@@ -21,6 +21,9 @@ enum O_ATTRIBUTE
 typedef enum TERRAIN_ARRAY_NUM
 {
 	TERNUM_NONE = -1,
+	TERNUM_BASIC,
+
+	TERNUM_END,
 
 
 
@@ -94,15 +97,16 @@ public:
 		return S_OK;
 	}
 
-	objNode& operator = (const objNode& obj) 
+	//objNode& operator = (const objNode& obj) 
+	void operator = (const objNode& obj)
 	{
 		this->_img = obj._img;
 		this->_imgNum = obj._imgNum;
 		this->_frameX = obj._frameX;
 		this->_frameY = obj._frameY;
 
-		this->_pos = obj._pos;
-		this->_rc = obj._rc;
+		//this->_pos = obj._pos;
+		//this->_rc = obj._rc;
 		this->_attr = obj._attr;
 		this->_zLevel = obj._zLevel;
 
@@ -114,12 +118,12 @@ public:
 			this->_imgNum == obj._imgNum				&&
 			this->_frameX == obj._frameX				&&
 			this->_frameY == obj._frameY				&&
-			this->_pos.x == obj._pos.x					&&
-			this->_pos.y == obj._pos.y					&&
-			this->_rc.left == obj._rc.left				&&
-			this->_rc.top == obj._rc.top				&&
-			this->_rc.right == obj._rc.right			&&
-			this->_rc.bottom == obj._rc.bottom			&&
+			//this->_pos.x == obj._pos.x					&&
+			//this->_pos.y == obj._pos.y					&&
+			//this->_rc.left == obj._rc.left				&&
+			//this->_rc.top == obj._rc.top				&&
+			//this->_rc.right == obj._rc.right			&&
+			//this->_rc.bottom == obj._rc.bottom			&&
 			this->_attr == obj._attr					&&
 			this->_zLevel == obj._zLevel
 			)
@@ -137,12 +141,12 @@ public:
 			this->_imgNum == obj._imgNum				&&
 			this->_frameX == obj._frameX				&&
 			this->_frameY == obj._frameY				&&
-			this->_pos.x == obj._pos.x					&&
-			this->_pos.y == obj._pos.y					&&
-			this->_rc.left == obj._rc.left				&&
-			this->_rc.top == obj._rc.top				&&
-			this->_rc.right == obj._rc.right			&&
-			this->_rc.bottom == obj._rc.bottom			&&
+			//this->_pos.x == obj._pos.x					&&
+			//this->_pos.y == obj._pos.y					&&
+			//this->_rc.left == obj._rc.left				&&
+			//this->_rc.top == obj._rc.top				&&
+			//this->_rc.right == obj._rc.right			&&
+			//this->_rc.bottom == obj._rc.bottom			&&
 			this->_attr == obj._attr					&&
 			this->_zLevel == obj._zLevel
 			)
@@ -164,7 +168,7 @@ public:
 	TERNUM _terImgNum;
 	int _terFrameX;
 	int _terFrameY;
-
+	POINT _idx;
 
 	T_ATTRIBUTE _terAttr;
 	POINT _pos;
@@ -173,11 +177,11 @@ public:
 public:
 	//»ý¼ºÀÚ
 	tileNode() :
-		_terImg(nullptr), _terImgNum(TERNUM_NONE), _terFrameX(NULL), _terFrameY(NULL),
+		_terImg(nullptr), _terImgNum(TERNUM_NONE), _terFrameX(NULL), _terFrameY(NULL), _idx({ NULL,NULL }),
 		_terAttr(T_ATTR_NONE), _pos({ NULL,NULL }), _rc({ NULL,NULL,NULL,NULL }) {};
 		
 	tileNode(const tileNode& tile) :
-		_terImg(tile._terImg), _terImgNum(tile._terImgNum), _terFrameX(tile._terFrameX), _terFrameY(tile._terFrameY),
+		_terImg(nullptr), _terImgNum(tile._terImgNum), _terFrameX(tile._terFrameX), _terFrameY(tile._terFrameY), _idx(tile._idx),
 		_terAttr(tile._terAttr), _pos(tile._pos), _rc(tile._rc) {};
 	
 	~tileNode() {};
@@ -189,10 +193,36 @@ public:
 		_terImgNum = TERNUM_NONE;
 		_terFrameX = NULL;
 		_terFrameY = NULL;
+		_idx = { NULL,NULL };
 
 		_terAttr = T_ATTR_NONE;
 		_pos = { NULL,NULL };
 		_rc = { NULL,NULL,NULL,NULL };
+
+		return S_OK;
+	}
+	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, T_ATTRIBUTE T_attr, POINT pos, RECT rc) {
+		_terImg = img;
+		_terImgNum = terImgNum;
+		_terFrameX = frameX;
+		_terFrameY = frameY;
+
+		_terAttr = T_attr;
+		_pos = pos;
+		_rc = rc;
+
+		return S_OK;
+	}
+	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, T_ATTRIBUTE T_attr, POINT pos, RECT rc) {
+		_terImg = img;
+		_terImgNum = terImgNum;
+		_terFrameX = frameX;
+		_terFrameY = frameY;
+		_idx = idx;
+
+		_terAttr = T_attr;
+		_pos = pos;
+		_rc = rc;
 
 		return S_OK;
 	}
@@ -201,16 +231,17 @@ public:
 	////------------------O P E R A T O R-------------------
 	////----------------------------------------------------
 
-	tileNode& operator = (const tileNode& tile)
+	//tileNode& operator = (const tileNode& tile)
+	void operator = (const tileNode& tile)
 	{
 		this->_terImg = tile._terImg;
 		this->_terImgNum = tile._terImgNum;
 		this->_terFrameX = tile._terFrameX;
 		this->_terFrameY = tile._terFrameY;
 
-		this->_terAttr = T_ATTR_NONE;
-		this->_pos = tile._pos;
-		this->_rc = tile._rc;
+		this->_terAttr = tile._terAttr;
+		//this->_pos = tile._pos;
+		//this->_rc = tile._rc;
 
 
 	}
@@ -220,13 +251,14 @@ public:
 			this->_terImgNum == tile._terImgNum		&&
 			this->_terFrameX == tile._terFrameX		&&
 			this->_terFrameY == tile._terFrameY		&&
-			this->_terAttr == tile._terAttr			&&
-			this->_pos.x == tile._pos.x				&&
-			this->_pos.y == tile._pos.y				&&
-			this->_rc.left == tile._rc.left			&&
-			this->_rc.top == tile._rc.top				&&
-			this->_rc.right == tile._rc.right			&&
-			this->_rc.bottom == tile._rc.bottom		)
+			this->_terAttr == tile._terAttr			
+			//this->_pos.x == tile._pos.x				&&
+			//this->_pos.y == tile._pos.y				&&
+			//this->_rc.left == tile._rc.left			&&
+			//this->_rc.top == tile._rc.top				&&
+			//this->_rc.right == tile._rc.right			&&
+			//this->_rc.bottom == tile._rc.bottom		
+			)
 		{
 			return true;
 		}
@@ -241,13 +273,14 @@ public:
 			this->_terImgNum == tile._terImgNum		&&
 			this->_terFrameX == tile._terFrameX		&&
 			this->_terFrameY == tile._terFrameY		&&
-			this->_terAttr == tile._terAttr			&&
-			this->_pos.x == tile._pos.x				&&
-			this->_pos.y == tile._pos.y				&&
-			this->_rc.left == tile._rc.left			&&
-			this->_rc.top == tile._rc.top				&&
-			this->_rc.right == tile._rc.right			&&
-			this->_rc.bottom == tile._rc.bottom)
+			this->_terAttr == tile._terAttr			
+			//this->_pos.x == tile._pos.x				&&
+			//this->_pos.y == tile._pos.y				&&
+			//this->_rc.left == tile._rc.left			&&
+			//this->_rc.top == tile._rc.top				&&
+			//this->_rc.right == tile._rc.right			&&
+			//this->_rc.bottom == tile._rc.bottom
+			)
 		{
 			return false;
 		}

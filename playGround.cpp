@@ -73,7 +73,7 @@ void playGround::render()
 	//wstring aaa = L"아나" + to_wstring(aaaa);
 	//D2DMANAGER->drawText(aaa.c_str(), CAMERA2D->getCamPosX(), CAMERA2D->getCamPosY() + 200);
 
-	TIMEMANAGER->render();
+	//TIMEMANAGER->render();
 	// Draw 끝 - 이 코드가 빠지면 D2D 출력 X
 	D2DMANAGER->endDraw();
 }

@@ -13,6 +13,7 @@ private:
 	enum E_TOOLS {
 		TOOL_NONE = -1,
 		TOOL_CURSOR,
+		TOOL_BRUSH,
 		TOOL_MAGICBONG,
 		TOOL_SPOID,
 		TOOL_TILE_ERASER,
@@ -35,14 +36,18 @@ private:
 		MENU_END,
 	};
 
-	vector<pair<string, image*>> _vSampleImg;
+	//vector<image*> _vSampleTerImg;
+	vvMap _vvTerSamples[TERNUM_END];
+	vector<POINT> _vMagicSelectList;
+
+
 	POINT _tileNum;
 	vvMap _vvMap;
 	vObj _vObj;
 	
 	image* _frameImg;
-	tagButtons _buttons[8];
-	tagButtons _toolIcons[7];
+	tagButtons _buttons[MENU_END];
+	tagButtons _toolIcons[TOOL_END];
 
 	int _mapIdx;
 	int _areaIdx;
@@ -52,9 +57,23 @@ private:
 
 	RECT _mapTileRc;
 	POINT _cursorSelectIdx[2];
-	bool _isLButtonDown;
-	
+	POINT _cursorSelectIdxSorted[2];
+	//bool _isLButtonDown;
 
+	bool _isChoosingSample;
+	TERRAIN_ARRAY_NUM _curTerSampleIdx;		//	현재 샘플이미지 번호
+	TILE* _cursorTile;			//	커서에 뭍힌 오브젝트
+
+	POINTF _ptMousePrePos;	//	핸드툴용
+
+	int _resizeMapCounter;
+	int _mapIdxAdjustCounter;
+	
+	const int MAPIDX_COUNT_MAX = 5;
+	const int RESIZE_MAP_COUNT_MAX = 5;
+	const int SAMPLE_PALLET_START_X = 65;
+	const int SAMPLE_PALLET_START_Y = 33;
+	
 
 public:
 	mapEditor();
@@ -66,9 +85,50 @@ public:
 	void update();
 	void render();
 
+	HRESULT initSamples();
+
 	void SelectToolFunc();
 	void SelectMenuFunc();
-	void SelectMapTile();
+	
+
+	void SwitchToolsFunc();
+	void SwitchMenusFunc();
+
+	//	===	otherFunc ===
+	void AdjustMapIdxFunc();
+	void ResizeMapFunc();
+	void AddMapX();
+	void AddMapY();
+	void EraseMapX();
+	void EraseMapY();
+	
+
+
+	//	===	ToolsFunc ===
+	void SelectMapTile();	//	cursor
+	void BrushTile();
+	void MagicSelect();
+	void SpoidFunc();
+	void EraseTile();
+	void EraseObj();
+	void PaintFunc();
+	void HandFunc();
+
+	//	=== MenusFunc ===
+	void SaveMapFunc();
+	void LoadMapFunc();
+	void TileSampleFunc();
+
+
+	//	===	utils ===
+	POINT CursorPtToSampleIdx();
+	void TransTileValue(TILE* sour, TILE* dest);
+	bool IsSameTile(TILE* sour, TILE* dest);
+
+	//	===	render ===
+	void CursorSampleRender();
+	void PreviewRender();
+	void MagicSelectRender();
 
 };
 

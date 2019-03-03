@@ -148,7 +148,7 @@
       <Filter>PlayGround</Filter>
     </ClInclude>
     <ClInclude Include="objects.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>2DFramework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -225,7 +225,7 @@
       <Filter>PlayGround\scenes</Filter>
     </ClCompile>
     <ClCompile Include="objects.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>2DFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
