@@ -9,10 +9,15 @@ mapEditor::mapEditor()
 	IMAGEMANAGER->addFrameImage("toolIcons", L"images/mapEditor/toolIcons.png", 128, 512, 2, 8);
 
 
-	IMAGEMANAGER->addFrameImage("tile1", L"images/map/tileSample1.png", 640, 384, 5, 6);
-	
+	IMAGEMANAGER->addFrameImage("tile1", L"images/map/tileSample1.png", 896, 384, 7, 6);
+	IMAGEMANAGER->addImage("objSample1", L"images/map/objSample1.png", 512, 544);
+	IMAGEMANAGER->addImage("objSample2", L"images/map/objSample2.png", 1152, 544);
+	IMAGEMANAGER->addImage("objSample3", L"images/map/objSample3.png", 512, 512);
+	IMAGEMANAGER->addImage("objSample4", L"images/map/objSample4.png", 1024, 544);
+	 
 
 	initSamples();
+	InitObjInfo();
 
 	//	카메라 설정
 	POINT tmpPt = { -WINSIZEX / 2,0 };
@@ -43,6 +48,7 @@ mapEditor::mapEditor()
 			tmpTile->_pos = ConvertIdxToPosFloat(j, i, TILESIZE_WID, TILESIZE_HEI);
 			tmpTile->_idx.x = j;
 			tmpTile->_idx.y = i;
+			tmpTile->_pickIdx = tmpTile->_idx;
 
 			//tmpTile->_pos.x = WINSIZEX / 2 + ((j - i)*(TILESIZE_WID / 2));			//tmpPt.x = WINSIZEX / 2 - (i*(TILESIZE_WID / 2)) + (j*(TILESIZE_WID / 2));
 			//tmpTile->_pos.y = TILESIZE_HEI / 2 + ((i + j) * (TILESIZE_HEI / 2));	//TILESIZE_HEI / 2 + (i * (TILESIZE_HEI / 2)) + (j * (TILESIZE_HEI/2));
@@ -93,7 +99,9 @@ mapEditor::mapEditor()
 
 	_isChoosingSample = false;
 	_curTerSampleIdx = TERNUM_BASIC;
+	_curObjSampleIdx = OBJNUM_BASIC;
 	_cursorTile = nullptr;
+	_cursorObjInfo.init();
 
 	_ptMousePrePos = { -1,-1 };
 
@@ -131,6 +139,7 @@ HRESULT mapEditor::init()
 			tmpTile->_pos = ConvertIdxToPosFloat(j, i, TILESIZE_WID, TILESIZE_HEI);
 			tmpTile->_idx.x = j;
 			tmpTile->_idx.y = i;
+			tmpTile->_pickIdx = tmpTile->_idx;
 
 			//tmpTile->_pos.x = WINSIZEX / 2 + ((j - i)*(TILESIZE_WID / 2));	//tmpPt.x = WINSIZEX / 2 - (i*(TILESIZE_WID / 2)) + (j*(TILESIZE_WID / 2));
 			//tmpTile->_pos.y = TILESIZE_HEI / 2 + ((i + j) * (TILESIZE_HEI / 2));	//TILESIZE_HEI / 2 + (i * (TILESIZE_HEI / 2)) + (j * (TILESIZE_HEI/2));
@@ -155,6 +164,7 @@ HRESULT mapEditor::init()
 	
 	_isChoosingSample = false;
 	_curTerSampleIdx = TERNUM_BASIC;
+	_curObjSampleIdx = OBJNUM_BASIC;
 
 	_ptMousePrePos = { -1,-1 };
 
@@ -188,6 +198,7 @@ HRESULT mapEditor::init(int tileNumX, int tileNumY)
 			tmpTile->_pos = ConvertIdxToPosFloat(j, i, TILESIZE_WID, TILESIZE_HEI);
 			tmpTile->_idx.x = j;
 			tmpTile->_idx.y = i;
+			tmpTile->_pickIdx = tmpTile->_idx;
 			
 			_vLine.push_back(tmpTile);
 		}
@@ -207,6 +218,7 @@ HRESULT mapEditor::init(int tileNumX, int tileNumY)
 
 	_isChoosingSample = false;
 	_curTerSampleIdx = TERNUM_BASIC;
+	_curObjSampleIdx = OBJNUM_BASIC;
 
 	_ptMousePrePos = { -1,-1 };
 
@@ -231,6 +243,7 @@ void mapEditor::update()
 		_cursorSelectIdx[1].x = -1;
 		_cursorSelectIdx[1].y = -1;
 		_vMagicSelectList.clear();
+		_cursorObjInfo.init();
 	}
 
 	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD8)) {
@@ -274,6 +287,8 @@ void mapEditor::render()
 		for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
 			for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
 				D2DMANAGER->drawDiamondLine(0xFF0000, _vvMap[i][j]->_pos.x, _vvMap[i][j]->_pos.y, TILESIZE_WID, TILESIZE_HEI, 2);
+				//	픽인덱스타일에 파랑테두리그리기
+				PickIdxTileRender(j, i);
 			}
 		}
 	}
@@ -281,39 +296,19 @@ void mapEditor::render()
 	//	매직선택 윤곽선
 	MagicSelectRender();
 
+	//	오브젝트 렌더
+	ObjRender();
+
 	//	커서 미리보기 렌더
 	PreviewRender();
 
 
-
+	//	샘플 렌더
 	if (_isChoosingSample) {
-		//	테스트용 샘플출력
-		for (int i = 0; i < _vvTerSamples[_curTerSampleIdx].size(); i++) {
-			for (int j = 0; j < _vvTerSamples[_curTerSampleIdx][0].size(); j++) {
-				_vvTerSamples[_curTerSampleIdx][i][j]->_img->frameRenderABS(
-					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.left,
-					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.top,
-					_vvTerSamples[_curTerSampleIdx][i][j]->_frameX,
-					_vvTerSamples[_curTerSampleIdx][i][j]->_frameY,
-					1.0f);
-				D2DMANAGER->drawRectangle(0xFF0000,
-					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.left + CAMERA2D->getCamPosX()
-					, _vvTerSamples[_curTerSampleIdx][i][j]->_rc.top + CAMERA2D->getCamPosY()
-					, _vvTerSamples[_curTerSampleIdx][i][j]->_rc.right + CAMERA2D->getCamPosX()
-					, _vvTerSamples[_curTerSampleIdx][i][j]->_rc.bottom + CAMERA2D->getCamPosY());
-			}
-		}
+		SampleRender();
+		
 	}
 	
-
-
-
-
-
-
-
-
-
 
 
 
@@ -376,7 +371,7 @@ HRESULT mapEditor::initSamples()
 			rc = RectMakeCenter(pos.x, pos.y, TILESIZE_WID, TILESIZE_HEI);
 
 			tmpTile->init(IMAGEMANAGER->findImage("tile1"), TERRAIN_ARRAY_NUM::TERNUM_BASIC,
-				j, i, { NULL,NULL }, T_ATTRIBUTE::T_ATTR_NONE, pos, rc, 0);
+				j, i, { NULL,NULL }, { NULL,NULL }, T_ATTRIBUTE::T_ATTR_NONE, pos, rc, 0);
 
 			vLine.push_back(tmpTile);
 		}
@@ -386,6 +381,49 @@ HRESULT mapEditor::initSamples()
 
 
 	return S_OK;
+}
+
+void mapEditor::InitObjInfo()
+{
+	//	1페이지
+	{
+		for (int i = 0; i < 4; i++) {
+			_objImgInfo[OBJNUM_BASIC][i].centerPosInImg.x = 66 + (i * 128);
+			_objImgInfo[OBJNUM_BASIC][i].centerPosInImg.y = 246;
+			_objImgInfo[OBJNUM_BASIC][i].sampleRc = RectMake(i * 128, 0, 128, 272);
+			_objImgInfo[OBJNUM_BASIC][i].objTileSize = { 1,1 };
+			_objImgInfo[OBJNUM_BASIC][i].imgNum = OBJNUM_BASIC;
+			_objImgInfo[OBJNUM_BASIC][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_BASIC].c_str());
+			_objImgInfo[OBJNUM_BASIC][i].zLvl = 2;
+			_objImgInfo[OBJNUM_BASIC][i].attr = O_ATTR_UNMOVE;
+
+		}
+		for (int i = 4; i < 9; i++) {
+			_objImgInfo[OBJNUM_BASIC][i].centerPosInImg.x = 50 + (i - 4) * 96;
+			_objImgInfo[OBJNUM_BASIC][i].centerPosInImg.y = 400;
+			_objImgInfo[OBJNUM_BASIC][i].sampleRc = RectMake((i - 4) * 96, 273, 96, 144);
+			_objImgInfo[OBJNUM_BASIC][i].objTileSize = { 1,1 };
+			_objImgInfo[OBJNUM_BASIC][i].imgNum = OBJNUM_BASIC;
+			_objImgInfo[OBJNUM_BASIC][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_BASIC].c_str());
+			_objImgInfo[OBJNUM_BASIC][i].zLvl = 2;
+			_objImgInfo[OBJNUM_BASIC][i].attr = O_ATTR_UNMOVE;
+		}
+		for (int i = 9; i < 12; i++) {
+			_objImgInfo[OBJNUM_BASIC][i].centerPosInImg.x = 64 + (i - 9) * 128;
+			_objImgInfo[OBJNUM_BASIC][i].centerPosInImg.y = 512;
+			_objImgInfo[OBJNUM_BASIC][i].sampleRc = RectMake((i - 9) * 128, 416, 128, 128);
+			_objImgInfo[OBJNUM_BASIC][i].objTileSize = { 1,1 };
+			_objImgInfo[OBJNUM_BASIC][i].imgNum = OBJNUM_BASIC;
+			_objImgInfo[OBJNUM_BASIC][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_BASIC].c_str());
+			_objImgInfo[OBJNUM_BASIC][i].zLvl = 2;
+			_objImgInfo[OBJNUM_BASIC][i].attr = O_ATTR_UNMOVE;
+		}
+
+	}
+
+	//	2페이지
+
+
 }
 
 void mapEditor::SelectToolFunc()
@@ -624,7 +662,7 @@ void mapEditor::SwitchMenusFunc()
 
 		break;
 	case MENU_OBJ:
-
+		ObjSampleFunc();
 
 		break;
 	case MENU_UNIT:
@@ -721,6 +759,7 @@ void mapEditor::AddMapX()
 		tmpTile->init();
 		tmpTile->_idx.x = _tileNum.x - 1;
 		tmpTile->_idx.y = i;
+		tmpTile->_pickIdx = tmpTile->_idx;
 		tmpTile->_pos = ConvertIdxToPosFloat(tmpTile->_idx.x, tmpTile->_idx.y, TILESIZE_WID, TILESIZE_HEI);
 
 		_vvMap[i].push_back(tmpTile);
@@ -739,6 +778,7 @@ void mapEditor::AddMapY()
 		tmpTile->init();
 		tmpTile->_idx.x = i;
 		tmpTile->_idx.y = _tileNum.y - 1;
+		tmpTile->_pickIdx = tmpTile->_idx;
 		tmpTile->_pos = ConvertIdxToPosFloat(tmpTile->_idx.x, tmpTile->_idx.y, TILESIZE_WID, TILESIZE_HEI);
 
 		tmpLine.push_back(tmpTile);
@@ -764,6 +804,8 @@ void mapEditor::EraseMapY()
 	}
 	_vvMap.pop_back();
 }
+
+
 
 void mapEditor::SelectMapTile()
 {
@@ -821,7 +863,20 @@ void mapEditor::BrushTile()
 				}
 			}
 		}
+	}
+	else if (_cursorObjInfo.img != nullptr) {
+		for (int i = 0; i < _tileNum.y; i++) {
+			for (int j = 0; j < _tileNum.x; j++) {
+				if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
+					if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
+						//_vvMap[i][j] = _cursorTile;
+						MakeObjOnMap(_cursorObjInfo, j, i);
 
+						return;
+					}
+				}
+			}
+		}
 	}
 
 }
@@ -931,19 +986,45 @@ void mapEditor::EraseObj()
 void mapEditor::PaintFunc()
 {
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
-		if (_vMagicSelectList.size() == 0) {
-			for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
-				for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
-					TransTileValue(_cursorTile, _vvMap[i][j]);
+		//	타일일떄,
+		if (_cursorTile != nullptr) {
+			if (_cursorSelectIdxSorted[0].x != -1) {
+				for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
+					for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
+						TransTileValue(_cursorTile, _vvMap[i][j]);
+					}
+				}
+			}
+			else if (_vMagicSelectList.size() != 0) {
+				for (int i = 0; i < _vMagicSelectList.size(); i++) {
+					POINT idx = _vMagicSelectList[i];
+					TransTileValue(_cursorTile, _vvMap[idx.y][idx.x]);
 				}
 			}
 		}
-		else {
-			for (int i = 0; i < _vMagicSelectList.size(); i++) {
-				POINT idx = _vMagicSelectList[i];
-				TransTileValue(_cursorTile, _vvMap[idx.y][idx.x]);
+		//	오브젝일떄,
+		else if (_cursorObjInfo.img != nullptr) {
+			if (_cursorSelectIdxSorted[0].x != -1) {
+				for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
+					for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
+						//TransTileValue(_cursorTile, _vvMap[i][j]);
+						MakeObjOnMap(_cursorObjInfo, j, i);
+					}
+				}
 			}
+			else if (_vMagicSelectList.size() != 0) {
+				for (int i = 0; i < _vMagicSelectList.size(); i++) {
+					POINT idx = _vMagicSelectList[i];
+					//TransTileValue(_cursorTile, _vvMap[idx.y][idx.x]);
+					MakeObjOnMap(_cursorObjInfo, idx.x, idx.y);
+
+				}
+			}
+
+
+
 		}
+		
 	}
 	
 }
@@ -971,8 +1052,17 @@ void mapEditor::MakeHillFunc(int augZlvl)
 		for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
 			for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
 				if (_vvMap[i][j]->_img == nullptr)	continue;
-				if (_vvMap[i][j]->_zLevel + augZlvl > 0) {
+				if (_vvMap[i][j]->_zLevel + augZlvl >= 0) {
 					_vvMap[i][j]->_zLevel += augZlvl;
+					AdjustHillToObj(j, i, augZlvl);		//	오브젝트도 위치이동!(pos,rc)
+
+				}
+				//	높아져서 덮어진부분 pickIdx로 픽 설정해준다.
+				if (_vvMap[i][j]->_zLevel % 2 == 0) {
+					for (int k = 0; k < _vvMap[i][j]->_zLevel / 2; k++) {
+						if (i - (k + 1) < 0 || j - (k + 1) < 0)	continue;
+						_vvMap[i - (k + 1)][j - (k + 1)]->_pickIdx = { j,i };
+					}
 				}
 				
 			}
@@ -985,7 +1075,29 @@ void mapEditor::MakeHillFunc(int augZlvl)
 			if (_vvMap[idx.y][idx.x]->_img == nullptr)	 continue;
 			if (_vvMap[idx.y][idx.x]->_zLevel + augZlvl > 0) {
 				_vvMap[idx.y][idx.x]->_zLevel += augZlvl;
+				AdjustHillToObj(idx.x, idx.y, augZlvl);
 			}
+			//	높아져서 덮어진부분 pickIdx로 픽 설정해준다.
+			if (_vvMap[idx.y][idx.x]->_zLevel % 2 == 0) {
+				for (int k = 0; k < _vvMap[idx.y][idx.x]->_zLevel / 2; k++) {
+					if (idx.y - (k + 1) < 0 || idx.x - (k + 1) < 0)	continue;
+					_vvMap[idx.y - (k + 1)][idx.x - (k + 1)]->_pickIdx = { idx.x,idx.y };
+				}
+			}
+
+
+		}
+	}
+}
+
+void mapEditor::AdjustHillToObj(int idxX, int idxY, int augHeiLvl)
+{
+	for (int i = 0; i < _vObj.size(); i++) {
+		if (_vObj[i]->_mapIdx.x == idxX &&
+			_vObj[i]->_mapIdx.y == idxY) {
+			_vObj[i]->_pos.y -= (TILESIZE_HEI / 2) * augHeiLvl;
+			_vObj[i]->_rc.top -= (TILESIZE_HEI / 2) * augHeiLvl;
+			_vObj[i]->_rc.bottom -= (TILESIZE_HEI / 2) * augHeiLvl;
 		}
 	}
 }
@@ -1050,10 +1162,10 @@ void mapEditor::SaveMapFunc()
 	//==============================
 
 	//	vv맵 데이터 1차배열로 복사중...
-	TILE* saveTileAry = new TILE[_tileNum.x * _tileNum.y];
+	tagTileInfo* saveTileAry = new tagTileInfo[_tileNum.x * _tileNum.y];
 	for (int i = 0; i < _tileNum.y; i++) {
 		for (int j = 0; j < _tileNum.x; j++) {
-			saveTileAry[i*_tileNum.x + j] = *_vvMap[i][j];
+			saveTileAry[i*_tileNum.x + j] = _vvMap[i][j]->getTileInfo();
 		}
 	}
 
@@ -1061,22 +1173,25 @@ void mapEditor::SaveMapFunc()
 	fileForMapData = CreateFile(fileNameForMap, GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	WriteFile(fileForMapData, saveTileAry, sizeof(TILE)*_tileNum.x * _tileNum.y, &writeForMapData, NULL);
+	WriteFile(fileForMapData, saveTileAry, sizeof(tagTileInfo)*_tileNum.x * _tileNum.y, &writeForMapData, NULL);
 	CloseHandle(fileForMapSize);
 	delete[] saveTileAry;
 
 	//==============================
 
 	//	v오브젝트 데이터 1차배열로 복사중...
-	OBJ* saveObjAry = new OBJ[_vObj.size()];
+	tagObjInfo* saveObjAry = new tagObjInfo[_vObj.size()];
 	for (int i = 0; i < _vObj.size(); i++) {
-		saveObjAry[i] = *_vObj[i];
+		saveObjAry[i] = _vObj[i]->getObjInfo();
+		
+		//saveObjAry[i] = *_vObj[i];
+
 	}
 
 	fileForObjData = CreateFile(fileNameForObj, GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	WriteFile(fileForObjData, saveObjAry, sizeof(OBJ)*_vObj.size(), &writeForObjData, NULL);
+	WriteFile(fileForObjData, saveObjAry, sizeof(tagObjInfo)*_vObj.size(), &writeForObjData, NULL);
 	CloseHandle(fileForObjData);
 	delete[] saveObjAry;
 
@@ -1163,19 +1278,18 @@ void mapEditor::LoadMapFunc()
 	vObjSize = tmpInt;
 
 	//	벡터 리사이즈
-	_vvMap.reserve(_tileNum.y);
-	for (int i = 0; i < _tileNum.y; i++) {
-		_vvMap[i].reserve(_tileNum.x);
-	}
-
-	_vObj.reserve(vObjSize);
+	//_vvMap.resize(_tileNum.y);
+	//for (int i = 0; i < _tileNum.y; i++) {
+	//	_vvMap[i].resize(_tileNum.x);
+	//}
+	//_vObj.resize(vObjSize);
 
 	//	맵데이터 로드
-	TILE* savedTileAry = new TILE[_tileNum.x * _tileNum.y];
-	ZeroMemory(savedTileAry, sizeof(TILE) * (_tileNum.x * _tileNum.y));
+	tagTileInfo* savedTileAry = new tagTileInfo[_tileNum.x * _tileNum.y];
+	ZeroMemory(savedTileAry, sizeof(tagTileInfo) * (_tileNum.x * _tileNum.y));
 
 	fileForMapData = CreateFile(fileNameForMap, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(fileForMapData, savedTileAry, sizeof(TILE) * _tileNum.x * _tileNum.y, &readForMapData, NULL);
+	ReadFile(fileForMapData, savedTileAry, sizeof(tagTileInfo) * _tileNum.x * _tileNum.y, &readForMapData, NULL);
 	CloseHandle(fileForMapData);
 
 	//	vv맵에 데이터 적용
@@ -1185,24 +1299,31 @@ void mapEditor::LoadMapFunc()
 		tmpVLine.reserve(_tileNum.x);
 		for (int j = 0; j < _tileNum.x; j++) {
 			TILE* tmpTile = new TILE;
-			*tmpTile = savedTileAry[i*_tileNum.x + j];
+			tmpTile->setTileInfo(savedTileAry[i*_tileNum.x + j]);
 			tmpVLine.push_back(tmpTile);
 		}
 		_vvMap.push_back(tmpVLine);
 	}
+	//for (int i = 0; i < _tileNum.y; i++) {
+	//	for (int j = 0; j < _tileNum.x; j++) {
+	//		_vvMap[i][j]->setTileInfo(savedTileAry[i*_tileNum.x + j]);
+	//	}
+	//}
+
+
 
 	//	obj데이터 로드
-	OBJ* savedObjAry = new OBJ[vObjSize];
-	ZeroMemory(savedObjAry, sizeof(OBJ) * (vObjSize));
+	tagObjInfo* savedObjAry = new tagObjInfo[vObjSize];
+	ZeroMemory(savedObjAry, sizeof(tagObjInfo) * (vObjSize));
 
 	fileForObjData = CreateFile(fileNameForObj, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(fileForObjData, savedObjAry, sizeof(OBJ) * vObjSize, &readForObjData, NULL);
+	ReadFile(fileForObjData, savedObjAry, sizeof(tagObjInfo) * vObjSize, &readForObjData, NULL);
 	CloseHandle(fileForObjData);
 
 	//	vObj에 데이터 적용
 	for (int i = 0; i < vObjSize; i++) {
 		OBJ* tmpObj = new OBJ;
-		*tmpObj = savedObjAry[i];
+		tmpObj->setObjInfo(savedObjAry[i]);
 		_vObj.push_back(tmpObj);
 	}
 
@@ -1210,12 +1331,32 @@ void mapEditor::LoadMapFunc()
 
 void mapEditor::TileSampleFunc()
 {
-	for (int i = 0; i < _vvTerSamples[_curTerSampleIdx].size(); i++) {
+	for (int i = 0; i < _vvTerSamples[_curTerSampleIdx].size() - 2; i++) {
 		for (int j = 0; j < _vvTerSamples[_curTerSampleIdx][0].size(); j++) {
 			if (PtInRect(&_vvTerSamples[_curTerSampleIdx][i][j]->_rc, PointMake(_ptMouseAbs.x, _ptMouseAbs.y))) {
 				if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
+					_cursorObjInfo.init();
 					_cursorTile = _vvTerSamples[_curTerSampleIdx][i][j];
 				}
+			}
+		}
+	}
+}
+
+void mapEditor::ObjSampleFunc()
+{			//	요기해야함
+	for (int i = 0; i < 12; i++) {
+		if (_objImgInfo[_curObjSampleIdx][i].imgNum == OBJNUM_NONE)
+			continue;
+			
+		if (PtInRect(&_objImgInfo[_curObjSampleIdx][i].sampleRc, PointMake(_ptMouseAbs.x - SAMPLE_PALLET_START_X, _ptMouseAbs.y - SAMPLE_PALLET_START_Y))) {
+			if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
+				if (_cursorTile != nullptr) {
+					
+					_cursorTile = nullptr;
+				}
+				_cursorObjInfo = _objImgInfo[_curObjSampleIdx][i];
+				
 			}
 		}
 	}
@@ -1237,7 +1378,7 @@ void mapEditor::TransTileValue(TILE * sour, TILE * dest)
 	dest->_frameX = sour->_frameX;
 	dest->_frameY = sour->_frameY;
 	dest->_terAttr = sour->_terAttr;
-	dest->_zLevel = sour->_zLevel;
+	//dest->_zLevel = sour->_zLevel;
 
 
 }
@@ -1256,10 +1397,40 @@ bool mapEditor::IsSameTile(TILE * sour, TILE * dest)
 	return false;
 }
 
+void mapEditor::MakeObjOnMap(tagObjSpriteInfo obj, int idxX, int idxY)
+{
+	
+	OBJ* tmpObj = new OBJ;
+	POINTFLOAT pos = _vvMap[idxY][idxX]->_pos;
+	RECT rc = RectMake(pos.x - obj.getPixPosToLeft(),
+		pos.y - obj.getPixPosToTop(),
+		obj.getWid(),
+		obj.getHei());
+
+	//	오브젝 이닛하고 푸시백
+	tmpObj->init(obj.imgNum, obj.attr, PointMake(idxX, idxY), pos, rc, obj.sampleRc, obj.zLvl, obj.objTileSize);
+	_vObj.push_back(tmpObj);
+
+	//	맵에 속성 부여
+	if (tmpObj->_attr == O_ATTR_UNMOVE) {
+		for (int i = 0; i < tmpObj->_objTileSize.y; i++) {
+			for (int j = 0; j < tmpObj->_objTileSize.x; j++) {
+				_vvMap[idxY - i][idxX - j]->_terAttr = T_ATTR_UNMOVE;
+			}
+		}
+	}
+
+
+}
+
+
 void mapEditor::CursorSampleRender()
 {
 	if (_cursorTile != nullptr) {
-		_cursorTile->_img->frameRenderABS(1441, 33, _cursorTile->_frameX, _cursorTile->_frameY, 1.0f);
+		if (_cursorTile->_img != nullptr) {
+			_cursorTile->_img->frameRenderABS(1441, 33, _cursorTile->_frameX, _cursorTile->_frameY, 1.0f);
+		}
+		
 	}
 
 }
@@ -1269,8 +1440,36 @@ void mapEditor::PreviewRender()
 	if (_cursorTile != nullptr) {
 		if (_selectedTool == TOOL_BRUSH ||
 			_selectedTool == TOOL_PAINT) {
-			_cursorTile->_img->frameRenderABS(_ptMouseAbs.x - TILESIZE_WID / 2, _ptMouseAbs.y - TILESIZE_HEI / 2,
-				_cursorTile->_frameX, _cursorTile->_frameY, 0.5f);
+			if (_cursorTile->_img != nullptr) {
+				_cursorTile->_img->frameRenderABS(_ptMouseAbs.x - TILESIZE_WID / 2, _ptMouseAbs.y - TILESIZE_HEI / 2,
+					_cursorTile->_frameX, _cursorTile->_frameY, 0.5f);
+			}
+		}
+	}
+	
+		
+	
+	//_cursorObjInfo.img!=nullptr
+	//if (_cursorObjInfo.imgNum != OBJNUM_NONE) {
+	if (_cursorObjInfo.img != nullptr) {
+		if (_selectedTool == TOOL_BRUSH ||
+			_selectedTool == TOOL_PAINT) {
+			_cursorObjInfo.img->renderABS(
+				_ptMouseAbs.x - _cursorObjInfo.getPixPosToLeft(),
+				_ptMouseAbs.y - _cursorObjInfo.getPixPosToTop(),
+
+				//_ptMouseAbs.x - (_cursorObjInfo.centerPosInImg.x - _cursorObjInfo.sampleRc.left),
+				//_ptMouseAbs.y - (_cursorObjInfo.centerPosInImg.y - _cursorObjInfo.sampleRc.top),
+
+				_cursorObjInfo.sampleRc.left,
+				_cursorObjInfo.sampleRc.top,
+				
+				_cursorObjInfo.getWid(),
+				_cursorObjInfo.getHei(),
+				//_cursorObjInfo.sampleRc.right - _cursorObjInfo.sampleRc.left,
+				//_cursorObjInfo.sampleRc.bottom - _cursorObjInfo.sampleRc.top,
+				0.5f);
+
 		}
 	}
 }
@@ -1280,6 +1479,10 @@ void mapEditor::MagicSelectRender()
 	for (int i = 0; i < _vMagicSelectList.size(); i++) {
 		POINT idx = _vMagicSelectList[i];
 		D2DMANAGER->drawDiamondLine(0xFF0000, _vvMap[idx.y][idx.x]->_pos.x, _vvMap[idx.y][idx.x]->_pos.y, TILESIZE_WID, TILESIZE_HEI, 2);
+
+		//	픽인덱스타일에 파랑테두리그리기
+		PickIdxTileRender(idx.y, idx.x);
+
 	}
 }
 
@@ -1309,4 +1512,82 @@ void mapEditor::TileRender(int idxX, int idxY)
 		}
 	}
 
+}
+
+void mapEditor::PickIdxTileRender(int idxX, int idxY)
+{
+	
+	if (_vvMap[idxY][idxX]->_pickIdx.x != _vvMap[idxY][idxX]->_idx.x ||
+		_vvMap[idxY][idxX]->_pickIdx.y != _vvMap[idxY][idxX]->_idx.y) {
+		POINT pickIdx = _vvMap[idxY][idxX]->_pickIdx;
+		D2DMANAGER->drawDiamondLine(0x4BA5FF, _vvMap[pickIdx.y][pickIdx.x]->_pos.x, _vvMap[pickIdx.y][pickIdx.x]->_pos.y, TILESIZE_WID, TILESIZE_HEI, 2);
+	}
+}
+
+void mapEditor::SampleRender()
+{
+	if (_selectedMenu == MENU_TILE) {
+		for (int i = 0; i < _vvTerSamples[_curTerSampleIdx].size() - 2; i++) {		//	기둥 스프라이트 필요x 그래서 -2;
+			for (int j = 0; j < _vvTerSamples[_curTerSampleIdx][0].size(); j++) {
+				_vvTerSamples[_curTerSampleIdx][i][j]->_img->frameRenderABS(
+					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.left,
+					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.top,
+					_vvTerSamples[_curTerSampleIdx][i][j]->_frameX,
+					_vvTerSamples[_curTerSampleIdx][i][j]->_frameY,
+					1.0f);
+				D2DMANAGER->drawRectangle(0x8673CC,
+					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.left + CAMERA2D->getCamPosX() 
+					, _vvTerSamples[_curTerSampleIdx][i][j]->_rc.top + CAMERA2D->getCamPosY()
+					, _vvTerSamples[_curTerSampleIdx][i][j]->_rc.right + CAMERA2D->getCamPosX()
+					, _vvTerSamples[_curTerSampleIdx][i][j]->_rc.bottom + CAMERA2D->getCamPosY());
+			}
+		}
+	}
+	else if (_selectedMenu == MENU_OBJ) {
+		for (int i = 0; i < 12; i++) {
+			if (_objImgInfo[_curObjSampleIdx][i].imgNum == OBJNUM_NONE)	continue;
+			_objImgInfo[_curObjSampleIdx][i].img->renderABS(
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.left + SAMPLE_PALLET_START_X,
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.top + SAMPLE_PALLET_START_Y,
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.left,
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.top,
+				_objImgInfo[_curObjSampleIdx][i].getWid(),
+				_objImgInfo[_curObjSampleIdx][i].getHei(),
+				1.0f);
+
+			D2DMANAGER->drawRectangle(0x8673CC,
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.left + CAMERA2D->getCamPosX() + SAMPLE_PALLET_START_X,
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.top + CAMERA2D->getCamPosY() + SAMPLE_PALLET_START_Y,
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.right + CAMERA2D->getCamPosX() + SAMPLE_PALLET_START_X,
+				_objImgInfo[_curObjSampleIdx][i].sampleRc.bottom + CAMERA2D->getCamPosY() + SAMPLE_PALLET_START_Y);
+
+			
+			//	중점 확인용 ==========
+			D2DMANAGER->drawRectangle(0x00FF4E,
+				_objImgInfo[_curObjSampleIdx][i].centerPosInImg.x + CAMERA2D->getCamPosX() -5 + SAMPLE_PALLET_START_X,
+				_objImgInfo[_curObjSampleIdx][i].centerPosInImg.y + CAMERA2D->getCamPosY() -5 + SAMPLE_PALLET_START_Y,
+				_objImgInfo[_curObjSampleIdx][i].centerPosInImg.x + CAMERA2D->getCamPosX()+ 5 + SAMPLE_PALLET_START_X,
+				_objImgInfo[_curObjSampleIdx][i].centerPosInImg.y + CAMERA2D->getCamPosY() + 5 + SAMPLE_PALLET_START_Y
+			);
+				
+
+
+		}
+	}
+	
+}
+
+void mapEditor::ObjRender()
+{
+	for (int i = 0; i < _vObj.size(); i++) {
+		_vObj[i]->_img->render(
+			_vObj[i]->_rc.left,
+			_vObj[i]->_rc.top,
+			_vObj[i]->_sampleRc.left,
+			_vObj[i]->_sampleRc.top,
+			_vObj[i]->_sampleRc.right - _vObj[i]->_sampleRc.left,
+			_vObj[i]->_sampleRc.bottom - _vObj[i]->_sampleRc.top,
+			1.0f
+		);
+	}
 }

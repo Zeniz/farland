@@ -62,7 +62,9 @@ private:
 
 	bool _isChoosingSample;
 	TERRAIN_ARRAY_NUM _curTerSampleIdx;		//	현재 샘플이미지 번호
+	OBJECT_ARRAY_NUM _curObjSampleIdx;		//	현재 오브젝 샘플이미지 인덱스
 	TILE* _cursorTile;			//	커서에 뭍힌 오브젝트
+	tagObjSpriteInfo _cursorObjInfo;
 
 	POINTF _ptMousePrePos;	//	핸드툴용
 
@@ -86,6 +88,7 @@ public:
 	void render();
 
 	HRESULT initSamples();
+	void InitObjInfo();
 
 	void SelectToolFunc();
 	void SelectMenuFunc();
@@ -101,6 +104,8 @@ public:
 	void AddMapY();
 	void EraseMapX();
 	void EraseMapY();
+
+	
 	
 
 
@@ -115,23 +120,30 @@ public:
 	void HandFunc();
 
 	void MakeHillFunc(int augZlvl);
+	void AdjustHillToObj(int idxX, int idxY, int augHeiLvl);
 
 	//	=== MenusFunc ===
 	void SaveMapFunc();
 	void LoadMapFunc();
 	void TileSampleFunc();
+	void ObjSampleFunc();
 
 
 	//	===	utils ===
 	POINT CursorPtToSampleIdx();
 	void TransTileValue(TILE* sour, TILE* dest);
 	bool IsSameTile(TILE* sour, TILE* dest);
+	void MakeObjOnMap(tagObjSpriteInfo obj, int idxX, int idxY);
+	
 
 	//	===	render ===
-	void CursorSampleRender();
+	void CursorSampleRender();	//	커서가 현재 잡은 타일 우측위에 렌더
 	void PreviewRender();
 	void MagicSelectRender();
 	void TileRender(int idxX, int idxY);
+	void PickIdxTileRender(int idxX, int idxY);
+	void SampleRender();
+	void ObjRender();
 
 };
 
