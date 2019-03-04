@@ -2,7 +2,7 @@
 #include "gameNode.h"
 class objects : public gameNode
 {
-protected:
+public:
 	image* _img;
 	int _frameX;
 	int _frameY;

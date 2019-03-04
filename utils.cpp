@@ -28,11 +28,29 @@ namespace CCY_ZENIZ_UTIL
 		return false;
 	}
 
+	bool PtInDiamond(POINTFLOAT centerPos, POINTF ptMouse)
+	{
+		POINTF pos = { centerPos.x, centerPos.y };
+		if (fabs(pos.x - ptMouse.x) / (64) + fabs(pos.y - ptMouse.y) / 32 < 1) {
+			return true;
+		}
+		return false;
+	}
+
 
 
 	POINT ConvertIdxToPos(int idxX, int idxY, int tileWid, int tileHei)
 	{
 		POINT pos;
+		pos.x = ((idxX - idxY) * (tileWid / 2));			//tmpPt.x = WINSIZEX / 2 - (i*(TILESIZE_WID / 2)) + (j*(TILESIZE_WID / 2));
+		pos.y = tileHei / 2 + ((idxY + idxX) * (tileHei / 2));			//TILESIZE_HEI / 2 + (i * (TILESIZE_HEI / 2)) + (j * (TILESIZE_HEI/2));
+
+		return pos;
+	}
+
+	POINTFLOAT ConvertIdxToPosFloat(int idxX, int idxY, int tileWid, int tileHei)
+	{
+		POINTFLOAT pos;
 		pos.x = ((idxX - idxY) * (tileWid / 2));			//tmpPt.x = WINSIZEX / 2 - (i*(TILESIZE_WID / 2)) + (j*(TILESIZE_WID / 2));
 		pos.y = tileHei / 2 + ((idxY + idxX) * (tileHei / 2));			//TILESIZE_HEI / 2 + (i * (TILESIZE_HEI / 2)) + (j * (TILESIZE_HEI/2));
 

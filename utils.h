@@ -13,7 +13,9 @@ namespace CCY_ZENIZ_UTIL
 {
 	bool PtInDiamond(float centerX, float centerY, POINTF ptMouse);
 	bool PtInDiamond(POINT centerPos, POINTF ptMouse);
+	bool PtInDiamond(POINTFLOAT centerPos, POINTF ptMouse);
 	POINT ConvertIdxToPos(int idxX, int idxY, int tileWid, int tileHei);
+	POINTFLOAT ConvertIdxToPosFloat(int idxX, int idxY, int tileWid, int tileHei);
 	POINT ConvertPosToIdx(int posX, int posY, int tileWid, int tileHei);
 
 

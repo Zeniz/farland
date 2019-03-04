@@ -161,68 +161,99 @@ public:
 
 }OBJ;
 
-typedef class tileNode
+typedef class tileNode : public objects
 {
 public:
-	image* _terImg;
+	//image* _terImg;
 	TERNUM _terImgNum;
-	int _terFrameX;
-	int _terFrameY;
+	//int _terFrameX;
+	//int _terFrameY;
 	POINT _idx;
 
 	T_ATTRIBUTE _terAttr;
-	POINT _pos;
-	RECT _rc;
+	//POINT _pos;
+	//RECT _rc;
 	
 public:
 	//생성자
 	tileNode() :
-		_terImg(nullptr), _terImgNum(TERNUM_NONE), _terFrameX(NULL), _terFrameY(NULL), _idx({ NULL,NULL }),
-		_terAttr(T_ATTR_NONE), _pos({ NULL,NULL }), _rc({ NULL,NULL,NULL,NULL }) {};
+		//_terImg(nullptr), _terImgNum(TERNUM_NONE), _terFrameX(NULL), _terFrameY(NULL), _idx({ NULL,NULL }),
+		//_terAttr(T_ATTR_NONE), _pos({ NULL,NULL }), _rc({ NULL,NULL,NULL,NULL }) {};
+		_terImgNum(TERNUM_NONE), _idx({ NULL,NULL }), _terAttr(T_ATTR_NONE) {};
 		
 	tileNode(const tileNode& tile) :
-		_terImg(nullptr), _terImgNum(tile._terImgNum), _terFrameX(tile._terFrameX), _terFrameY(tile._terFrameY), _idx(tile._idx),
-		_terAttr(tile._terAttr), _pos(tile._pos), _rc(tile._rc) {};
+		_terImgNum(tile._terImgNum), _idx(tile._idx),
+		_terAttr(tile._terAttr) {};
 	
 	~tileNode() {};
 
 	//초기화
 	HRESULT init()
 	{
-		_terImg = nullptr;
+		//_terImg = nullptr;
+		//_terImgNum = TERNUM_NONE;
+		//_terFrameX = NULL;
+		//_terFrameY = NULL;
+		//_idx = { NULL,NULL };
+		//
+		//_terAttr = T_ATTR_NONE;
+		//_pos = { NULL,NULL };
+		//_rc = { NULL,NULL,NULL,NULL };
+		_img = nullptr;
 		_terImgNum = TERNUM_NONE;
-		_terFrameX = NULL;
-		_terFrameY = NULL;
-		_idx = { NULL,NULL };
-
+		_frameX = NULL;
+		_frameY = NULL;
+		_idx = { NULL, NULL };
 		_terAttr = T_ATTR_NONE;
 		_pos = { NULL,NULL };
 		_rc = { NULL,NULL,NULL,NULL };
+		_zLevel = NULL;
+
 
 		return S_OK;
 	}
-	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, T_ATTRIBUTE T_attr, POINT pos, RECT rc) {
-		_terImg = img;
+	
+	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, T_ATTRIBUTE T_attr, POINT pos, RECT rc) {
+		_img = img;
 		_terImgNum = terImgNum;
-		_terFrameX = frameX;
-		_terFrameY = frameY;
+		_frameX = frameX;
+		_frameY = frameY;
+		_idx = idx;
 
 		_terAttr = T_attr;
-		_pos = pos;
+		POINTFLOAT tmpPos;
+		tmpPos.x = pos.x;
+		tmpPos.y = pos.y;
+		_pos = tmpPos;
 		_rc = rc;
 
 		return S_OK;
 	}
-	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, T_ATTRIBUTE T_attr, POINT pos, RECT rc) {
-		_terImg = img;
+	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, T_ATTRIBUTE T_attr, POINTFLOAT pos, RECT rc) {
+		_img = img;
 		_terImgNum = terImgNum;
-		_terFrameX = frameX;
-		_terFrameY = frameY;
+		_frameX = frameX;
+		_frameY = frameY;
 		_idx = idx;
 
 		_terAttr = T_attr;
 		_pos = pos;
 		_rc = rc;
+
+		return S_OK;
+	}
+	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, T_ATTRIBUTE T_attr, POINTFLOAT pos, RECT rc, int zLvl) {
+		_img = img;
+		_terImgNum = terImgNum;
+		_frameX = frameX;
+		_frameY = frameY;
+		_idx = idx;
+
+		_terAttr = T_attr;
+		_pos = pos;
+		_rc = rc;
+
+		_zLevel = zLvl;
 
 		return S_OK;
 	}
@@ -234,12 +265,12 @@ public:
 	//tileNode& operator = (const tileNode& tile)
 	void operator = (const tileNode& tile)
 	{
-		this->_terImg = tile._terImg;
-		this->_terImgNum = tile._terImgNum;
-		this->_terFrameX = tile._terFrameX;
-		this->_terFrameY = tile._terFrameY;
-
-		this->_terAttr = tile._terAttr;
+		//this->_terImg = tile._terImg;
+		//this->_terImgNum = tile._terImgNum;
+		//this->_terFrameX = tile._terFrameX;
+		//this->_terFrameY = tile._terFrameY;
+		//
+		//this->_terAttr = tile._terAttr;
 		//this->_pos = tile._pos;
 		//this->_rc = tile._rc;
 
@@ -247,47 +278,47 @@ public:
 	}
 	bool operator == (const tileNode& tile)
 	{
-		if (this->_terImg == tile._terImg	&&
-			this->_terImgNum == tile._terImgNum		&&
-			this->_terFrameX == tile._terFrameX		&&
-			this->_terFrameY == tile._terFrameY		&&
-			this->_terAttr == tile._terAttr			
-			//this->_pos.x == tile._pos.x				&&
-			//this->_pos.y == tile._pos.y				&&
-			//this->_rc.left == tile._rc.left			&&
-			//this->_rc.top == tile._rc.top				&&
-			//this->_rc.right == tile._rc.right			&&
-			//this->_rc.bottom == tile._rc.bottom		
-			)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		//if (this->_terImg == tile._terImg	&&
+		//	this->_terImgNum == tile._terImgNum		&&
+		//	this->_terFrameX == tile._terFrameX		&&
+		//	this->_terFrameY == tile._terFrameY		&&
+		//	this->_terAttr == tile._terAttr			
+		//	//this->_pos.x == tile._pos.x				&&
+		//	//this->_pos.y == tile._pos.y				&&
+		//	//this->_rc.left == tile._rc.left			&&
+		//	//this->_rc.top == tile._rc.top				&&
+		//	//this->_rc.right == tile._rc.right			&&
+		//	//this->_rc.bottom == tile._rc.bottom		
+		//	)
+		//{
+		//	return true;
+		//}
+		//else
+		//{
+		//	return false;
+		//}
 	}
 	bool operator != (const tileNode& tile)
 	{
-		if (this->_terImg == tile._terImg	&&
-			this->_terImgNum == tile._terImgNum		&&
-			this->_terFrameX == tile._terFrameX		&&
-			this->_terFrameY == tile._terFrameY		&&
-			this->_terAttr == tile._terAttr			
-			//this->_pos.x == tile._pos.x				&&
-			//this->_pos.y == tile._pos.y				&&
-			//this->_rc.left == tile._rc.left			&&
-			//this->_rc.top == tile._rc.top				&&
-			//this->_rc.right == tile._rc.right			&&
-			//this->_rc.bottom == tile._rc.bottom
-			)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		//if (this->_terImg == tile._terImg	&&
+		//	this->_terImgNum == tile._terImgNum		&&
+		//	this->_terFrameX == tile._terFrameX		&&
+		//	this->_terFrameY == tile._terFrameY		&&
+		//	this->_terAttr == tile._terAttr			
+		//	//this->_pos.x == tile._pos.x				&&
+		//	//this->_pos.y == tile._pos.y				&&
+		//	//this->_rc.left == tile._rc.left			&&
+		//	//this->_rc.top == tile._rc.top				&&
+		//	//this->_rc.right == tile._rc.right			&&
+		//	//this->_rc.bottom == tile._rc.bottom
+		//	)
+		//{
+		//	return false;
+		//}
+		//else
+		//{
+		//	return true;
+		//}
 	}
 
 	//image* getImg() { return _terImg; }

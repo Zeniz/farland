@@ -9,7 +9,8 @@ mapEditor::mapEditor()
 	IMAGEMANAGER->addFrameImage("toolIcons", L"images/mapEditor/toolIcons.png", 128, 512, 2, 8);
 
 
-	IMAGEMANAGER->addFrameImage("terBasic", L"images/map/map1.png", 768, 256, 6, 4);
+	IMAGEMANAGER->addFrameImage("tile1", L"images/map/tileSample1.png", 640, 384, 5, 6);
+	
 
 	initSamples();
 
@@ -21,7 +22,7 @@ mapEditor::mapEditor()
 
 
 	//_vSampleTerImg.clear();
-	//_vSampleTerImg.push_back(IMAGEMANAGER->findImage("terBasic"));		//	tileNode의 이넘순서에 맞게 pushBack
+	//_vSampleTerImg.push_back(IMAGEMANAGER->findImage("tile1"));		//	tileNode의 이넘순서에 맞게 pushBack
 
 	_vMagicSelectList.clear();
 
@@ -38,8 +39,8 @@ mapEditor::mapEditor()
 		_vLine.reserve(_tileNum.x);
 		for (int j = 0; j < _tileNum.x; j++) {
 			TILE* tmpTile = new TILE;
-
-			tmpTile->_pos = ConvertIdxToPos(j, i, TILESIZE_WID, TILESIZE_HEI);
+			tmpTile->init();
+			tmpTile->_pos = ConvertIdxToPosFloat(j, i, TILESIZE_WID, TILESIZE_HEI);
 			tmpTile->_idx.x = j;
 			tmpTile->_idx.y = i;
 
@@ -126,7 +127,10 @@ HRESULT mapEditor::init()
 		_vLine.reserve(_tileNum.x);
 		for (int j = 0; j < _tileNum.x; j++) {
 			TILE* tmpTile = new TILE;
-			tmpTile->_pos = ConvertIdxToPos(j, i, TILESIZE_WID, TILESIZE_HEI);
+			tmpTile->init();
+			tmpTile->_pos = ConvertIdxToPosFloat(j, i, TILESIZE_WID, TILESIZE_HEI);
+			tmpTile->_idx.x = j;
+			tmpTile->_idx.y = i;
 
 			//tmpTile->_pos.x = WINSIZEX / 2 + ((j - i)*(TILESIZE_WID / 2));	//tmpPt.x = WINSIZEX / 2 - (i*(TILESIZE_WID / 2)) + (j*(TILESIZE_WID / 2));
 			//tmpTile->_pos.y = TILESIZE_HEI / 2 + ((i + j) * (TILESIZE_HEI / 2));	//TILESIZE_HEI / 2 + (i * (TILESIZE_HEI / 2)) + (j * (TILESIZE_HEI/2));
@@ -180,7 +184,10 @@ HRESULT mapEditor::init(int tileNumX, int tileNumY)
 		_vLine.reserve(_tileNum.x);
 		for (int j = 0; j < _tileNum.x; j++) {
 			TILE* tmpTile = new TILE;
-			tmpTile->_pos = ConvertIdxToPos(j, i, TILESIZE_WID, TILESIZE_HEI);
+			tmpTile->init();
+			tmpTile->_pos = ConvertIdxToPosFloat(j, i, TILESIZE_WID, TILESIZE_HEI);
+			tmpTile->_idx.x = j;
+			tmpTile->_idx.y = i;
 			
 			_vLine.push_back(tmpTile);
 		}
@@ -219,14 +226,27 @@ void mapEditor::update()
 
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON)) {
 		_cursorTile = nullptr;
+		_cursorSelectIdx[0].x = -1;
+		_cursorSelectIdx[0].y = -1;
+		_cursorSelectIdx[1].x = -1;
+		_cursorSelectIdx[1].y = -1;
+		_vMagicSelectList.clear();
 	}
+
+	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD8)) {
+		MakeHillFunc(+1);
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD2)) {
+		MakeHillFunc(-1);
+	}
+	
 
 	AdjustMapIdxFunc();
 	ResizeMapFunc();
 
 	SelectToolFunc();
 	SelectMenuFunc();
-
+	
 	SwitchToolsFunc();
 	SwitchMenusFunc();
 
@@ -245,10 +265,7 @@ void mapEditor::render()
 			//윤곽선그리기
 			D2DMANAGER->drawDiamondLine(_vvMap[i][j]->_pos.x, _vvMap[i][j]->_pos.y, TILESIZE_WID, TILESIZE_HEI);
 			//	타일그림
-			if (_vvMap[i][j]->_terImg != nullptr) {
-				_vvMap[i][j]->_terImg->frameRender(_vvMap[i][j]->_pos.x - TILESIZE_WID/2, _vvMap[i][j]->_pos.y - TILESIZE_HEI/2,
-					_vvMap[i][j]->_terFrameX, _vvMap[i][j]->_terFrameY, 1.0f);
-			}
+			TileRender(j, i);
 		}
 	}
 
@@ -273,11 +290,11 @@ void mapEditor::render()
 		//	테스트용 샘플출력
 		for (int i = 0; i < _vvTerSamples[_curTerSampleIdx].size(); i++) {
 			for (int j = 0; j < _vvTerSamples[_curTerSampleIdx][0].size(); j++) {
-				_vvTerSamples[_curTerSampleIdx][i][j]->_terImg->frameRenderABS(
+				_vvTerSamples[_curTerSampleIdx][i][j]->_img->frameRenderABS(
 					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.left,
 					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.top,
-					_vvTerSamples[_curTerSampleIdx][i][j]->_terFrameX,
-					_vvTerSamples[_curTerSampleIdx][i][j]->_terFrameY,
+					_vvTerSamples[_curTerSampleIdx][i][j]->_frameX,
+					_vvTerSamples[_curTerSampleIdx][i][j]->_frameY,
 					1.0f);
 				D2DMANAGER->drawRectangle(0xFF0000,
 					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.left + CAMERA2D->getCamPosX()
@@ -345,21 +362,22 @@ HRESULT mapEditor::initSamples()
 {
 	//	terrain
 
-	//	terBasic1
-	for (int i = 0; i < IMAGEMANAGER->findImage("terBasic")->GetMaxFrameY() + 1; i++) {
+	//	tile11
+	for (int i = 0; i < IMAGEMANAGER->findImage("tile1")->GetMaxFrameY() + 1; i++) {
 		vLine vLine;
 		vLine.clear();
-		for (int j = 0; j < IMAGEMANAGER->findImage("terBasic")->GetMaxFrameX() + 1; j++) {
+		for (int j = 0; j < IMAGEMANAGER->findImage("tile1")->GetMaxFrameX() + 1; j++) {
 			TILE* tmpTile = new TILE;
-			POINT pos;
+			POINTFLOAT pos;
 			RECT rc;
 
-			pos = { SAMPLE_PALLET_START_X + TILESIZE_WID / 2 + j * TILESIZE_WID,
-					SAMPLE_PALLET_START_Y + TILESIZE_HEI / 2 + i * TILESIZE_HEI };
+			pos = { (float)(SAMPLE_PALLET_START_X + TILESIZE_WID / 2 + j * TILESIZE_WID),
+					(float)(SAMPLE_PALLET_START_Y + TILESIZE_HEI / 2 + i * TILESIZE_HEI) };
 			rc = RectMakeCenter(pos.x, pos.y, TILESIZE_WID, TILESIZE_HEI);
 
-			tmpTile->init(IMAGEMANAGER->findImage("terBasic"), TERRAIN_ARRAY_NUM::TERNUM_BASIC,
-				j, i, T_ATTRIBUTE::T_ATTR_NONE, pos, rc);
+			tmpTile->init(IMAGEMANAGER->findImage("tile1"), TERRAIN_ARRAY_NUM::TERNUM_BASIC,
+				j, i, { NULL,NULL }, T_ATTRIBUTE::T_ATTR_NONE, pos, rc, 0);
+
 			vLine.push_back(tmpTile);
 		}
 		_vvTerSamples[TERNUM_BASIC].push_back(vLine);
@@ -703,7 +721,7 @@ void mapEditor::AddMapX()
 		tmpTile->init();
 		tmpTile->_idx.x = _tileNum.x - 1;
 		tmpTile->_idx.y = i;
-		tmpTile->_pos = ConvertIdxToPos(tmpTile->_idx.x, tmpTile->_idx.y, TILESIZE_WID, TILESIZE_HEI);
+		tmpTile->_pos = ConvertIdxToPosFloat(tmpTile->_idx.x, tmpTile->_idx.y, TILESIZE_WID, TILESIZE_HEI);
 
 		_vvMap[i].push_back(tmpTile);
 	}
@@ -721,7 +739,7 @@ void mapEditor::AddMapY()
 		tmpTile->init();
 		tmpTile->_idx.x = i;
 		tmpTile->_idx.y = _tileNum.y - 1;
-		tmpTile->_pos = ConvertIdxToPos(tmpTile->_idx.x, tmpTile->_idx.y, TILESIZE_WID, TILESIZE_HEI);
+		tmpTile->_pos = ConvertIdxToPosFloat(tmpTile->_idx.x, tmpTile->_idx.y, TILESIZE_WID, TILESIZE_HEI);
 
 		tmpLine.push_back(tmpTile);
 	}
@@ -854,16 +872,55 @@ void mapEditor::EraseTile()
 	TILE nullTile;
 	nullTile.init();
 	
-	for (int i = 0; i < _tileNum.y; i++) {
-		for (int j = 0; j < _tileNum.x; j++) {
-			if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
-				if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
-					
-					TransTileValue(&nullTile, _vvMap[i][j]);
+	//	커서로 구역 잡았을때,
+	if (_cursorSelectIdx[0].x != -1) {
+		for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
+			for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
+				if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
+					if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
+						for (int ii = _cursorSelectIdxSorted[0].y; ii <= _cursorSelectIdxSorted[1].y; ii++) {
+							for (int jj = _cursorSelectIdxSorted[0].x; jj <= _cursorSelectIdxSorted[1].x; jj++) {
+
+								TransTileValue(&nullTile, _vvMap[ii][jj]);
+
+							}
+						}
+						return;
+					}
 				}
 			}
 		}
 	}
+	//	마술봉으로 잡았을 때
+	else if (_vMagicSelectList.size() != 0) {
+		for (int i = 0; i < _vMagicSelectList.size(); i++) {
+			POINT idx = _vMagicSelectList[i];
+			if (PtInDiamond(_vvMap[idx.y][idx.x]->_pos, _ptMouse)) {
+				if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
+					for (int j = 0; j < _vMagicSelectList.size(); j++) {
+						POINT id = _vMagicSelectList[j];
+						TransTileValue(&nullTile, _vvMap[id.y][id.x]);
+					}
+					return;
+				}
+			}
+		}
+	}
+	
+	//	범위가 없을 때.
+	else {
+		for (int i = 0; i < _tileNum.y; i++) {
+			for (int j = 0; j < _tileNum.x; j++) {
+				if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
+					if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
+
+						TransTileValue(&nullTile, _vvMap[i][j]);
+					}
+				}
+			}
+		}
+	}
+	
 
 }
 
@@ -905,6 +962,32 @@ void mapEditor::HandFunc()
 
 	}
 	_ptMousePrePos = _ptMouseAbs;
+}
+
+void mapEditor::MakeHillFunc(int augZlvl)
+{
+	//	커서로 구역설정시,
+	if (_cursorSelectIdx[0].x != -1) {
+		for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
+			for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
+				if (_vvMap[i][j]->_img == nullptr)	continue;
+				if (_vvMap[i][j]->_zLevel + augZlvl > 0) {
+					_vvMap[i][j]->_zLevel += augZlvl;
+				}
+				
+			}
+		}
+	}
+	//	마술봉으로 구역설정시,
+	else if (_vMagicSelectList.size() != 0) {
+		for (int i = 0; i < _vMagicSelectList.size(); i++) {
+			POINT idx = _vMagicSelectList[i];
+			if (_vvMap[idx.y][idx.x]->_img == nullptr)	 continue;
+			if (_vvMap[idx.y][idx.x]->_zLevel + augZlvl > 0) {
+				_vvMap[idx.y][idx.x]->_zLevel += augZlvl;
+			}
+		}
+	}
 }
 
 
@@ -1149,22 +1232,24 @@ POINT mapEditor::CursorPtToSampleIdx()
 
 void mapEditor::TransTileValue(TILE * sour, TILE * dest)
 {
-	dest->_terImg = sour->_terImg;
+	dest->_img = sour->_img;
 	dest->_terImgNum = sour->_terImgNum;
-	dest->_terFrameX = sour->_terFrameX;
-	dest->_terFrameY = sour->_terFrameY;
+	dest->_frameX = sour->_frameX;
+	dest->_frameY = sour->_frameY;
 	dest->_terAttr = sour->_terAttr;
+	dest->_zLevel = sour->_zLevel;
 
 
 }
 
 bool mapEditor::IsSameTile(TILE * sour, TILE * dest)
 {
-	if (dest->_terImg == sour->_terImg &&
+	if (dest->_img == sour->_img &&
 		dest->_terImgNum == sour->_terImgNum &&
-		dest->_terFrameX == sour->_terFrameX &&
-		dest->_terFrameY == sour->_terFrameY &&
-		dest->_terAttr == sour->_terAttr
+		dest->_frameX == sour->_frameX &&
+		dest->_frameY == sour->_frameY &&
+		dest->_terAttr == sour->_terAttr &&
+		dest->_zLevel == sour->_zLevel
 		)
 		return true;
 
@@ -1174,7 +1259,7 @@ bool mapEditor::IsSameTile(TILE * sour, TILE * dest)
 void mapEditor::CursorSampleRender()
 {
 	if (_cursorTile != nullptr) {
-		_cursorTile->_terImg->frameRenderABS(1441, 33, _cursorTile->_terFrameX, _cursorTile->_terFrameY, 1.0f);
+		_cursorTile->_img->frameRenderABS(1441, 33, _cursorTile->_frameX, _cursorTile->_frameY, 1.0f);
 	}
 
 }
@@ -1184,8 +1269,8 @@ void mapEditor::PreviewRender()
 	if (_cursorTile != nullptr) {
 		if (_selectedTool == TOOL_BRUSH ||
 			_selectedTool == TOOL_PAINT) {
-			_cursorTile->_terImg->frameRenderABS(_ptMouseAbs.x - TILESIZE_WID / 2, _ptMouseAbs.y - TILESIZE_HEI / 2,
-				_cursorTile->_terFrameX, _cursorTile->_terFrameY, 0.5f);
+			_cursorTile->_img->frameRenderABS(_ptMouseAbs.x - TILESIZE_WID / 2, _ptMouseAbs.y - TILESIZE_HEI / 2,
+				_cursorTile->_frameX, _cursorTile->_frameY, 0.5f);
 		}
 	}
 }
@@ -1196,4 +1281,32 @@ void mapEditor::MagicSelectRender()
 		POINT idx = _vMagicSelectList[i];
 		D2DMANAGER->drawDiamondLine(0xFF0000, _vvMap[idx.y][idx.x]->_pos.x, _vvMap[idx.y][idx.x]->_pos.y, TILESIZE_WID, TILESIZE_HEI, 2);
 	}
+}
+
+void mapEditor::TileRender(int idxX, int idxY)
+{
+	//if (_vvMap[idxY][idxX]->_img != nullptr) {
+	//	_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2,
+	//		_vvMap[idxY][idxX]->_frameX, _vvMap[idxY][idxX]->_frameY, 1.0f);
+	//}
+
+	if (_vvMap[idxY][idxX]->_img != nullptr) {
+		for (int i = _vvMap[idxY][idxX]->_zLevel; i >= 0; i--) {
+			if (i == 0) {
+				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_frameX, _vvMap[idxY][idxX]->_frameY, 1.0f);
+			}
+			else if (i == 1) {
+				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI/2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_frameX, 4, 1.0f);
+			}
+			else {
+				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_frameX, 5, 1.0f);
+			}
+
+
+		}
+	}
+
 }

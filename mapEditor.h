@@ -114,6 +114,8 @@ public:
 	void PaintFunc();
 	void HandFunc();
 
+	void MakeHillFunc(int augZlvl);
+
 	//	=== MenusFunc ===
 	void SaveMapFunc();
 	void LoadMapFunc();
@@ -129,6 +131,7 @@ public:
 	void CursorSampleRender();
 	void PreviewRender();
 	void MagicSelectRender();
+	void TileRender(int idxX, int idxY);
 
 };
 
