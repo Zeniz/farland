@@ -53,6 +53,8 @@ typedef enum OBJECT_ARRAY_NUM
 //오브젝트 이미지 키값
 static string _objectImageKey[10] = { "objSample1","objSample2","objSample3","objSample4","","","","","","" };
 
+
+//	맵 에디터용...맵 에디터에 넣을까?
 struct tagObjSpriteInfo {
 	POINTFLOAT centerPosInImg;
 	RECT sampleRc;
@@ -92,6 +94,9 @@ struct tagObjSpriteInfo {
 
 };
 
+
+
+//	맵 에디터용...맵 에디터에 넣을까?
 static tagObjSpriteInfo _objImgInfo[OBJNUM_END][12];
 
 

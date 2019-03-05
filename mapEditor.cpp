@@ -14,9 +14,11 @@ mapEditor::mapEditor()
 	IMAGEMANAGER->addImage("objSample2", L"images/map/objSample2.png", 1152, 544);
 	IMAGEMANAGER->addImage("objSample3", L"images/map/objSample3.png", 512, 512);
 	IMAGEMANAGER->addImage("objSample4", L"images/map/objSample4.png", 1024, 544);
+
+	IMAGEMANAGER->addFrameImage("mobSprite", L"images/mapEditor/mobSprite.png", 144, 144, 1, 1);
 	 
 
-	initSamples();
+	InitSamples();
 	InitObjInfo();
 
 	//	카메라 설정
@@ -37,6 +39,7 @@ mapEditor::mapEditor()
 	
 	_vvMap.clear();
 	_vObj.clear();
+	_vEnemy.clear();
 
 	for (int i = 0; i < _tileNum.y; i++) {
 		vLine _vLine;
@@ -128,6 +131,7 @@ HRESULT mapEditor::init()
 
 	_vvMap.clear();
 	_vObj.clear();
+	_vEnemy.clear();
 
 	for (int i = 0; i < _tileNum.y; i++) {
 		vLine _vLine;
@@ -187,6 +191,7 @@ HRESULT mapEditor::init(int tileNumX, int tileNumY)
 
 	_vvMap.clear();
 	_vObj.clear();
+	_vEnemy.clear();
 
 	for (int i = 0; i < _tileNum.y; i++) {
 		vLine _vLine;
@@ -353,7 +358,7 @@ void mapEditor::render()
 
 }
 
-HRESULT mapEditor::initSamples()
+HRESULT mapEditor::InitSamples()
 {
 	//	terrain
 
@@ -383,7 +388,7 @@ HRESULT mapEditor::initSamples()
 	return S_OK;
 }
 
-void mapEditor::InitObjInfo()
+HRESULT mapEditor::InitObjInfo()
 {
 	//	초기화
 	for (int i = OBJNUM_BASIC; i < OBJNUM_END; i++) {
@@ -514,7 +519,23 @@ void mapEditor::InitObjInfo()
 		
 	}
 
+	return S_OK;
 
+}
+
+HRESULT mapEditor::InitMobSamples()
+{
+	_enemyInfo[MOB_SKEL].tileCenterPosAtSprite.x = 64;
+	_enemyInfo[MOB_SKEL].tileCenterPosAtSprite.y = 128;
+	_enemyInfo[MOB_SKEL].imgNum = MOB_SKEL;
+	_enemyInfo[MOB_SKEL].sampleImg = IMAGEMANAGER->findImage("mobSprite");
+	_enemyInfo[MOB_SKEL].sampleRc = RectMake(0, 0,
+		_enemyInfo[MOB_SKEL].sampleImg->GetFrameWidth(), _enemyInfo[MOB_SKEL].sampleImg->GetFrameHeight());
+
+	_enemyInfo[MOB_SKEL].zLvl = 0;
+	
+
+	return S_OK;
 }
 
 void mapEditor::SelectToolFunc()
@@ -715,7 +736,7 @@ void mapEditor::SwitchToolsFunc()
 				EraseTile();
 				break;
 			case TOOL_OBJ_ERASER:
-
+				EraseObj();
 				break;
 			case TOOL_PAINT:
 				PaintFunc();
@@ -1077,6 +1098,88 @@ void mapEditor::EraseTile()
 
 void mapEditor::EraseObj()
 {
+
+	//	커서로 구역 잡았을때,
+	if (_cursorSelectIdx[0].x != -1) {
+		for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
+			for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
+				if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
+					if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
+						for (int ii = _cursorSelectIdxSorted[0].y; ii <= _cursorSelectIdxSorted[1].y; ii++) {
+							for (int jj = _cursorSelectIdxSorted[0].x; jj <= _cursorSelectIdxSorted[1].x; jj++) {
+
+								for (int k = 0; k < _vObj.size(); ) {
+									if (_vObj[k]->_mapIdx.x == jj && _vObj[k]->_mapIdx.y == ii) {
+										SAFE_DELETE(_vObj[k]);
+										_vObj.erase(_vObj.begin() + k);
+										_vvMap[ii][jj]->_terAttr = T_ATTR_NONE;
+									}
+									else {
+										k++;
+									}
+								}
+
+							}
+						}
+						return;
+					}
+				}
+			}
+		}
+	}
+	//	마술봉으로 잡았을 때
+	else if (_vMagicSelectList.size() != 0) {
+		for (int i = 0; i < _vMagicSelectList.size(); i++) {
+			POINT idx = _vMagicSelectList[i];
+			if (PtInDiamond(_vvMap[idx.y][idx.x]->_pos, _ptMouse)) {
+				if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
+					for (int j = 0; j < _vMagicSelectList.size(); j++) {
+						POINT id = _vMagicSelectList[j];
+
+						for (int k = 0; k < _vObj.size(); k++) {
+							if (_vObj[k]->_mapIdx.x == id.x && _vObj[k]->_mapIdx.y == id.y) {
+								SAFE_DELETE(_vObj[k]);
+								_vObj.erase(_vObj.begin() + k);
+								_vvMap[id.y][id.x]->_terAttr = T_ATTR_NONE;
+							}
+							else {
+								k++;
+							}
+						}
+
+
+					}
+					return;
+				}
+			}
+		}
+	}
+
+	//	범위가 없을 때.
+	else {
+		for (int i = 0; i < _tileNum.y; i++) {
+			for (int j = 0; j < _tileNum.x; j++) {
+				if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
+					if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
+
+						for (int k = 0; k < _vObj.size(); k++) {
+							if (_vObj[k]->_mapIdx.x == j && _vObj[k]->_mapIdx.y == i) {
+								SAFE_DELETE(_vObj[k]);
+								_vObj.erase(_vObj.begin() + k);
+								_vvMap[i][j]->_terAttr = T_ATTR_NONE;
+								return;		//	1개만 지울거니까, 지우고 리턴해도됨
+							}
+							else {
+								k++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 }
 
 void mapEditor::PaintFunc()

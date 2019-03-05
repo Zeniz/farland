@@ -1,9 +1,14 @@
 #pragma once
 #include "gameNode.h"
 #include "tileNode.h"
+#include "enemy.h"
+#include "skeleton.h"
+
 class mapEditor : public gameNode
 {
 private:
+	typedef vector<enemy*> vEnemy;
+
 	struct tagButtons {
 		image* img;
 		RECT rc;
@@ -36,7 +41,7 @@ private:
 		MENU_END,
 	};
 
-	//vector<image*> _vSampleTerImg;
+	
 	vvMap _vvTerSamples[TERNUM_END];
 	vector<POINT> _vMagicSelectList;
 
@@ -44,6 +49,7 @@ private:
 	POINT _tileNum;
 	vvMap _vvMap;
 	vObj _vObj;
+	vEnemy _vEnemy;
 	
 	image* _frameImg;
 	tagButtons _buttons[MENU_END];
@@ -58,13 +64,14 @@ private:
 	RECT _mapTileRc;
 	POINT _cursorSelectIdx[2];
 	POINT _cursorSelectIdxSorted[2];
-	//bool _isLButtonDown;
+	
 
 	bool _isChoosingSample;
 	int _curTerSampleIdx;		//	현재 샘플이미지 번호
 	int _curObjSampleIdx;		//	현재 오브젝 샘플이미지 인덱스
 	TILE* _cursorTile;			//	커서에 뭍힌 오브젝트
 	tagObjSpriteInfo _cursorObjInfo;
+	
 
 	POINTF _ptMousePrePos;	//	핸드툴용
 
@@ -87,8 +94,9 @@ public:
 	void update();
 	void render();
 
-	HRESULT initSamples();
-	void InitObjInfo();
+	HRESULT InitSamples();
+	HRESULT InitObjInfo();
+	HRESULT InitMobSamples();
 
 	void SelectToolFunc();
 	void SelectMenuFunc();

@@ -58,6 +58,9 @@
     <Filter Include="PlayGround\scenes">
       <UniqueIdentifier>{747d3e86-3853-41b4-b1e0-819bc49d2256}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\enemy">
+      <UniqueIdentifier>{b529c0c8-2733-4926-b231-66e989b404b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -150,6 +153,12 @@
     <ClInclude Include="objects.h">
       <Filter>2DFramework</Filter>
     </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="skeleton.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -226,6 +235,12 @@
     </ClCompile>
     <ClCompile Include="objects.cpp">
       <Filter>2DFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="skeleton.cpp">
+      <Filter>PlayGround\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
