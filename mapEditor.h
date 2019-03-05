@@ -61,8 +61,8 @@ private:
 	//bool _isLButtonDown;
 
 	bool _isChoosingSample;
-	TERRAIN_ARRAY_NUM _curTerSampleIdx;		//	현재 샘플이미지 번호
-	OBJECT_ARRAY_NUM _curObjSampleIdx;		//	현재 오브젝 샘플이미지 인덱스
+	int _curTerSampleIdx;		//	현재 샘플이미지 번호
+	int _curObjSampleIdx;		//	현재 오브젝 샘플이미지 인덱스
 	TILE* _cursorTile;			//	커서에 뭍힌 오브젝트
 	tagObjSpriteInfo _cursorObjInfo;
 

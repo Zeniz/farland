@@ -385,6 +385,21 @@ HRESULT mapEditor::initSamples()
 
 void mapEditor::InitObjInfo()
 {
+	//	초기화
+	for (int i = OBJNUM_BASIC; i < OBJNUM_END; i++) {
+		for (int j = 0; j < 12; j++) {
+			_objImgInfo[i][j].centerPosInImg.x = NULL;
+			_objImgInfo[i][j].centerPosInImg.y = NULL;
+			_objImgInfo[i][j].sampleRc = { NULL,NULL,NULL,NULL };
+			_objImgInfo[i][j].objTileSize = { NULL,NULL };
+			_objImgInfo[i][j].imgNum = OBJNUM_NONE;
+			_objImgInfo[i][j].img = nullptr;
+			_objImgInfo[i][j].zLvl = NULL;
+			_objImgInfo[i][j].attr = O_ATTR_NONE;
+		}
+		
+	}
+
 	//	1페이지
 	{
 		for (int i = 0; i < 4; i++) {
@@ -418,10 +433,86 @@ void mapEditor::InitObjInfo()
 			_objImgInfo[OBJNUM_BASIC][i].zLvl = 2;
 			_objImgInfo[OBJNUM_BASIC][i].attr = O_ATTR_UNMOVE;
 		}
-
 	}
-
 	//	2페이지
+	{
+		_objImgInfo[OBJNUM_HOUSE][0].centerPosInImg.x = 256;
+		_objImgInfo[OBJNUM_HOUSE][0].centerPosInImg.y = 544 - TILESIZE_HEI / 2;
+		_objImgInfo[OBJNUM_HOUSE][0].sampleRc = RectMake(0, 0, 576, 544);
+		_objImgInfo[OBJNUM_HOUSE][0].objTileSize = { 4,5 };
+		_objImgInfo[OBJNUM_HOUSE][0].imgNum = OBJNUM_HOUSE;
+		_objImgInfo[OBJNUM_HOUSE][0].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_HOUSE].c_str());
+		_objImgInfo[OBJNUM_HOUSE][0].zLvl = 1;
+		_objImgInfo[OBJNUM_HOUSE][0].attr = O_ATTR_UNMOVE;
+
+		_objImgInfo[OBJNUM_HOUSE][1].centerPosInImg.x = 896;
+		_objImgInfo[OBJNUM_HOUSE][1].centerPosInImg.y = 544 - TILESIZE_HEI / 2;
+		_objImgInfo[OBJNUM_HOUSE][1].sampleRc = RectMake(576, 0, 576, 544);
+		_objImgInfo[OBJNUM_HOUSE][1].objTileSize = { 5,4 };
+		_objImgInfo[OBJNUM_HOUSE][1].imgNum = OBJNUM_HOUSE;
+		_objImgInfo[OBJNUM_HOUSE][1].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_HOUSE].c_str());
+		_objImgInfo[OBJNUM_HOUSE][1].zLvl = 1;
+		_objImgInfo[OBJNUM_HOUSE][1].attr = O_ATTR_UNMOVE;
+	}
+	
+	//	3페이지
+	{
+		for (int i = 0; i < 4; i++) {
+			_objImgInfo[OBJNUM_COMB][i].centerPosInImg.x = 48 + (i * 96);
+			_objImgInfo[OBJNUM_COMB][i].centerPosInImg.y = 176;
+			_objImgInfo[OBJNUM_COMB][i].sampleRc = RectMake(0 + (i * 96), 0, 96, 192);
+			_objImgInfo[OBJNUM_COMB][i].objTileSize = { 1,1 };
+			_objImgInfo[OBJNUM_COMB][i].imgNum = OBJNUM_COMB;
+			_objImgInfo[OBJNUM_COMB][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_COMB].c_str());
+			_objImgInfo[OBJNUM_COMB][i].zLvl = 2;
+			_objImgInfo[OBJNUM_COMB][i].attr = O_ATTR_UNMOVE;
+		}
+		for (int i = 4; i < 6; i++) {
+			_objImgInfo[OBJNUM_COMB][i].centerPosInImg.x = 48 + ((i-4) * 128);
+			_objImgInfo[OBJNUM_COMB][i].centerPosInImg.y = 352;
+			_objImgInfo[OBJNUM_COMB][i].sampleRc = RectMake(0 + (i - 4) * 112, 193, 112, 192);
+			_objImgInfo[OBJNUM_COMB][i].objTileSize = { 1,1 };
+			_objImgInfo[OBJNUM_COMB][i].imgNum = OBJNUM_COMB;
+			_objImgInfo[OBJNUM_COMB][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_COMB].c_str());
+			_objImgInfo[OBJNUM_COMB][i].zLvl = 2;
+			_objImgInfo[OBJNUM_COMB][i].attr = O_ATTR_UNMOVE; 
+		} 
+		//	풀떼기
+		for (int i = 6; i < 10; i++) {
+			_objImgInfo[OBJNUM_COMB][i].centerPosInImg.x = 64 + (i - 6) * 128;
+			_objImgInfo[OBJNUM_COMB][i].centerPosInImg.y = 480;
+			_objImgInfo[OBJNUM_COMB][i].sampleRc = RectMake(0 + (i - 6) * 128, 384, 128, 128);
+			_objImgInfo[OBJNUM_COMB][i].objTileSize = { 1,1 };
+			_objImgInfo[OBJNUM_COMB][i].imgNum = OBJNUM_COMB;
+			_objImgInfo[OBJNUM_COMB][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_COMB].c_str());
+			_objImgInfo[OBJNUM_COMB][i].zLvl = 2;
+			_objImgInfo[OBJNUM_COMB][i].attr = O_ATTR_NONE;
+		}
+	}
+	//	4페이지 - 크리스탈
+	{
+		for (int i = 0; i < 4; i++) {
+			_objImgInfo[OBJNUM_CRYSTAL][i].centerPosInImg.x = 128 + (i * 256);
+			_objImgInfo[OBJNUM_CRYSTAL][i].centerPosInImg.y = 304;
+			_objImgInfo[OBJNUM_CRYSTAL][i].sampleRc = RectMake(0 + (i * 256), 0, 256, 336);
+			_objImgInfo[OBJNUM_CRYSTAL][i].objTileSize = { 2,2 };
+			_objImgInfo[OBJNUM_CRYSTAL][i].imgNum = OBJNUM_CRYSTAL;
+			_objImgInfo[OBJNUM_CRYSTAL][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_CRYSTAL].c_str());
+			_objImgInfo[OBJNUM_CRYSTAL][i].zLvl = 2;
+			_objImgInfo[OBJNUM_CRYSTAL][i].attr = O_ATTR_UNMOVE;
+		}
+		for (int i = 4; i < 9; i++) {
+			_objImgInfo[OBJNUM_CRYSTAL][i].centerPosInImg.x = 64 + (i - 4) * 128;
+			_objImgInfo[OBJNUM_CRYSTAL][i].centerPosInImg.y = 512;
+			_objImgInfo[OBJNUM_CRYSTAL][i].sampleRc = RectMake(0 + (i - 4) * 128, 337, 128, 208);
+			_objImgInfo[OBJNUM_CRYSTAL][i].objTileSize = { 1,1 };
+			_objImgInfo[OBJNUM_CRYSTAL][i].imgNum = OBJNUM_CRYSTAL;
+			_objImgInfo[OBJNUM_CRYSTAL][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJNUM_CRYSTAL].c_str());
+			_objImgInfo[OBJNUM_CRYSTAL][i].zLvl = 2;
+			_objImgInfo[OBJNUM_CRYSTAL][i].attr = O_ATTR_UNMOVE;
+		}
+		
+	}
 
 
 }
@@ -658,11 +749,16 @@ void mapEditor::SwitchMenusFunc()
 
 		break;
 	case MENU_TILE:
-		TileSampleFunc();
+		if (_isChoosingSample) {			//	필요없긴 함...
+			TileSampleFunc();
+		}
+		
 
 		break;
 	case MENU_OBJ:
-		ObjSampleFunc();
+		if (_isChoosingSample) {			//	필요없긴 함..
+			ObjSampleFunc();
+		}
 
 		break;
 	case MENU_UNIT:
@@ -1344,7 +1440,14 @@ void mapEditor::TileSampleFunc()
 }
 
 void mapEditor::ObjSampleFunc()
-{			//	요기해야함
+{	
+	//오브젝 페이지 넘기기
+	if (KEYMANAGER->isOnceKeyDown(VK_TAB)) {
+		_curObjSampleIdx+= 1;
+		if (_curObjSampleIdx == OBJNUM_END)
+			_curObjSampleIdx = OBJNUM_BASIC;
+	}
+	//	오브젝트 선택
 	for (int i = 0; i < 12; i++) {
 		if (_objImgInfo[_curObjSampleIdx][i].imgNum == OBJNUM_NONE)
 			continue;
