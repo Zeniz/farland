@@ -11,7 +11,8 @@ const int TILESIZE_HEI = 64;
 enum T_ATTRIBUTE
 {
 	T_ATTR_NONE = 0x00000000UL,
-	T_ATTR_UNMOVE = 0x00000001UL
+	T_ATTR_UNMOVE = 0x00000001UL,
+	T_ATTR_UNITON = 0x00000002UL,
 };
 
 enum O_ATTRIBUTE
@@ -64,6 +65,10 @@ struct tagObjSpriteInfo {
 	int zLvl;
 	O_ATTRIBUTE attr;
 
+	POINTFLOAT pos;
+	RECT rc;
+	POINT mapIdx;
+
 	int getPixPosToTop() {
 		return centerPosInImg.y - sampleRc.top;
 	}
@@ -83,13 +88,18 @@ struct tagObjSpriteInfo {
 		return sampleRc.bottom - sampleRc.top;
 	}
 	void init() {
+		this->centerPosInImg = { -1,-1 };		//	초기화 조건이 -1임.ObjSampleFunc()에서 쓰임
 		this->sampleRc = { NULL,NULL,NULL,NULL };
 		this->objTileSize = { NULL,NULL };
-		this->centerPosInImg = { -1,-1 };		//	초기화 조건이 -1임.ObjSampleFunc()에서 쓰임
-		this->attr = O_ATTR_NONE;
 		this->imgNum = OBJNUM_NONE;
 		this->img = nullptr;
 		this->zLvl = NULL;
+		this->attr = O_ATTR_NONE;
+		
+		this->pos = { NULL,NULL };
+		this->rc = { NULL, NULL, NULL, NULL };
+		this->mapIdx = { NULL,NULL };
+		
 	}
 
 };
@@ -114,6 +124,35 @@ struct tagTileInfo {
 	POINTFLOAT pos;
 	RECT rc;
 	int zLevel;
+
+	void setTileInfo(TERRAIN_ARRAY_NUM terImgNum,
+		int frameX, int frameY, POINT idx, POINT pickIdx,
+		T_ATTRIBUTE terAttr, POINTFLOAT pos, RECT rc, int zlvl) {
+		
+		this->terImgNum = terImgNum;
+		this->frameX = frameX;
+		this->frameY = frameY;
+		this->idx = idx;
+		this->pickIdx = idx;
+
+		this->terAttr = terAttr;
+		this->pos = pos;
+		this->rc = rc;
+		this->zLevel = zlvl;
+	}
+	void init() {
+		this->terImgNum = TERNUM_NONE;
+		this->frameX = NULL;
+		this->frameY = NULL;
+		this->idx = { NULL,NULL };
+		this->pickIdx = { NULL,NULL };
+
+		this->terAttr = T_ATTR_NONE;
+		this->pos = { NULL,NULL };
+		this->rc = { NULL,NULL,NULL,NULL };
+		this->zLevel = NULL;
+	}
+
 };
 
 struct tagObjInfo {
@@ -281,6 +320,8 @@ public:
 			return true;
 		}
 	}
+	
+
 	void setObjInfo(tagObjInfo objInfo) {
 		this->_imgNum = objInfo.objImgNum;
 		this->_frameX = objInfo.frameX;
@@ -317,7 +358,38 @@ public:
 
 		return objInfo;
 	}
+	tagObjSpriteInfo getObjSpirteInfo() {
+		tagObjSpriteInfo objInfo;
 
+		objInfo.centerPosInImg	= this->_centerPosInImg;
+		objInfo.sampleRc		= this->_sampleRc;
+		objInfo.objTileSize		= this->_objTileSize;
+		objInfo.imgNum			= this->_imgNum;
+		objInfo.img				= NULL;
+		objInfo.zLvl			= this->_zLevel;
+		objInfo.attr			= this->_attr;
+
+		objInfo.pos				= this->_pos;
+		objInfo.rc				= this->_rc;
+		objInfo.mapIdx			= this->_mapIdx;
+
+		return objInfo;
+	}
+	void setObjFromSpriteInfo(tagObjSpriteInfo objInfo) {
+		this->_centerPosInImg = objInfo.centerPosInImg;
+		this->_sampleRc = objInfo.sampleRc;
+		this->_objTileSize = objInfo.objTileSize;
+		this->_imgNum = objInfo.imgNum;
+		this->_img = IMAGEMANAGER->findImage(_objectImageKey[objInfo.imgNum].c_str());
+		this->_zLevel = objInfo.zLvl;
+		this->_attr = objInfo.attr;
+
+		this->_pos = objInfo.pos;
+		this->_rc = objInfo.rc;
+		this->_mapIdx = objInfo.mapIdx;
+
+	}
+	
 
 
 
@@ -540,6 +612,7 @@ public:
 
 }TILE;
 
+bool compareObj(OBJ* obj1, OBJ* obj2);
 
 
 typedef vector<TILE*> vLine;

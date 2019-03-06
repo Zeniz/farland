@@ -1,5 +1,14 @@
 #pragma once
 #include "gameNode.h"
+#include <algorithm>
+
+enum OBJ_KINDS {
+	OBJKIND_NONE = -1,
+	OBJKIND_TILE,
+	OBJKIND_OBJ,
+	OBJKIND_UNIT,
+};
+
 class objects : public gameNode
 {
 public:
@@ -10,11 +19,20 @@ public:
 	POINTFLOAT _pos;
 	RECT _rc;
 	int _zLevel;
+	OBJ_KINDS _objKinds;
 	
+
 
 public:
 	objects();
 	~objects();
+
+	//	zorder sort용 operator
+	bool operator<(objects target) {		// 연산자 오버로드
+		return this->_pos.y < target._pos.y;
+	}
+
+
 
 	image* getImg() { return _img; }
 	void setImg(image* img) { _img = img; }

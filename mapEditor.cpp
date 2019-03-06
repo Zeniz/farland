@@ -18,8 +18,9 @@ mapEditor::mapEditor()
 	IMAGEMANAGER->addFrameImage("mobSprite", L"images/mapEditor/mobSprite.png", 144, 144, 1, 1);
 	 
 
-	InitSamples();
-	InitObjInfo();
+	InitTileSamples();
+	InitObjSamples();
+	InitMobSamples();
 
 	//	카메라 설정
 	POINT tmpPt = { -WINSIZEX / 2,0 };
@@ -39,7 +40,9 @@ mapEditor::mapEditor()
 	
 	_vvMap.clear();
 	_vObj.clear();
+	_vObjInfo.clear();
 	_vEnemy.clear();
+	_vEnemyInfo.clear();
 
 	for (int i = 0; i < _tileNum.y; i++) {
 		vLine _vLine;
@@ -103,8 +106,10 @@ mapEditor::mapEditor()
 	_isChoosingSample = false;
 	_curTerSampleIdx = TERNUM_BASIC;
 	_curObjSampleIdx = OBJNUM_BASIC;
+	_curUnitSampleIdx = MOB_SKEL;
 	_cursorTile = nullptr;
 	_cursorObjInfo.init();
+	_cursorUnitInfo.init();
 
 	_ptMousePrePos = { -1,-1 };
 
@@ -132,6 +137,8 @@ HRESULT mapEditor::init()
 	_vvMap.clear();
 	_vObj.clear();
 	_vEnemy.clear();
+	//_vObjInfo.clear();
+	//_vEnemyInfo.clear();
 
 	for (int i = 0; i < _tileNum.y; i++) {
 		vLine _vLine;
@@ -169,6 +176,11 @@ HRESULT mapEditor::init()
 	_isChoosingSample = false;
 	_curTerSampleIdx = TERNUM_BASIC;
 	_curObjSampleIdx = OBJNUM_BASIC;
+	_curUnitSampleIdx = MOB_SKEL;
+
+	_cursorTile = nullptr;
+	_cursorObjInfo.init();
+	_cursorUnitInfo.init();
 
 	_ptMousePrePos = { -1,-1 };
 
@@ -192,6 +204,8 @@ HRESULT mapEditor::init(int tileNumX, int tileNumY)
 	_vvMap.clear();
 	_vObj.clear();
 	_vEnemy.clear();
+	//_vObjInfo.clear();
+	//_vEnemyInfo.clear();
 
 	for (int i = 0; i < _tileNum.y; i++) {
 		vLine _vLine;
@@ -224,6 +238,11 @@ HRESULT mapEditor::init(int tileNumX, int tileNumY)
 	_isChoosingSample = false;
 	_curTerSampleIdx = TERNUM_BASIC;
 	_curObjSampleIdx = OBJNUM_BASIC;
+	_curUnitSampleIdx = MOB_SKEL;
+
+	_cursorTile = nullptr;
+	_cursorObjInfo.init();
+	_cursorUnitInfo.init();
 
 	_ptMousePrePos = { -1,-1 };
 
@@ -242,13 +261,7 @@ void mapEditor::update()
 	CAMERA2D->update();
 
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON)) {
-		_cursorTile = nullptr;
-		_cursorSelectIdx[0].x = -1;
-		_cursorSelectIdx[0].y = -1;
-		_cursorSelectIdx[1].x = -1;
-		_cursorSelectIdx[1].y = -1;
-		_vMagicSelectList.clear();
-		_cursorObjInfo.init();
+		ClearInfoInCursor();
 	}
 
 	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD8)) {
@@ -267,10 +280,6 @@ void mapEditor::update()
 	
 	SwitchToolsFunc();
 	SwitchMenusFunc();
-
-
-	
-	
 
 
 }
@@ -303,6 +312,9 @@ void mapEditor::render()
 
 	//	오브젝트 렌더
 	ObjRender();
+
+	//	유닛 렌더
+	UnitRender();
 
 	//	커서 미리보기 렌더
 	PreviewRender();
@@ -358,7 +370,7 @@ void mapEditor::render()
 
 }
 
-HRESULT mapEditor::InitSamples()
+HRESULT mapEditor::InitTileSamples()
 {
 	//	terrain
 
@@ -388,7 +400,7 @@ HRESULT mapEditor::InitSamples()
 	return S_OK;
 }
 
-HRESULT mapEditor::InitObjInfo()
+HRESULT mapEditor::InitObjSamples()
 {
 	//	초기화
 	for (int i = OBJNUM_BASIC; i < OBJNUM_END; i++) {
@@ -532,7 +544,11 @@ HRESULT mapEditor::InitMobSamples()
 	_enemyInfo[MOB_SKEL].sampleRc = RectMake(0, 0,
 		_enemyInfo[MOB_SKEL].sampleImg->GetFrameWidth(), _enemyInfo[MOB_SKEL].sampleImg->GetFrameHeight());
 
+	_enemyInfo[MOB_SKEL].rc = RectMake(0, 0, 0, 0);	//	직접 찍을때 값 따로 넣어줌
+	_enemyInfo[MOB_SKEL].mobTileSize = { 1,1 };
+
 	_enemyInfo[MOB_SKEL].zLvl = 0;
+	_enemyInfo[MOB_SKEL].mapIdx = { NULL,NULL };	//	직접 찍을때 값 따로 넣어줌
 	
 
 	return S_OK;
@@ -783,7 +799,7 @@ void mapEditor::SwitchMenusFunc()
 
 		break;
 	case MENU_UNIT:
-
+		UnitSampleFunc();
 
 		break;
 	case MENU_AREAMODE:
@@ -922,6 +938,18 @@ void mapEditor::EraseMapY()
 	_vvMap.pop_back();
 }
 
+void mapEditor::ClearInfoInCursor()
+{
+	_cursorTile = nullptr;
+	_cursorSelectIdx[0].x = -1;
+	_cursorSelectIdx[0].y = -1;
+	_cursorSelectIdx[1].x = -1;
+	_cursorSelectIdx[1].y = -1;
+	_vMagicSelectList.clear();
+	_cursorObjInfo.init();
+	_cursorUnitInfo.init();
+}
+
 
 
 void mapEditor::SelectMapTile()
@@ -988,6 +1016,20 @@ void mapEditor::BrushTile()
 					if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
 						//_vvMap[i][j] = _cursorTile;
 						MakeObjOnMap(_cursorObjInfo, j, i);
+
+						return;
+					}
+				}
+			}
+		}
+	}
+	else if (_cursorUnitInfo.sampleImg != nullptr) {
+		for (int i = 0; i < _tileNum.y; i++) {
+			for (int j = 0; j < _tileNum.x; j++) {
+				if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
+					if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
+						//_vvMap[i][j] = _cursorTile;
+						MakeUnitOnMap(_cursorUnitInfo, j, i);
 
 						return;
 					}
@@ -1108,6 +1150,7 @@ void mapEditor::EraseObj()
 						for (int ii = _cursorSelectIdxSorted[0].y; ii <= _cursorSelectIdxSorted[1].y; ii++) {
 							for (int jj = _cursorSelectIdxSorted[0].x; jj <= _cursorSelectIdxSorted[1].x; jj++) {
 
+								//	오브젝트 삭제
 								for (int k = 0; k < _vObj.size(); ) {
 									if (_vObj[k]->_mapIdx.x == jj && _vObj[k]->_mapIdx.y == ii) {
 										SAFE_DELETE(_vObj[k]);
@@ -1118,6 +1161,29 @@ void mapEditor::EraseObj()
 										k++;
 									}
 								}
+								//	몹 삭제
+								for (int k = 0; k < _vEnemy.size(); ) {
+									if (_vEnemy[k]->_mapIdx.x == jj && _vEnemy[k]->_mapIdx.y == ii) {
+										SAFE_DELETE(_vEnemy[k]);
+										_vEnemy.erase(_vEnemy.begin() + k);
+										//_vvMap[ii][jj]->_terAttr = T_ATTR_NONE;
+									}
+									else {
+										k++;
+									}
+								}
+
+
+								//for (int k = 0; k < _vObjInfo.size(); ) {
+								//	if (_vObjInfo[k]->mapIdx.x == jj && _vObjInfo[k]->mapIdx.y == ii) {
+								//		SAFE_DELETE(_vObjInfo[k]);
+								//		_vObjInfo.erase(_vObjInfo.begin() + k);
+								//		_vvMap[ii][jj]->_terAttr = T_ATTR_NONE;
+								//	}
+								//	else {
+								//		k++;
+								//	}
+								//}
 
 							}
 						}
@@ -1136,6 +1202,7 @@ void mapEditor::EraseObj()
 					for (int j = 0; j < _vMagicSelectList.size(); j++) {
 						POINT id = _vMagicSelectList[j];
 
+						//	오브젝 삭제
 						for (int k = 0; k < _vObj.size(); k++) {
 							if (_vObj[k]->_mapIdx.x == id.x && _vObj[k]->_mapIdx.y == id.y) {
 								SAFE_DELETE(_vObj[k]);
@@ -1146,6 +1213,30 @@ void mapEditor::EraseObj()
 								k++;
 							}
 						}
+
+
+						//	몹 삭제
+						for (int k = 0; k < _vObj.size(); k++) {
+							if (_vEnemy[k]->_mapIdx.x == id.x && _vEnemy[k]->_mapIdx.y == id.y) {
+								SAFE_DELETE(_vEnemy[k]);
+								_vEnemy.erase(_vEnemy.begin() + k);
+								//_vvMap[id.y][id.x]->_terAttr = T_ATTR_NONE;
+							}
+							else {
+								k++;
+							}
+						}
+
+						//for (int k = 0; k < _vObjInfo.size(); k++) {
+						//	if (_vObjInfo[k]->mapIdx.x == id.x && _vObjInfo[k]->mapIdx.y == id.y) {
+						//		SAFE_DELETE(_vObjInfo[k]);
+						//		_vObjInfo.erase(_vObjInfo.begin() + k);
+						//		_vvMap[id.y][id.x]->_terAttr = T_ATTR_NONE;
+						//	}
+						//	else {
+						//		k++;
+						//	}
+						//}
 
 
 					}
@@ -1162,6 +1253,7 @@ void mapEditor::EraseObj()
 				if (PtInDiamond(_vvMap[i][j]->_pos, _ptMouse)) {
 					if (KEYMANAGER->isStayKeyDown(VK_LBUTTON)) {
 
+						//	obj 삭제
 						for (int k = 0; k < _vObj.size(); k++) {
 							if (_vObj[k]->_mapIdx.x == j && _vObj[k]->_mapIdx.y == i) {
 								SAFE_DELETE(_vObj[k]);
@@ -1173,6 +1265,33 @@ void mapEditor::EraseObj()
 								k++;
 							}
 						}
+
+						//	몹 삭제
+						for (int k = 0; k < _vEnemy.size(); k++) {
+							if (_vEnemy[k]->_mapIdx.x == j && _vEnemy[k]->_mapIdx.y == i) {
+								SAFE_DELETE(_vEnemy[k]);
+								_vEnemy.erase(_vEnemy.begin() + k);
+								//_vvMap[i][j]->_terAttr = T_ATTR_NONE;
+								return;		//	위에서 오브젝 삭제하고 리턴함 ㅠㅠ 유닛 이레이저를 만들던가..범위잡아서 지우든가 ㅇㅇ..
+							}
+							else {
+								k++;
+							}
+						}
+
+						//for (int k = 0; k < _vObjInfo.size(); k++) {
+						//	if (_vObjInfo[k]->mapIdx.x == j && _vObjInfo[k]->mapIdx.y == i) {
+						//		SAFE_DELETE(_vObjInfo[k]);
+						//		_vObjInfo.erase(_vObjInfo.begin() + k);
+						//		_vvMap[i][j]->_terAttr = T_ATTR_NONE;
+						//		return;		//	1개만 지울거니까, 지우고 리턴해도됨
+						//	}
+						//	else {
+						//		k++;
+						//	}
+						//}
+
+
 					}
 				}
 			}
@@ -1193,12 +1312,14 @@ void mapEditor::PaintFunc()
 						TransTileValue(_cursorTile, _vvMap[i][j]);
 					}
 				}
+				return;
 			}
 			else if (_vMagicSelectList.size() != 0) {
 				for (int i = 0; i < _vMagicSelectList.size(); i++) {
 					POINT idx = _vMagicSelectList[i];
 					TransTileValue(_cursorTile, _vvMap[idx.y][idx.x]);
 				}
+				return;
 			}
 		}
 		//	오브젝일떄,
@@ -1210,6 +1331,7 @@ void mapEditor::PaintFunc()
 						MakeObjOnMap(_cursorObjInfo, j, i);
 					}
 				}
+				return;
 			}
 			else if (_vMagicSelectList.size() != 0) {
 				for (int i = 0; i < _vMagicSelectList.size(); i++) {
@@ -1218,10 +1340,28 @@ void mapEditor::PaintFunc()
 					MakeObjOnMap(_cursorObjInfo, idx.x, idx.y);
 
 				}
+				return;
 			}
+		}
+		else if (_cursorUnitInfo.sampleImg != nullptr) {
+			if (_cursorSelectIdxSorted[0].x != -1) {
+				for (int i = _cursorSelectIdxSorted[0].y; i <= _cursorSelectIdxSorted[1].y; i++) {
+					for (int j = _cursorSelectIdxSorted[0].x; j <= _cursorSelectIdxSorted[1].x; j++) {
+						//TransTileValue(_cursorTile, _vvMap[i][j]);
+						MakeUnitOnMap(_cursorUnitInfo, j, i);
+					}
+				}
+				return;
+			}
+			else if (_vMagicSelectList.size() != 0) {
+				for (int i = 0; i < _vMagicSelectList.size(); i++) {
+					POINT idx = _vMagicSelectList[i];
+					//TransTileValue(_cursorTile, _vvMap[idx.y][idx.x]);
+					MakeUnitOnMap(_cursorUnitInfo, idx.x, idx.y);
 
-
-
+				}
+				return;
+			}
 		}
 		
 	}
@@ -1254,6 +1394,7 @@ void mapEditor::MakeHillFunc(int augZlvl)
 				if (_vvMap[i][j]->_zLevel + augZlvl >= 0) {
 					_vvMap[i][j]->_zLevel += augZlvl;
 					AdjustHillToObj(j, i, augZlvl);		//	오브젝트도 위치이동!(pos,rc)
+					AdjustHillToEnemy(j, i, augZlvl);		//	Enemy도 위치이동!(pos,rc)
 
 				}
 				//	높아져서 덮어진부분 pickIdx로 픽 설정해준다.
@@ -1275,6 +1416,7 @@ void mapEditor::MakeHillFunc(int augZlvl)
 			if (_vvMap[idx.y][idx.x]->_zLevel + augZlvl > 0) {
 				_vvMap[idx.y][idx.x]->_zLevel += augZlvl;
 				AdjustHillToObj(idx.x, idx.y, augZlvl);
+				AdjustHillToEnemy(idx.x, idx.y, augZlvl);		//	Enemy도 위치이동!(pos,rc)
 			}
 			//	높아져서 덮어진부분 pickIdx로 픽 설정해준다.
 			if (_vvMap[idx.y][idx.x]->_zLevel % 2 == 0) {
@@ -1294,31 +1436,76 @@ void mapEditor::AdjustHillToObj(int idxX, int idxY, int augHeiLvl)
 	for (int i = 0; i < _vObj.size(); i++) {
 		if (_vObj[i]->_mapIdx.x == idxX &&
 			_vObj[i]->_mapIdx.y == idxY) {
+
 			_vObj[i]->_pos.y -= (TILESIZE_HEI / 2) * augHeiLvl;
 			_vObj[i]->_rc.top -= (TILESIZE_HEI / 2) * augHeiLvl;
 			_vObj[i]->_rc.bottom -= (TILESIZE_HEI / 2) * augHeiLvl;
 		}
 	}
+
+	//for (int i = 0; i < _vObjInfo.size(); i++) {
+	//	if (_vObjInfo[i]->mapIdx.x == idxX &&
+	//		_vObjInfo[i]->mapIdx.y == idxY) {
+	//
+	//		//_vObjInfo[i]->zLvl += augHeiLvl;		//	계산안함. zlvl은 별도로 처리
+	//
+	//		_vObjInfo[i]->pos.y -= (TILESIZE_HEI / 2) * augHeiLvl;
+	//		_vObjInfo[i]->rc.top -= (TILESIZE_HEI / 2) * augHeiLvl;
+	//		_vObjInfo[i]->rc.bottom -= (TILESIZE_HEI / 2) * augHeiLvl;
+	//	}
+	//}
+
+}
+
+void mapEditor::AdjustHillToEnemy(int idxX, int idxY, int augHeiLvl)
+{
+	for (int i = 0; i < _vEnemy.size(); i++) {
+		if (_vEnemy[i]->_mapIdx.x == idxX &&
+			_vEnemy[i]->_mapIdx.y == idxY) {
+
+			_vEnemy[i]->_pos.y -= (TILESIZE_HEI / 2) * augHeiLvl;
+			_vEnemy[i]->_rc.top -= (TILESIZE_HEI / 2) * augHeiLvl;
+			_vEnemy[i]->_rc.bottom -= (TILESIZE_HEI / 2) * augHeiLvl;
+		}
+	}
+
+	//for (int i = 0; i < _vEnemyInfo.size(); i++) {
+	//	if (_vEnemyInfo[i]->mapIdx.x == idxX &&
+	//		_vEnemyInfo[i]->mapIdx.y == idxY) {
+	//
+	//		
+	//
+	//		_vEnemyInfo[i]->pos.y -= (TILESIZE_HEI / 2) * augHeiLvl;
+	//		_vEnemyInfo[i]->rc.top -= (TILESIZE_HEI / 2) * augHeiLvl;
+	//		_vEnemyInfo[i]->rc.bottom -= (TILESIZE_HEI / 2) * augHeiLvl;
+	//	}
+	//}
+
 }
 
 
 void mapEditor::SaveMapFunc()
 {
 
-	HANDLE fileForMapSize, fileForMapData, fileForObjSize, fileForObjData;
-	DWORD writeForMapSize, writeForMapData , writeForObjSize, writeForObjData;
+	//HANDLE fileForMapSize, fileForMapData, fileForObjSize, fileForObjData;
+	//DWORD writeForMapSize, writeForMapData , writeForObjSize, writeForObjData;
 
 
 	char fileNameForMap[20] = "mapData";
 	char fileNameForObj[20] = "objData";
+	char fileNameForEnemy[20] = "enemyData";
 	char fileNameForMapSize[20] = "mapSize";
 	char fileNameForObjSize[20] = "objSize";
+	char fileNameForEnemySize[20] = "enemySize";
+	
 
 	char idxBuffer[5] = {};		//	맵 인덱스 저장소
 	char mapSizeStr[20] = {};		//	맵 크기 str저장소
 	char objSizeStr[20] = {};
+	char enemySizeStr[20] = {};
 	char tileNumBuffer[10] = {};		//	itoa임시 저장소
 	char objNumBuffer[10] = {};		//	itoa임시 저장소
+	char enemyNumBuffer[10] = {};		//	itoa임시 저장소
 
 	//	파일이름 생성
 	itoa(_mapIdx, idxBuffer, 10);
@@ -1327,10 +1514,15 @@ void mapEditor::SaveMapFunc()
 	strcat_s(fileNameForMap, sizeof(fileNameForMap), idxBuffer);
 	strcat_s(fileNameForMap, sizeof(fileNameForMap), ".map");
 
-	strcat_s(fileNameForObjSize, sizeof(fileNameForMap), idxBuffer);
-	strcat_s(fileNameForObjSize, sizeof(fileNameForMap), ".map");
-	strcat_s(fileNameForObj, sizeof(fileNameForMap), idxBuffer);
-	strcat_s(fileNameForObj, sizeof(fileNameForMap), ".map");
+	strcat_s(fileNameForObjSize, sizeof(fileNameForObjSize), idxBuffer);
+	strcat_s(fileNameForObjSize, sizeof(fileNameForObjSize), ".map");
+	strcat_s(fileNameForObj, sizeof(fileNameForObj), idxBuffer);
+	strcat_s(fileNameForObj, sizeof(fileNameForObj), ".map");
+
+	strcat_s(fileNameForEnemySize, sizeof(fileNameForEnemySize), idxBuffer);
+	strcat_s(fileNameForEnemySize, sizeof(fileNameForEnemySize), ".map");
+	strcat_s(fileNameForEnemy, sizeof(fileNameForEnemy), idxBuffer);
+	strcat_s(fileNameForEnemy, sizeof(fileNameForEnemy), ".map");
 
 	
 	//	맵 크기 str 생성
@@ -1343,20 +1535,43 @@ void mapEditor::SaveMapFunc()
 
 	//	OBJ 크기 str 생성
 	itoa(_vObj.size(), objNumBuffer, 10);
+	//itoa(_vObjInfo.size(), objNumBuffer, 10);
 	strcat_s(objSizeStr, sizeof(objSizeStr), objNumBuffer);
 	strcat_s(objSizeStr, sizeof(objSizeStr), ",");
-	
+
+	//	Enemy 크기 str 생성
+	itoa(_vEnemy.size(), enemyNumBuffer, 10);
+	//itoa(_vEnemyInfo.size(), enemyNumBuffer, 10);
+	strcat_s(enemySizeStr, sizeof(enemySizeStr), enemyNumBuffer);
+	strcat_s(enemySizeStr, sizeof(enemySizeStr), ",");
+
 	//	맵크기 저장한 파일 생성
+	HANDLE fileForMapSize;
+	DWORD writeForMapSize;
+
 	fileForMapSize = CreateFile(fileNameForMapSize, GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	WriteFile(fileForMapSize, mapSizeStr, sizeof(mapSizeStr), &writeForMapSize, NULL);
 	CloseHandle(fileForMapSize);
 
 	//	vObj크기 저장한 파일 생성
+	HANDLE fileForObjSize;
+	DWORD writeForObjSize;
+	
 	fileForObjSize = CreateFile(fileNameForObjSize, GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	WriteFile(fileForObjSize, objSizeStr, sizeof(objSizeStr), &writeForObjSize, NULL);
 	CloseHandle(fileForObjSize);
+
+	//	vEnemy크기 저장한 파일 생성
+	HANDLE fileForEnemySize;
+	DWORD writeForEnemySize;
+	
+	fileForEnemySize = CreateFile(fileNameForEnemySize, GENERIC_WRITE, NULL, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(fileForEnemySize, enemySizeStr, sizeof(enemySizeStr), &writeForEnemySize, NULL);
+	CloseHandle(fileForEnemySize);
+
 
 	//==============================
 
@@ -1364,36 +1579,97 @@ void mapEditor::SaveMapFunc()
 	tagTileInfo* saveTileAry = new tagTileInfo[_tileNum.x * _tileNum.y];
 	for (int i = 0; i < _tileNum.y; i++) {
 		for (int j = 0; j < _tileNum.x; j++) {
-			saveTileAry[i*_tileNum.x + j] = _vvMap[i][j]->getTileInfo();
+			saveTileAry[i*_tileNum.x + j] = _vvMap[i][j]->getTileInfo();		//	포인터 주소 넘길게 아니라 값 넘겨라 임마
+			//saveTileAry[i*_tileNum.x + j].setTileInfo(
+			//	_vvMap[i][j]->getTileInfo().terImgNum,
+			//	_vvMap[i][j]->getTileInfo().frameX,
+			//	_vvMap[i][j]->getTileInfo().frameY,
+			//	_vvMap[i][j]->getTileInfo().idx,
+			//	_vvMap[i][j]->getTileInfo().pickIdx,
+			//	_vvMap[i][j]->getTileInfo().terAttr,
+			//	_vvMap[i][j]->getTileInfo().pos,
+			//	_vvMap[i][j]->getTileInfo().rc,
+			//	_vvMap[i][j]->getTileInfo().zLevel
+			//);
 		}
 	}
 
+	HANDLE fileForMapData;
+	DWORD writeForMapData;
 
 	fileForMapData = CreateFile(fileNameForMap, GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
+	
 	WriteFile(fileForMapData, saveTileAry, sizeof(tagTileInfo)*_tileNum.x * _tileNum.y, &writeForMapData, NULL);
-	CloseHandle(fileForMapSize);
+
 	delete[] saveTileAry;
+
+	CloseHandle(fileForMapData);
+	
+	
 
 	//==============================
 
 	//	v오브젝트 데이터 1차배열로 복사중...
-	tagObjInfo* saveObjAry = new tagObjInfo[_vObj.size()];
+	//tagObjInfo* saveObjAry = new tagObjInfo[_vObj.size()];
+	//for (int i = 0; i < _vObj.size(); i++) {
+	//	saveObjAry[i] = _vObj[i]->getObjInfo();
+	//	
+	//	//saveObjAry[i] = *_vObj[i];
+	//
+	//}
+
+	//tagObjSpriteInfo* saveObjAry = new tagObjSpriteInfo[_vObjInfo.size()];
+	//for (int i = 0; i < _vObjInfo.size(); i++) {
+	//	saveObjAry[i] = *_vObjInfo[i];
+	//
+	//}
+
+	tagObjSpriteInfo* saveObjAry = new tagObjSpriteInfo[_vObj.size()];
 	for (int i = 0; i < _vObj.size(); i++) {
-		saveObjAry[i] = _vObj[i]->getObjInfo();
-		
-		//saveObjAry[i] = *_vObj[i];
+		saveObjAry[i] = _vObj[i]->getObjSpirteInfo();
 
 	}
+
+	HANDLE fileForObjData;
+	DWORD writeForObjData;
 
 	fileForObjData = CreateFile(fileNameForObj, GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	WriteFile(fileForObjData, saveObjAry, sizeof(tagObjInfo)*_vObj.size(), &writeForObjData, NULL);
-	CloseHandle(fileForObjData);
+	WriteFile(fileForObjData, saveObjAry, sizeof(tagObjSpriteInfo)*_vObj.size(), &writeForObjData, NULL);
+	//WriteFile(fileForObjData, saveObjAry, sizeof(tagObjSpriteInfo)*_vObjInfo.size(), &writeForObjData, NULL);
+	
 	delete[] saveObjAry;
+	CloseHandle(fileForObjData);
 
+
+	//==============================
+
+	//	vEnemyInfo 데이터 1차배열로 복사중...
+	tagEnemySpriteInfoForMapEditor* saveEnemyAry = new tagEnemySpriteInfoForMapEditor[_vEnemy.size()];
+	for (int i = 0; i < _vEnemy.size(); i++) {
+		saveEnemyAry[i] = _vEnemy[i]->getEnemyInfo();
+	}
+
+	////	vEnemyInfo 데이터 1차배열로 복사중...
+	//tagEnemySpriteInfoForMapEditor* saveEnemyAry = new tagEnemySpriteInfoForMapEditor[_vEnemyInfo.size()];
+	//for (int i = 0; i < _vEnemyInfo.size(); i++) {
+	//	saveEnemyAry[i] = *_vEnemyInfo[i];
+	//}
+
+	HANDLE fileForEnemyData;
+	DWORD writeForEnemyData;
+
+	fileForEnemyData = CreateFile(fileNameForEnemy, GENERIC_WRITE, NULL, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	WriteFile(fileForEnemyData, saveEnemyAry, sizeof(tagEnemySpriteInfoForMapEditor)*_vEnemy.size(), &writeForEnemyData, NULL);
+	//WriteFile(fileForEnemyData, saveEnemyAry, sizeof(tagEnemySpriteInfoForMapEditor)*_vEnemyInfo.size(), &writeForEnemyData, NULL);
+
+	delete[] saveEnemyAry;
+	CloseHandle(fileForEnemyData);
 
 }
 
@@ -1412,6 +1688,7 @@ void mapEditor::LoadMapFunc()
 	}
 	_vvMap.clear();
 
+	
 	for (int i = _vObj.size() - 1; i >= 0; i--) {
 		if (_vObj[i]) {
 			SAFE_DELETE(_vObj[i]);
@@ -1419,26 +1696,58 @@ void mapEditor::LoadMapFunc()
 		}
 	}
 	_vObj.clear();
+	//for (int i = _vObjInfo.size() - 1; i >= 0; i--) {
+	//	if (_vObjInfo[i]) {
+	//		SAFE_DELETE(_vObjInfo[i]);
+	//		_vObjInfo.pop_back();
+	//	}
+	//}
+	//_vObjInfo.clear();
+
+	for (int i = _vEnemy.size() - 1; i >= 0; i--) {
+		if (_vEnemy[i]) {
+			SAFE_DELETE(_vEnemy[i]);
+			_vEnemy.pop_back();
+		}
+	}
+	_vEnemy.clear();
 
 
-	HANDLE fileForMapSize, fileForMapData, fileForObjSize, fileForObjData;
-	DWORD readForMapSize, readForMapData, readForObjSize, readForObjData;
+	//for (int i = _vEnemyInfo.size() - 1; i >= 0; i--) {
+	//	if (_vEnemyInfo[i]) {
+	//		SAFE_DELETE(_vEnemyInfo[i]);
+	//		_vEnemyInfo.pop_back();
+	//	}
+	//}
+	//_vEnemyInfo.clear();
+
+	
+
+
+	HANDLE fileForMapSize, fileForMapData, fileForObjSize, fileForObjData, fileForEnemySize, fileForEnemyData;
+	DWORD readForMapSize, readForMapData, readForObjSize, readForObjData, readForEnemySize, readForEnemyData;
 
 	char fileNameForMap[20] = "mapData";
 	char fileNameForObj[20] = "objData";
+	char fileNameForEnemy[20] = "enemyData";
 	char fileNameForMapSize[20] = "mapSize";
 	char fileNameForObjSize[20] = "objSize";
+	char fileNameForEnemySize[20] = "enemySize";
+	
 
 	char idxBuffer[5] = {};		//	맵 인덱스 저장소
 	char mapSizeStr[20] = {};		//	맵 크기 str저장소
 	char objSizeStr[20] = {};
+	char enemySizeStr[20] = {};
 	char tileNumBuffer[10] = {};		//	itoa임시 저장소
 	char objNumBuffer[10] = {};		//	itoa임시 저장소
+	char enemyNumBuffer[10] = {};		//	itoa임시 저장소
 
 	char* token;			
 	char* context;		
 	int tmpInt;
 	int vObjSize;
+	int vEnemySize;
 
 	//	파일이름 생성
 	itoa(_mapIdx, idxBuffer, 10);
@@ -1447,10 +1756,16 @@ void mapEditor::LoadMapFunc()
 	strcat_s(fileNameForMap, sizeof(fileNameForMap), idxBuffer);
 	strcat_s(fileNameForMap, sizeof(fileNameForMap), ".map");
 
-	strcat_s(fileNameForObjSize, sizeof(fileNameForMap), idxBuffer);
-	strcat_s(fileNameForObjSize, sizeof(fileNameForMap), ".map");
-	strcat_s(fileNameForObj, sizeof(fileNameForMap), idxBuffer);
-	strcat_s(fileNameForObj, sizeof(fileNameForMap), ".map");
+	strcat_s(fileNameForObjSize, sizeof(fileNameForObjSize), idxBuffer);
+	strcat_s(fileNameForObjSize, sizeof(fileNameForObjSize), ".map");
+	strcat_s(fileNameForObj, sizeof(fileNameForObj), idxBuffer);
+	strcat_s(fileNameForObj, sizeof(fileNameForObj), ".map");
+
+	strcat_s(fileNameForEnemySize, sizeof(fileNameForEnemySize), idxBuffer);
+	strcat_s(fileNameForEnemySize, sizeof(fileNameForEnemySize), ".map");
+	strcat_s(fileNameForEnemy, sizeof(fileNameForEnemy), idxBuffer);
+	strcat_s(fileNameForEnemy, sizeof(fileNameForEnemy), ".map");
+
 
 	//	맵크기 로드
 	fileForMapSize = CreateFile(fileNameForMapSize, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -1461,6 +1776,12 @@ void mapEditor::LoadMapFunc()
 	fileForObjSize = CreateFile(fileNameForObjSize, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(fileForObjSize, objSizeStr, 20, &readForObjSize, NULL);
 	CloseHandle(fileForObjSize);
+
+	//	enemy 크기 로드
+	fileForEnemySize = CreateFile(fileNameForEnemySize, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(fileForEnemySize, enemySizeStr, 20, &readForEnemySize, NULL);
+	CloseHandle(fileForEnemySize);
+
 
 	//	맵 크기 넣어줌
 	token = strtok_s(mapSizeStr, ",", &context);
@@ -1475,6 +1796,11 @@ void mapEditor::LoadMapFunc()
 	token = strtok_s(objSizeStr, ",", &context);
 	tmpInt = atoi(token);
 	vObjSize = tmpInt;
+
+	//	enemy 크기 넣어줌
+	token = strtok_s(enemySizeStr, ",", &context);
+	tmpInt = atoi(token);
+	vEnemySize = tmpInt;
 
 	//	벡터 리사이즈
 	//_vvMap.resize(_tileNum.y);
@@ -1510,7 +1836,7 @@ void mapEditor::LoadMapFunc()
 	//}
 
 
-
+	/*
 	//	obj데이터 로드
 	tagObjInfo* savedObjAry = new tagObjInfo[vObjSize];
 	ZeroMemory(savedObjAry, sizeof(tagObjInfo) * (vObjSize));
@@ -1525,6 +1851,71 @@ void mapEditor::LoadMapFunc()
 		tmpObj->setObjInfo(savedObjAry[i]);
 		_vObj.push_back(tmpObj);
 	}
+	*/
+
+	//	obj데이터 로드
+	tagObjSpriteInfo* savedObjAry = new tagObjSpriteInfo[vObjSize];
+	ZeroMemory(savedObjAry, sizeof(tagObjSpriteInfo) * (vObjSize));
+
+	fileForObjData = CreateFile(fileNameForObj, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(fileForObjData, savedObjAry, sizeof(tagObjSpriteInfo) * vObjSize, &readForObjData, NULL);
+	CloseHandle(fileForObjData);
+
+	//	vObj에 데이터 적용
+	for (int i = 0; i < vObjSize; i++) {
+		OBJ* tmpObj = new OBJ;
+		tmpObj->setObjFromSpriteInfo(savedObjAry[i]);
+		_vObj.push_back(tmpObj);
+	}
+	
+	////	vObj에 데이터 적용
+	//for (int i = 0; i < vObjSize; i++) {
+	//	tagObjSpriteInfo* tmpObj = new tagObjSpriteInfo;
+	//	*tmpObj = savedObjAry[i];
+	//	_vObjInfo.push_back(tmpObj);
+	//}
+
+
+
+	//	enemy데이터 로드
+	tagEnemySpriteInfoForMapEditor* savedEnemyAry = new tagEnemySpriteInfoForMapEditor[vEnemySize];
+	ZeroMemory(savedEnemyAry, sizeof(tagEnemySpriteInfoForMapEditor) * (vEnemySize));
+
+	fileForEnemyData = CreateFile(fileNameForEnemy, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(fileForEnemyData, savedEnemyAry, sizeof(tagEnemySpriteInfoForMapEditor) * vEnemySize, &readForEnemyData, NULL);
+	CloseHandle(fileForEnemyData);
+
+	//	vEnemyInfo에 데이터 적용
+	for (int i = 0; i < vEnemySize; i++) {
+		tagEnemySpriteInfoForMapEditor loadEnemyInfo;
+		loadEnemyInfo = savedEnemyAry[i];
+		switch (loadEnemyInfo.imgNum) {
+		case MOB_SKEL:
+			enemy* tmpSkel = new skeleton;
+			tmpSkel->setEnemyInfo(
+				loadEnemyInfo.tileCenterPosAtSprite,
+				loadEnemyInfo.sampleRc,
+				loadEnemyInfo.pos,
+				loadEnemyInfo.mobTileSize,
+				loadEnemyInfo.imgNum,
+				loadEnemyInfo.zLvl,
+				loadEnemyInfo.mapIdx,
+				loadEnemyInfo.rc
+			);
+			_vEnemy.push_back(tmpSkel);
+
+			break;
+			//	몹 추가될떄마다 여기서 뉴!!!
+		}
+		
+	}
+
+	////	vEnemyInfo에 데이터 적용
+	//for (int i = 0; i < vEnemySize; i++) {
+	//	tagEnemySpriteInfoForMapEditor* tmpEnemy = new tagEnemySpriteInfoForMapEditor;
+	//	*tmpEnemy = savedEnemyAry[i];
+	//	_vEnemyInfo.push_back(tmpEnemy);
+	//}
 
 }
 
@@ -1535,6 +1926,7 @@ void mapEditor::TileSampleFunc()
 			if (PtInRect(&_vvTerSamples[_curTerSampleIdx][i][j]->_rc, PointMake(_ptMouseAbs.x, _ptMouseAbs.y))) {
 				if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
 					_cursorObjInfo.init();
+					_cursorUnitInfo.init();
 					_cursorTile = _vvTerSamples[_curTerSampleIdx][i][j];
 				}
 			}
@@ -1557,12 +1949,32 @@ void mapEditor::ObjSampleFunc()
 			
 		if (PtInRect(&_objImgInfo[_curObjSampleIdx][i].sampleRc, PointMake(_ptMouseAbs.x - SAMPLE_PALLET_START_X, _ptMouseAbs.y - SAMPLE_PALLET_START_Y))) {
 			if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
-				if (_cursorTile != nullptr) {
-					
+				//if (_cursorTile != nullptr) {
 					_cursorTile = nullptr;
-				}
+				//}
+				_cursorUnitInfo.init();
+				
 				_cursorObjInfo = _objImgInfo[_curObjSampleIdx][i];
 				
+			}
+		}
+	}
+}
+
+void mapEditor::UnitSampleFunc()
+{
+	//	오브젝트 선택
+	for (int i = 0; i < E_IMG_END; i++) {
+		
+		if (PtInRect(&_enemyInfo[i].sampleRc, PointMake(_ptMouseAbs.x - SAMPLE_PALLET_START_X, _ptMouseAbs.y - SAMPLE_PALLET_START_Y))) {
+			if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
+				//if (_cursorTile != nullptr) {
+					_cursorTile = nullptr;
+				//}				
+				_cursorObjInfo.init();
+				
+				_cursorUnitInfo = _enemyInfo[i];
+
 			}
 		}
 	}
@@ -1625,8 +2037,87 @@ void mapEditor::MakeObjOnMap(tagObjSpriteInfo obj, int idxX, int idxY)
 			}
 		}
 	}
+	
+	sort(_vObj.begin(), _vObj.end(), compareObj);
+
+	/*
+	tagObjSpriteInfo* tmpObj = new tagObjSpriteInfo;
+	tmpObj->init();
+	*tmpObj = obj;
+	POINTFLOAT pos = _vvMap[idxY][idxX]->_pos;
+	RECT rc = RectMake(pos.x - obj.getPixPosToLeft(),
+		pos.y - obj.getPixPosToTop(),
+		obj.getWid(),
+		obj.getHei());
+
+	tmpObj->pos = pos;
+	tmpObj->rc = rc;
+	tmpObj->mapIdx = { idxX, idxY };
+
+	//	맵에 속성 부여
+	if (tmpObj->attr == O_ATTR_UNMOVE) {
+		for (int i = 0; i < tmpObj->objTileSize.y; i++) {
+			for (int j = 0; j < tmpObj->objTileSize.x; j++) {
+				_vvMap[idxY - i][idxX - j]->_terAttr = T_ATTR_UNMOVE;
+			}
+		}
+	}
+
+	_vObjInfo.push_back(tmpObj);
+	*/
 
 
+}
+
+void mapEditor::MakeUnitOnMap(tagEnemySpriteInfoForMapEditor unit, int idxX, int idxY)
+{
+	enemy* newEnemy;
+
+	POINTFLOAT pos = _vvMap[idxY][idxX]->_pos;
+	RECT rc = RectMake(pos.x - unit.getPixPosToLeft(),
+		pos.y - unit.getPixPosToTop(),
+		unit.getWid(),
+		unit.getHei());
+
+	switch (unit.imgNum) {
+	case MOB_SKEL:
+		newEnemy = new skeleton;
+		newEnemy->setEnemyInfo(unit.tileCenterPosAtSprite, unit.sampleRc, 
+			{ NULL,NULL },	//	pos
+			unit.mobTileSize, unit.imgNum, unit.zLvl,
+			{ NULL,NULL },	//	mapIdx;
+			{ NULL,NULL,NULL,NULL });	//	rc
+
+		newEnemy->_rc = rc;
+		newEnemy->_mapIdx = { idxX, idxY };
+		_vEnemy.push_back(newEnemy);
+
+
+		break;
+	}
+
+
+
+	sort(_vEnemy.begin(), _vEnemy.end(), compareEnemy);
+
+	//tagEnemySpriteInfoForMapEditor* tmpEnemyInfo = new tagEnemySpriteInfoForMapEditor;
+	//tmpEnemyInfo->init();
+	//*tmpEnemyInfo = unit;
+	//
+	//POINTFLOAT pos = _vvMap[idxY][idxX]->_pos;
+	//RECT rc = RectMake(pos.x - tmpEnemyInfo->getPixPosToLeft(),
+	//	pos.y - tmpEnemyInfo->getPixPosToTop(),
+	//	tmpEnemyInfo->getWid(),
+	//	tmpEnemyInfo->getHei());
+	//
+	//
+	//
+	//tmpEnemyInfo->pos = pos;
+	//tmpEnemyInfo->rc = rc;
+	//tmpEnemyInfo->mapIdx = { idxX, idxY };
+	//
+	//
+	//_vEnemyInfo.push_back(tmpEnemyInfo);
 }
 
 
@@ -1643,23 +2134,22 @@ void mapEditor::CursorSampleRender()
 
 void mapEditor::PreviewRender()
 {
-	if (_cursorTile != nullptr) {
-		if (_selectedTool == TOOL_BRUSH ||
-			_selectedTool == TOOL_PAINT) {
+	if (_selectedTool == TOOL_BRUSH ||
+		_selectedTool == TOOL_PAINT) {
+
+		if (_cursorTile != nullptr) {
 			if (_cursorTile->_img != nullptr) {
 				_cursorTile->_img->frameRenderABS(_ptMouseAbs.x - TILESIZE_WID / 2, _ptMouseAbs.y - TILESIZE_HEI / 2,
 					_cursorTile->_frameX, _cursorTile->_frameY, 0.5f);
 			}
 		}
-	}
-	
-		
-	
-	//_cursorObjInfo.img!=nullptr
-	//if (_cursorObjInfo.imgNum != OBJNUM_NONE) {
-	if (_cursorObjInfo.img != nullptr) {
-		if (_selectedTool == TOOL_BRUSH ||
-			_selectedTool == TOOL_PAINT) {
+
+
+
+		//_cursorObjInfo.img!=nullptr
+		//if (_cursorObjInfo.imgNum != OBJNUM_NONE) {
+		else if (_cursorObjInfo.img != nullptr) {
+
 			_cursorObjInfo.img->renderABS(
 				_ptMouseAbs.x - _cursorObjInfo.getPixPosToLeft(),
 				_ptMouseAbs.y - _cursorObjInfo.getPixPosToTop(),
@@ -1669,15 +2159,31 @@ void mapEditor::PreviewRender()
 
 				_cursorObjInfo.sampleRc.left,
 				_cursorObjInfo.sampleRc.top,
-				
+
 				_cursorObjInfo.getWid(),
 				_cursorObjInfo.getHei(),
 				//_cursorObjInfo.sampleRc.right - _cursorObjInfo.sampleRc.left,
 				//_cursorObjInfo.sampleRc.bottom - _cursorObjInfo.sampleRc.top,
 				0.5f);
+		}
+
+
+		else if (_cursorUnitInfo.sampleImg != nullptr) {
+
+			_cursorUnitInfo.sampleImg->renderABS(
+				_ptMouseAbs.x - _cursorUnitInfo.getPixPosToLeft(),
+				_ptMouseAbs.y - _cursorUnitInfo.getPixPosToTop(),
+
+				_cursorUnitInfo.sampleRc.left,
+				_cursorUnitInfo.sampleRc.top,
+
+				_cursorUnitInfo.getWid(),
+				_cursorUnitInfo.getHei(),
+				0.5f);
 
 		}
 	}
+
 }
 
 void mapEditor::MagicSelectRender()
@@ -1741,6 +2247,8 @@ void mapEditor::SampleRender()
 					_vvTerSamples[_curTerSampleIdx][i][j]->_frameX,
 					_vvTerSamples[_curTerSampleIdx][i][j]->_frameY,
 					1.0f);
+
+				//	테두리
 				D2DMANAGER->drawRectangle(0x8673CC,
 					_vvTerSamples[_curTerSampleIdx][i][j]->_rc.left + CAMERA2D->getCamPosX() 
 					, _vvTerSamples[_curTerSampleIdx][i][j]->_rc.top + CAMERA2D->getCamPosY()
@@ -1780,11 +2288,45 @@ void mapEditor::SampleRender()
 
 		}
 	}
+	else if (_selectedMenu == MENU_UNIT) {
+		for (int i = 0; i < E_IMGNUM::E_IMG_END; i++) {
+			_enemyInfo[i].sampleImg->renderABS(
+				_enemyInfo[i].sampleRc.left + SAMPLE_PALLET_START_X,
+				_enemyInfo[i].sampleRc.top + SAMPLE_PALLET_START_Y,
+				_enemyInfo[i].sampleRc.left,
+				_enemyInfo[i].sampleRc.top,
+				_enemyInfo[i].sampleImg->GetFrameWidth(),
+				_enemyInfo[i].sampleImg->GetFrameWidth(),
+				1.0f);
+
+			//	테두리
+			D2DMANAGER->drawRectangle(0x8673CC,
+				_enemyInfo[i].sampleRc.left + CAMERA2D->getCamPosX() + SAMPLE_PALLET_START_X,
+				_enemyInfo[i].sampleRc.top + CAMERA2D->getCamPosY() + SAMPLE_PALLET_START_Y,
+				_enemyInfo[i].sampleRc.right + CAMERA2D->getCamPosX() + SAMPLE_PALLET_START_X,
+				_enemyInfo[i].sampleRc.bottom + CAMERA2D->getCamPosY() + SAMPLE_PALLET_START_Y);
+
+
+			//	중점 확인용 ==========
+			D2DMANAGER->drawRectangle(0x00FF4E,
+				_enemyInfo[i].tileCenterPosAtSprite.x + CAMERA2D->getCamPosX() - 5 + SAMPLE_PALLET_START_X,
+				_enemyInfo[i].tileCenterPosAtSprite.y + CAMERA2D->getCamPosY() - 5 + SAMPLE_PALLET_START_Y,
+				_enemyInfo[i].tileCenterPosAtSprite.x + CAMERA2D->getCamPosX() + 5 + SAMPLE_PALLET_START_X,
+				_enemyInfo[i].tileCenterPosAtSprite.y + CAMERA2D->getCamPosY() + 5 + SAMPLE_PALLET_START_Y
+			);
+
+		}
+
+
+
+	}
 	
 }
 
 void mapEditor::ObjRender()
 {
+	
+	//	언덕값에따라 _rc, _pos처리해줄때의 렌더
 	for (int i = 0; i < _vObj.size(); i++) {
 		_vObj[i]->_img->render(
 			_vObj[i]->_rc.left,
@@ -1796,4 +2338,96 @@ void mapEditor::ObjRender()
 			1.0f
 		);
 	}
+	
+
+	/*
+	//	언덕값에따라 _rc, _pos처리안하고, 자신의 맵타일의 높이로 렌더에서 계산처리
+	for (int i = 0; i < _vObjInfo.size(); i++) {
+		_vObjInfo[i]->img->render(
+			_vObjInfo[i]->rc.left,
+			_vObjInfo[i]->rc.top - _vvMap[_vObjInfo[i]->mapIdx.y][_vObjInfo[i]->mapIdx.x]->_zLevel * (TILESIZE_HEI/2),
+			_vObjInfo[i]->sampleRc.left,
+			_vObjInfo[i]->sampleRc.top,
+			_vObjInfo[i]->sampleRc.right - _vObjInfo[i]->sampleRc.left,
+			_vObjInfo[i]->sampleRc.bottom - _vObjInfo[i]->sampleRc.top,
+			1.0f
+		);
+	}
+	*/
+
+
+}
+
+void mapEditor::UnitRender()
+{
+	for (int i = 0; i < _vEnemy.size(); i++) {
+		_vEnemy[i]->_sampleImg->render(
+			_vEnemy[i]->_rc.left,
+			_vEnemy[i]->_rc.top,
+			_vEnemy[i]->_sampleRc.left,
+			_vEnemy[i]->_sampleRc.top,
+			_vEnemy[i]->getWid(),
+			_vEnemy[i]->getHei(),
+			1.0f
+		);
+	}
+
+
+	//for (int i = 0; i < _vEnemyInfo.size(); i++) {
+	//	_vEnemyInfo[i]->sampleImg->render(
+	//		_vEnemyInfo[i]->rc.left,
+	//		_vEnemyInfo[i]->rc.top,
+	//		_vEnemyInfo[i]->sampleRc.left,
+	//		_vEnemyInfo[i]->sampleRc.top,
+	//		_vEnemyInfo[i]->getWid(),
+	//		_vEnemyInfo[i]->getHei(),
+	//		1.0f
+	//	);
+	//}
+
+	/*
+	for (int i = 0; i < _vEnemyInfo.size(); i++) {
+		_vEnemyInfo[i]->sampleImg->render(
+			_vEnemyInfo[i]->rc.left,
+			_vEnemyInfo[i]->rc.top - _vvMap[_vEnemyInfo[i]->mapIdx.y][_vEnemyInfo[i]->mapIdx.x]->_zLevel * (TILESIZE_HEI / 2),
+			_vEnemyInfo[i]->sampleRc.left,
+			_vEnemyInfo[i]->sampleRc.top,
+			_vEnemyInfo[i]->getWid(),
+			_vEnemyInfo[i]->getHei(),
+			1.0f
+		);
+	}
+	*/
+}
+
+void mapEditor::SortedRender(int idxX, int idxY)
+{
+	int objCount = 0;
+	int enemyCount = 0;
+
+
+
+	if (_vvMap[idxY][idxX]->_img != nullptr) {
+		for (int i = _vvMap[idxY][idxX]->_zLevel; i >= 0; i--) {
+			if (i == 0) {
+				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_frameX, _vvMap[idxY][idxX]->_frameY, 1.0f);
+			}
+			else if (i == 1) {
+				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_frameX, 4, 1.0f);
+			}
+			else {
+				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_frameX, 5, 1.0f);
+			}
+
+
+		}
+	}
+
+
+
+	
+
 }

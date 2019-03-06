@@ -242,6 +242,9 @@
     <ClCompile Include="skeleton.cpp">
       <Filter>PlayGround\enemy</Filter>
     </ClCompile>
+    <ClCompile Include="tileNode.cpp">
+      <Filter>PlayGround</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="windowsAPI.rc">
