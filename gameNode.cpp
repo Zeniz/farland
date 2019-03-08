@@ -36,6 +36,7 @@ HRESULT gameNode::init(bool managerInit)
 		CAMERA2D->init();
 		TXTDATA->init();
 		EFFECTMANAGER->init();
+		ASTARFUNC->init();
 	}
 
 	return S_OK;
@@ -69,6 +70,8 @@ void gameNode::release()
 		KEYANIMANAGER->releaseSingleton();
 		EFFECTMANAGER->release();
 		EFFECTMANAGER->releaseSingleton();
+		ASTARFUNC->release();
+		ASTARFUNC->releaseSingleton();
 	}
 }
 

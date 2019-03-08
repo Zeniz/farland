@@ -85,11 +85,16 @@ private:
 
 	int _resizeMapCounter;
 	int _mapIdxAdjustCounter;
+
+	POINT _clipMapIdx[2];
 	
 	const int MAPIDX_COUNT_MAX = 5;
 	const int RESIZE_MAP_COUNT_MAX = 5;
 	const int SAMPLE_PALLET_START_X = 65;
 	const int SAMPLE_PALLET_START_Y = 33;
+
+	const int CLIP_TILENUM_WID = 27;
+	const int CLIP_TILENUM_HEI = 27;
 	
 
 public:
@@ -122,6 +127,8 @@ public:
 	void EraseMapY();
 	
 	void ClearInfoInCursor();
+
+	void SetClipRangeFunc();
 
 
 	//	===	ToolsFunc ===
@@ -165,9 +172,24 @@ public:
 	void TileRender(int idxX, int idxY);
 	void ObjRender();		//	z-order로 바꿔야함
 	void UnitRender();		//	z-order로 바꿔야함
-	void SortedRender(int idxX, int idxY);
-	void ObjRender(int idxX, int idxY);		//	sort 되어있음! render만 ㄱㄱ
-	void UnitRender(int idxX, int idxY);
+	void SortedRender(int idxX, int idxY, int& objCount, int& unitCount);
+	void ObjRender(int idx);		//	sort 되어있음! render만 ㄱㄱ
+	void UnitRender(int idx);
+
+	
 
 };
 
+//
+
+/*
+
+//	클리핑
+for (int i = _clipMapIdx[0].y; i < _clipMapIdx[1].y; i++) {
+	for (int j = _clipMapIdx[0].x; j < _clipMapIdx[1].x; j++) {
+		if (i < 0)				continue;
+		if (i > _tileNum.y - 1)	continue;
+		if (j < 0)				continue;
+		if (j > _tileNum.x - 1)	continue;
+
+		*/

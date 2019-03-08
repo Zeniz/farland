@@ -7,6 +7,7 @@ enum OBJ_KINDS {
 	OBJKIND_TILE,
 	OBJKIND_OBJ,
 	OBJKIND_UNIT,
+	OBJKIND_CHAR,
 };
 
 class objects : public gameNode

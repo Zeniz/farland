@@ -15,11 +15,13 @@ HRESULT playGround::init()
 	gameNode::init(true);
 
 	_mapEditor = new mapEditor;
+	_testMap = new testMap;
 	
 
 
 
 	SCENEMANAGER->addScene("mapEditor", _mapEditor);
+	SCENEMANAGER->addScene("testMap", _testMap);
 	
 
 	SCENEMANAGER->changeScene("mapEditor");

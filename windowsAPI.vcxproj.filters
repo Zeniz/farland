@@ -61,6 +61,18 @@
     <Filter Include="PlayGround\enemy">
       <UniqueIdentifier>{b529c0c8-2733-4926-b231-66e989b404b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\characters">
+      <UniqueIdentifier>{99828566-8769-4349-b86d-59d998a70ffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\characters\statePattern">
+      <UniqueIdentifier>{edac0d00-398c-4843-833b-a1627ca9de43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\characters\chars">
+      <UniqueIdentifier>{e347ab75-b787-4573-b01d-251f46345a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\characters\skills">
+      <UniqueIdentifier>{84ee0cb5-cf27-44f1-af62-bc132f50d7a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -159,6 +171,60 @@
     <ClInclude Include="skeleton.h">
       <Filter>PlayGround\enemy</Filter>
     </ClInclude>
+    <ClInclude Include="mapLoader.h">
+      <Filter>2DFramework\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="charStatePattern.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateBlock.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateCast.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateDead.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateFrozen.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateGetHit.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateGetHit2.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateIdle.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateMove.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateStone.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="charLeon.h">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClInclude>
+    <ClInclude Include="character.h">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClInclude>
+    <ClInclude Include="charSkills.h">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClInclude>
+    <ClInclude Include="testMap.h">
+      <Filter>PlayGround\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="CharMgr.h">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClInclude>
+    <ClInclude Include="aStar.h">
+      <Filter>2DFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="aStarTileNode.h">
+      <Filter>2DFramework\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -244,6 +310,57 @@
     </ClCompile>
     <ClCompile Include="tileNode.cpp">
       <Filter>PlayGround</Filter>
+    </ClCompile>
+    <ClCompile Include="mapLoader.cpp">
+      <Filter>2DFramework\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="charStatePattern.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateBlock.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateCast.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateDead.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateFrozen.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateGetHit.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateGetHit2.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateIdle.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateMove.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateStone.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="charLeon.cpp">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClCompile>
+    <ClCompile Include="character.cpp">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClCompile>
+    <ClCompile Include="charSkills.cpp">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClCompile>
+    <ClCompile Include="testMap.cpp">
+      <Filter>PlayGround\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="CharMgr.cpp">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClCompile>
+    <ClCompile Include="aStar.cpp">
+      <Filter>2DFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

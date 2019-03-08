@@ -172,30 +172,6 @@ struct tagObjInfo {
 
 };
 
-
-typedef struct astarTile
-{
-public:
-	enum ASTAR_NODE_TYPE
-	{
-		EMPTY = 0,
-		BLOCK,
-		START,
-		DEST
-	};
-
-	POINT idx;
-	POINT parentIndex = { -1,-1 };
-	int zLevel = 0; 
-
-	float f = 0.0f;
-	float g = 0.0f;
-	float h = 0.0f;
-
-	ASTAR_NODE_TYPE nodeType = EMPTY;
-
-}ASTARTILE;
-
 typedef class objNode : public objects
 {
 public:
