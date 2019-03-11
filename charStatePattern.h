@@ -18,6 +18,12 @@ public:
 	virtual void onGetHit2(Character* character) abstract;
 	virtual void onBlock(Character* character) abstract;
 
+	virtual void onBasicAtk(Character* character) abstract;
+	virtual void onSkillOne(Character* character) abstract;
+	virtual void onSkillTwo(Character* character) abstract;
+	virtual void onSkillThree(Character* character) abstract;
+	virtual void onSkillFour(Character* character) abstract;
+
 	virtual void update(Character* character) abstract;
 
 

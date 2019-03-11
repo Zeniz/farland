@@ -154,6 +154,7 @@
     <ClInclude Include="button.h" />
     <ClInclude Include="camera2D.h" />
     <ClInclude Include="character.h" />
+    <ClInclude Include="CharInfoUI.h" />
     <ClInclude Include="charLeon.h" />
     <ClInclude Include="CharMgr.h" />
     <ClInclude Include="charSkills.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="keyManager.h" />
     <ClInclude Include="mapEditor.h" />
     <ClInclude Include="mapLoader.h" />
+    <ClInclude Include="MaskTile.h" />
     <ClInclude Include="objects.h" />
     <ClInclude Include="playGround.h" />
     <ClInclude Include="randomFunction.h" />
@@ -180,6 +182,7 @@
     <ClInclude Include="singletonBase.h" />
     <ClInclude Include="skeleton.h" />
     <ClInclude Include="soundManager.h" />
+    <ClInclude Include="stateBasicAtk.h" />
     <ClInclude Include="stateBlock.h" />
     <ClInclude Include="stateCast.h" />
     <ClInclude Include="stateDead.h" />
@@ -188,6 +191,10 @@
     <ClInclude Include="stateGetHit2.h" />
     <ClInclude Include="stateIdle.h" />
     <ClInclude Include="stateMove.h" />
+    <ClInclude Include="stateSkillFour.h" />
+    <ClInclude Include="stateSkillOne.h" />
+    <ClInclude Include="stateSkillThree.h" />
+    <ClInclude Include="stateSkillTwo.h" />
     <ClInclude Include="stateStone.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -205,6 +212,7 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera2D.cpp" />
     <ClCompile Include="character.cpp" />
+    <ClCompile Include="CharInfoUI.cpp" />
     <ClCompile Include="charLeon.cpp" />
     <ClCompile Include="CharMgr.cpp" />
     <ClCompile Include="charSkills.cpp" />
@@ -222,11 +230,13 @@
     <ClCompile Include="keyManager.cpp" />
     <ClCompile Include="mapEditor.cpp" />
     <ClCompile Include="mapLoader.cpp" />
+    <ClCompile Include="MaskTile.cpp" />
     <ClCompile Include="objects.cpp" />
     <ClCompile Include="playGround.cpp" />
     <ClCompile Include="sceneManager.cpp" />
     <ClCompile Include="skeleton.cpp" />
     <ClCompile Include="soundManager.cpp" />
+    <ClCompile Include="stateBasicAtk.cpp" />
     <ClCompile Include="stateBlock.cpp" />
     <ClCompile Include="stateCast.cpp" />
     <ClCompile Include="stateDead.cpp" />
@@ -235,6 +245,10 @@
     <ClCompile Include="stateGetHit2.cpp" />
     <ClCompile Include="stateIdle.cpp" />
     <ClCompile Include="stateMove.cpp" />
+    <ClCompile Include="stateSkillFour.cpp" />
+    <ClCompile Include="stateSkillOne.cpp" />
+    <ClCompile Include="stateSkillThree.cpp" />
+    <ClCompile Include="stateSkillTwo.cpp" />
     <ClCompile Include="stateStone.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

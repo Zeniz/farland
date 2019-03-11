@@ -1,10 +1,11 @@
 #pragma once
 #include "charStatePattern.h"
-class stateStone : public charStatePattern
+class stateSkillTwo : public charStatePattern
 {
 public:
-	stateStone();
-	~stateStone();
+	stateSkillTwo();
+	~stateSkillTwo();
+
 public:
 	void onIdle(Character* character) override;
 	void onMove(Character* character) override;

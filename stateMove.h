@@ -16,6 +16,15 @@ public:
 	void onGetHit2(Character* character) override;
 	void onBlock(Character* character) override;
 
+	void onBasicAtk(Character* character) override;
+	void onSkillOne(Character* character) override;
+	void onSkillTwo(Character* character) override;
+	void onSkillThree(Character* character) override;
+	void onSkillFour(Character* character) override;
+
 	void update(Character* character) override;
+
+	void CalDirFunc(Character* character);
+	void CalTileForRender(Character* character);
 };
 

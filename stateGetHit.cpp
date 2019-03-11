@@ -47,6 +47,26 @@ void stateGetHit::onBlock(Character* character)
 {
 }
 
+void stateGetHit::onBasicAtk(Character * character)
+{
+}
+
+void stateGetHit::onSkillOne(Character * character)
+{
+}
+
+void stateGetHit::onSkillTwo(Character * character)
+{
+}
+
+void stateGetHit::onSkillThree(Character * character)
+{
+}
+
+void stateGetHit::onSkillFour(Character * character)
+{
+}
+
 void stateGetHit::update(Character* character)
 {
 }

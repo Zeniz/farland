@@ -24,7 +24,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("testMap", _testMap);
 	
 
-	SCENEMANAGER->changeScene("mapEditor");
+	SCENEMANAGER->changeScene("testMap");
 
 
 	return S_OK;

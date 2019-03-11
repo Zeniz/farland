@@ -47,6 +47,26 @@ void stateBlock::onBlock(Character * character)
 {
 }
 
+void stateBlock::onBasicAtk(Character * character)
+{
+}
+
+void stateBlock::onSkillOne(Character * character)
+{
+}
+
+void stateBlock::onSkillTwo(Character * character)
+{
+}
+
+void stateBlock::onSkillThree(Character * character)
+{
+}
+
+void stateBlock::onSkillFour(Character * character)
+{
+}
+
 void stateBlock::update(Character * character)
 {
 }

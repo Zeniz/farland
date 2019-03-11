@@ -17,12 +17,18 @@
 #include "stateGetHit2.h"
 #include "stateBlock.h"
 
+#include "CharInfoUI.h"
+
+
+
 class CharMgr : public gameNode
 {
 	typedef vector<enemy*> vEnemy;
 
 	charStatePattern* _arrStatePattern[static_cast<const int>(CHAR_STATE::CHAR_STATE_END)];
 	vector<Character*> _vChara;
+	
+	CharInfoUI* _charInfoUI;
 
 	
 	vvMap* _vvMap;
@@ -36,6 +42,7 @@ public:
 	void release();
 	void update();
 	void render(int idxX, int idxY);
+	void RenderCharInfo();
 
 
 	void InitArrStatePattern();		

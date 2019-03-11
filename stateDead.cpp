@@ -47,6 +47,26 @@ void stateDead::onBlock(Character * character)
 {
 }
 
+void stateDead::onBasicAtk(Character * character)
+{
+}
+
+void stateDead::onSkillOne(Character * character)
+{
+}
+
+void stateDead::onSkillTwo(Character * character)
+{
+}
+
+void stateDead::onSkillThree(Character * character)
+{
+}
+
+void stateDead::onSkillFour(Character * character)
+{
+}
+
 void stateDead::update(Character * character)
 {
 }

@@ -9,6 +9,7 @@
 #include "mapLoader.h"
 
 
+#include "MaskTile.h"
 
 
 
@@ -29,7 +30,7 @@ private:
 	const int CLIP_TILENUM_HEI = 60;
 	
 	
-
+	MaskTile* _maskTile;
 
 	
 

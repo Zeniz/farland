@@ -48,7 +48,8 @@ HRESULT testMap::init()
 
 
 	
-
+	_maskTile = new MaskTile;
+	_maskTile->init(&_vvMap);
 	
 
 
@@ -70,6 +71,7 @@ void testMap::update()
 
 	_charMgr->update();
 
+	_maskTile->update();
 }
 
 void testMap::render()
@@ -79,7 +81,7 @@ void testMap::render()
 	bool isFoundObjStart = false;
 	bool isFoundEnemyStart = false;
 
-	//	처음 렌더 시작 위치 찾기. (vObj, vEnemy가 맵인덱스로  sort되어있음)
+	//	obj, enemy의 첫 렌더 인덱스 찾기. (vObj, vEnemy가 맵인덱스로  sort되어있음)
 	for (int i = _clipMapIdx[0].y; i < _clipMapIdx[1].y; i++) {
 		for (int j = _clipMapIdx[0].x; j < _clipMapIdx[1].x; j++) {
 			if (i < 0)				continue;
@@ -111,6 +113,7 @@ void testMap::render()
 	//	바닥타일 깔고,
 	FloorTileRender();
 
+	//	에너미, 캐릭터, 높이타일, obj 깔아줌
 	for (int i = _clipMapIdx[0].y; i < _clipMapIdx[1].y; i++) {
 		for (int j = _clipMapIdx[0].x; j < _clipMapIdx[1].x; j++) {
 			if (i < 0)				continue;
@@ -121,11 +124,12 @@ void testMap::render()
 
 			//	enemy
 			EnemyRender(j, i, enemyRenderCount);
+			//	높이 타일
+			ZTileRender(j, i);
 			//	player
 			_charMgr->render(j, i);
 
-			//	높이 타일
-			ZTileRender(j, i);
+			
 
 			//	obj
 			ObjRender(j, i, objRenderCount);
@@ -133,6 +137,8 @@ void testMap::render()
 
 		}
 	}
+
+	_maskTile->render();
 
 	//	astar테스트용 출력
 	list<POINT>* tmpWaylistAddr = _charMgr->getWayListAddr(0);
@@ -152,6 +158,10 @@ void testMap::render()
 
 		}
 	}
+
+	//	캐릭터 정보 UI
+	_charMgr->RenderCharInfo();
+
 
 }
 

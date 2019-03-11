@@ -4,14 +4,14 @@ class charLeon : public Character
 {
 private:
 
-
+	
 
 	const float BASIC_MAXHP = 100;
 	const float BASIC_REGENHP = 1;
 	const float BASIC_MAXMP = 100;
 	const float BASIC_REGENMP = 1;
 
-	const float BASIC_MOVESPD = 1.0f;
+	const float BASIC_MOVESPD = 20.0f;			//	³ª´©´Â ¼ýÀÚ. ³·À»¼ö·Ï »¡¶óÁü
 	const float BASIC_CASTSPD = 1.0f;
 
 	const float BASIC_ATK = 10;
@@ -33,9 +33,12 @@ public:
 
 	void release();
 	void update() override;
+	void aniRender() override;
+	
 
 
 	void KnowingTileFunc();
+	void CalTileforRenderFunc();
 
 	void setAni();
 	void makeIdleByEndAni();

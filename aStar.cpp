@@ -100,7 +100,10 @@ void aStar::PathFind(POINT startIdx, POINT destIdx, POINT curIdx, list<POINT>& w
 				if (!IsInClosedList(curIdx.x, curIdx.y - 1)) {
 //					if ((*_vvMap)[curIdx.y - 1][curIdx.x]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
 					if ((_vvMap)[curIdx.y - 1][curIdx.x]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
-						isOpenTile[OPEN_DIR::UP] = true;
+						if (abs((_vvMap)[curIdx.y - 1][curIdx.x]->zLevel - (_vvMap)[curIdx.y][curIdx.x]->zLevel) < 3) {
+							isOpenTile[OPEN_DIR::UP] = true;
+						}
+						
 					}
 
 				}
@@ -110,7 +113,9 @@ void aStar::PathFind(POINT startIdx, POINT destIdx, POINT curIdx, list<POINT>& w
 				if (!IsInClosedList(curIdx.x, curIdx.y + 1)) {
 		//			if ((*_vvMap)[curIdx.y + 1][curIdx.x]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
 					if ((_vvMap)[curIdx.y + 1][curIdx.x]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
-						isOpenTile[OPEN_DIR::DOWN] = true;
+						if (abs((_vvMap)[curIdx.y + 1][curIdx.x]->zLevel - (_vvMap)[curIdx.y][curIdx.x]->zLevel) < 3) {
+							isOpenTile[OPEN_DIR::DOWN] = true;
+						}
 					}
 				}
 			}
@@ -118,7 +123,9 @@ void aStar::PathFind(POINT startIdx, POINT destIdx, POINT curIdx, list<POINT>& w
 				if (!IsInClosedList(curIdx.x - 1, curIdx.y)) {
 		//			if ((*_vvMap)[curIdx.y][curIdx.x - 1]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
 					if ((_vvMap)[curIdx.y][curIdx.x - 1]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
-						isOpenTile[OPEN_DIR::LEFT] = true;
+						if (abs((_vvMap)[curIdx.y][curIdx.x - 1]->zLevel - (_vvMap)[curIdx.y][curIdx.x]->zLevel) < 3) {
+							isOpenTile[OPEN_DIR::LEFT] = true;
+						}
 					}
 				}
 			}
@@ -126,7 +133,9 @@ void aStar::PathFind(POINT startIdx, POINT destIdx, POINT curIdx, list<POINT>& w
 				if (!IsInClosedList(curIdx.x + 1, curIdx.y)) {
 		//			if ((*_vvMap)[curIdx.y][curIdx.x - 1]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
 					if ((_vvMap)[curIdx.y][curIdx.x + 1]->nodeType != ASTARTILE::ASTAR_NODE_TYPE::BLOCK) {
-						isOpenTile[OPEN_DIR::RIGHT] = true;
+						if (abs((_vvMap)[curIdx.y][curIdx.x + 1]->zLevel - (_vvMap)[curIdx.y][curIdx.x]->zLevel) < 3) {
+							isOpenTile[OPEN_DIR::RIGHT] = true;
+						}
 					}
 				}
 			}

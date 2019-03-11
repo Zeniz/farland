@@ -47,6 +47,26 @@ void stateFrozen::onBlock(Character* character)
 {
 }
 
+void stateFrozen::onBasicAtk(Character * character)
+{
+}
+
+void stateFrozen::onSkillOne(Character * character)
+{
+}
+
+void stateFrozen::onSkillTwo(Character * character)
+{
+}
+
+void stateFrozen::onSkillThree(Character * character)
+{
+}
+
+void stateFrozen::onSkillFour(Character * character)
+{
+}
+
 void stateFrozen::update(Character* character)
 {
 }

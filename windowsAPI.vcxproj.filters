@@ -73,6 +73,9 @@
     <Filter Include="PlayGround\characters\skills">
       <UniqueIdentifier>{84ee0cb5-cf27-44f1-af62-bc132f50d7a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\UI">
+      <UniqueIdentifier>{aa54e69b-6856-4108-8579-c9eece535481}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -225,6 +228,27 @@
     <ClInclude Include="aStarTileNode.h">
       <Filter>2DFramework\utils</Filter>
     </ClInclude>
+    <ClInclude Include="stateSkillFour.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateSkillOne.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateSkillThree.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateSkillTwo.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="stateBasicAtk.h">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClInclude>
+    <ClInclude Include="MaskTile.h">
+      <Filter>PlayGround\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CharInfoUI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -361,6 +385,27 @@
     </ClCompile>
     <ClCompile Include="aStar.cpp">
       <Filter>2DFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="stateSkillFour.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateSkillOne.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateSkillThree.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateSkillTwo.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="stateBasicAtk.cpp">
+      <Filter>PlayGround\characters\statePattern</Filter>
+    </ClCompile>
+    <ClCompile Include="MaskTile.cpp">
+      <Filter>PlayGround\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CharInfoUI.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

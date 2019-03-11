@@ -12,6 +12,12 @@
 #include "stateGetHit2.h"
 #include "stateBlock.h"
 
+#include "stateBasicAtk.h"
+#include "stateSkillOne.h"
+#include "stateSkillTwo.h"
+#include "stateSkillThree.h"
+#include "stateSkillFour.h"
+
 
 Character::Character()
 {
@@ -53,6 +59,31 @@ Character::Character()
 	_curSkill = CUR_SKILL::NONE;
 	_lOrderList.clear();
 	_lWayIdxList.clear();
+
+
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)] = new stateIdle();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)] = new stateMove();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)] = new stateCast();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::DEAD)] = new stateDead();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::GETHIT)] = new stateGetHit();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::STONE)] = new stateStone();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::FROZEN)] = new stateFrozen();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::GETHIT2)] = new stateGetHit2();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::BLOCK)] = new stateBlock();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::BASIC_ATK)] = new stateBasicAtk();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL1)] = new stateSkillOne();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL2)] = new stateSkillTwo();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL3)] = new stateSkillThree();
+	_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL4)] = new stateSkillFour();
+
+
+	screenRc = RectMake(0, 0, UI_START_X, UI_START_Y);
+	
+	_mode = MODE_KINDS::MODE_KINDS_NONE;
+	_isOrderFin = true;
+	_isSelectedChar = false;
+	
+
 
 }
 
@@ -106,10 +137,6 @@ HRESULT Character::init()
 	return S_OK;
 }
 
-void Character::aniRender()
-{
-	_img->aniRender(_rc.left, _rc.top, this->_ani);
-}
 
 void Character::InitObjectiveVal(image* img, POINTFLOAT pos, int zlvl, animation * ani, TILE * curTile)
 {
@@ -189,4 +216,37 @@ void Character::InitCharacteristicAugVal()
 	_charValue[AUG][DEF] = NULL;
 	_charValue[AUG][M_ATK] = NULL;
 	_charValue[AUG][M_DEF] = NULL;
+}
+
+void Character::MoveFunc()
+{
+	if (_lWayIdxList.size() != 0) {
+
+
+
+		POINT targetIdx = { _lWayIdxList.begin()->x, _lWayIdxList.begin()->y };
+		//	벡터 계산
+		_moveVec.x = (targetIdx.x - mapIdx.x) * TILESIZE_WID / _charValue[CUR][MOVE_SPD];
+		_moveVec.y = (targetIdx.y - mapIdx.y) * TILESIZE_HEI / _charValue[CUR][MOVE_SPD];
+
+		//	오차허용계산
+		if (abs((*_vvMap)[targetIdx.y][targetIdx.x]->_pos.x - _pos.x) < FLOAT_ERROR) {
+			_moveVec.x = 0;
+			_pos.x = (*_vvMap)[targetIdx.y][targetIdx.x]->_pos.x;
+		}
+		if (abs((*_vvMap)[targetIdx.y][targetIdx.x]->_pos.y - _pos.y) < FLOAT_ERROR) {
+			_moveVec.y = 0;
+			_pos.y = (*_vvMap)[targetIdx.y][targetIdx.x]->_pos.y;
+		}
+		//	도착했다면,
+		if (_moveVec.x == 0 && _moveVec.y == 0) {
+			_lWayIdxList.pop_front();
+		}
+
+		//	이동적용
+		_pos.x += _moveVec.x;
+		_pos.y += _moveVec.y;
+		_rc = RectMake(_pos.x - 128, _pos.y - 160, _img->GetFrameWidth(), _img->GetFrameHeight());
+
+	}
 }

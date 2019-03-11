@@ -219,6 +219,7 @@ void charLeon::InitCharacteristicValDefault()
 	_name = CHAR_NAME::LEON;
 	_dir = CHAR_DIR::LB;
 	_state = CHAR_STATE::IDLE;
+	_curState = _arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
 }
 
 void charLeon::InitCharacteristicAugValDefault()
@@ -245,38 +246,84 @@ void charLeon::release()
 
 void charLeon::update()
 {
-	KnowingTileFunc();
-
-
+	//	애니메이션 세팅
 	setAni();
 	makeIdleByEndAni();
-	//	애니메이션 테스트용
-	stateAniTest();
-	
-	//	astarMove 테스트용
-	for (int i = 0; i < (*_vvMap).size(); i++) {
-		for (int j = 0; j < (*_vvMap)[0].size(); j++) {
-			if (PtInDiamond((*_vvMap)[i][j]->_pos, _ptMouse)) {
-				if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
-					if ((*_vvMap)[i][j]->_terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
-						_targetTile = (*_vvMap)[i][j];
-						ASTARFUNC->PathFind(mapIdx, PointMake(j, i), mapIdx, _lWayIdxList);
-					}
-					
-				}
+
+	if (_isSelectedChar) {
+		if (KEYMANAGER->isOnceKeyDown('M')) {
+			if (_mode == MODE_KINDS::MOVE) {
+				_mode = MODE_KINDS::MODE_KINDS_NONE;
+			}
+			else {
+				_mode = MODE_KINDS::MOVE;
 			}
 		}
+
+
+
+		switch (_mode)
+		{
+		case MODE_KINDS::MOVE:
+			if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
+				POINT ClickedIdx;
+				ClickedIdx = ConvertPosToIdx(_ptMouse.x, _ptMouse.y, TILESIZE_WID, TILESIZE_HEI);
+
+				//	맵 인덱스 안쪽이라면,
+				if (0 <= ClickedIdx.x && ClickedIdx.x < (*_vvMap)[0].size() &&
+					0 <= ClickedIdx.y && ClickedIdx.y < (*_vvMap).size()) {
+					//	찍은곳이 갈 수 있는 곳이라면,
+					if ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]->_terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
+						//_targetTile = ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]);
+						ASTARFUNC->PathFind(mapIdx, PointMake(ClickedIdx.x, ClickedIdx.y), mapIdx, _lWayIdxList);
+						_lOrderList.push_back(ORDER_KINDS::MOVE);
+
+
+					}
+				}
+
+			}
+			break;
+		default:
+			break;
+		}
 	}
+
 	
+
+
+	//	애니메이션 테스트용
+	//stateAniTest();
+	
+	
+	_curState->update(this);
 	
 
 
 }
 
+void charLeon::aniRender()
+{
+	if (_dir == CHAR_DIR::LT || _dir == CHAR_DIR::RB) {
+		_img->aniRenderReverseX(_rc.left, _rc.top - _curTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
+	}
+	else {
+		_img->aniRender(_rc.left, _rc.top - _curTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
+	}
+
+	//WCHAR str[128];
+	//swprintf_s(str, L"cameraX : %d", CAMERA2D->getCamPosX());
+	//D2DMANAGER->drawText(str, CAMERA2D->getCamPosX(), CAMERA2D->getCamPosY() + 80);
+	WCHAR str[128];
+	swprintf_s(str, L"Dir : [%d]", _dir);
+	D2DMANAGER->drawText(str, CAMERA2D->getCamPosX(), CAMERA2D->getCamPosY() + 130);
+	
+}
+
 void charLeon::KnowingTileFunc()
 {
-	mapIdx = ConvertPosToIdx(_pos.x, _pos.y, TILESIZE_WID, TILESIZE_HEI);
-	_curTile = (*_vvMap)[mapIdx.y][mapIdx.x];
+	//mapIdx = ConvertPosToIdx(_pos.x, _pos.y, TILESIZE_WID, TILESIZE_HEI);
+	//_curTile = (*_vvMap)[mapIdx.y][mapIdx.x];
 
 	switch (_dir)
 	{
@@ -296,6 +343,46 @@ void charLeon::KnowingTileFunc()
 		break;
 	}
 
+}
+
+void charLeon::CalTileforRenderFunc()
+{
+	POINTFLOAT probe;
+	POINT tileIdx;
+	switch (_dir)
+	{
+	case CHAR_DIR::NONE:
+		break;
+	case CHAR_DIR::LT:
+		probe.x = _pos.x - TILESIZE_WID / 4;
+		probe.y = _pos.y - TILESIZE_HEI / 4;
+		break;
+	case CHAR_DIR::RT:
+		probe.x = _pos.x + TILESIZE_WID / 4;
+		probe.y = _pos.y - TILESIZE_HEI / 4;
+		break;
+	case CHAR_DIR::LB:
+		probe.x = _pos.x - TILESIZE_WID / 4;
+		probe.y = _pos.y + TILESIZE_HEI / 4;
+		break;
+	case CHAR_DIR::RB:
+		probe.x = _pos.x + TILESIZE_WID / 4;
+		probe.y = _pos.y + TILESIZE_HEI / 4;
+		break;
+	case CHAR_DIR::CHAR_DIR_END:
+		break;
+	default:
+		break;
+	}
+
+	tileIdx = ConvertPosToIdx(probe.x, probe.y, TILESIZE_WID, TILESIZE_HEI);
+	if (0 < tileIdx.x && (*_vvMap)[0].size() &&
+		0 < tileIdx.y && (*_vvMap).size()) {
+		_tileForRender = (*_vvMap)[tileIdx.y][tileIdx.x];
+	}
+	else {
+		_tileForRender = _curTile;
+	}
 }
 
 void charLeon::setAni()
@@ -436,7 +523,7 @@ void charLeon::OrderPerform()
 		{
 		case ORDER_KINDS::NONE:
 			break;
-		case ORDER_KINDS::STAY:
+		case ORDER_KINDS::HOLD:
 			break;
 		case ORDER_KINDS::MOVE:
 			break;
