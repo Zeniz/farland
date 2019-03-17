@@ -18,6 +18,7 @@ enemy::enemy()
 	_isStateChanged = true;
 	_isAtkFin = false;
 	_atkCount = 0;
+	_deleteDelayCount = 0;
 }
 
 
@@ -124,4 +125,18 @@ void enemy::MakeIdleByEndAni()
 		_state = E_STATE::E_IDLE;
 	}
 }
+
+void enemy::ChkDead()
+{
+	if (_statValue[E_STATS::E_CURHP] <= 0) {
+		_state = E_STATE::E_DEAD;
+	}
+}
+
+void enemy::setHpBar(POINT augPos)
+{
+	_hpBar = new enemyHpBar;
+	_hpBar->init(&_statValue[E_STATS::E_CURHP], &_statValue[E_STATS::E_MAXHP], &_pos, augPos);
+}
+
 

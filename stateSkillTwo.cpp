@@ -75,8 +75,8 @@ void stateSkillTwo::update(Character * character)
 		character->_coolDownTimer[0][ORDER_KINDS::SKILL2] = 0;
 
 		(*_vEnemy)[character->_targetEnemyIdx]->setCurHpAug(
-			character->_charValue[0][CHAR_VALUE_KINDS::ATK] * character->SKILL2_MULTI +
-			character->_charValue[1][CHAR_VALUE_KINDS::ATK] * character->SKILL2_MULTI);
+			-(character->_charValue[0][CHAR_VALUE_KINDS::ATK] * character->SKILL2_MULTI +
+			character->_charValue[1][CHAR_VALUE_KINDS::ATK] * character->SKILL2_MULTI));
 
 
 		//	공격적용 후, 오더 삭제후 idle로 돌아감

@@ -71,6 +71,7 @@ void eStatePattern::Idle(enemy * enemy)
 
 void eStatePattern::Dead(enemy * enemy)
 {
+	enemy->_deleteDelayCount++;
 }
 
 void eStatePattern::GetDmg(enemy * enemy)

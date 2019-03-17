@@ -69,4 +69,5 @@ void stateDead::onSkillFour(Character * character)
 
 void stateDead::update(Character * character)
 {
+	
 }

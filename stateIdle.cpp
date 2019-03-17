@@ -237,6 +237,14 @@ void stateIdle::CalForJumptoAtkState(Character * character, ORDER_KINDS proceedO
 				//	상하좌우에 적이 있나?
 				ChkNearbyEnemy(character, &isNearEnemy);
 				if (isNearEnemy) {
+					//적이 근처에 있긴한데, 그놈이 이미 죽었다면 -> order삭제
+					vEnemy* pvEnemy = character->_vEnemy;
+					if ((*pvEnemy)[character->_targetEnemyIdx]->_state == E_STATE::E_DEAD) {
+						character->_lOrderList.erase(character->_lOrderList.begin());
+						return;
+					}
+
+
 					//	character->_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
 					CHAR_STATE destState;
 					switch (proceedOrder)

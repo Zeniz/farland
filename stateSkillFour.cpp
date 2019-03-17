@@ -76,8 +76,8 @@ void stateSkillFour::update(Character * character)
 		character->_coolDownTimer[0][ORDER_KINDS::SKILL4] = 0;
 
 		(*_vEnemy)[character->_targetEnemyIdx]->setCurHpAug(
-			character->_charValue[0][CHAR_VALUE_KINDS::ATK] * character->SKILL4_MULTI +
-			character->_charValue[1][CHAR_VALUE_KINDS::ATK] * character->SKILL4_MULTI);
+			-(character->_charValue[0][CHAR_VALUE_KINDS::ATK] * character->SKILL4_MULTI +
+			character->_charValue[1][CHAR_VALUE_KINDS::ATK] * character->SKILL4_MULTI));
 		(*_vEnemy)[character->_targetEnemyIdx]->setState(E_STATE::E_STUNNED);
 
 

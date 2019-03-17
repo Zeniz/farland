@@ -511,7 +511,8 @@ void Character::MakeOrder()
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD) {
+						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
+							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
 							_liOrderList = _lOrderList.erase(_liOrderList);
 						}
 						else {
@@ -554,7 +555,8 @@ void Character::MakeOrder()
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD) {
+						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
+							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
 							_liOrderList = _lOrderList.erase(_liOrderList);
 						}
 						else {
@@ -597,7 +599,8 @@ void Character::MakeOrder()
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD) {
+						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
+							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
 							_liOrderList = _lOrderList.erase(_liOrderList);
 						}
 						else {
@@ -640,7 +643,8 @@ void Character::MakeOrder()
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD) {
+						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
+							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
 							_liOrderList = _lOrderList.erase(_liOrderList);
 						}
 						else {

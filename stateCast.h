@@ -23,6 +23,7 @@ public:
 	void onSkillFour(Character* character) override;
 
 	void update(Character* character) override;
+	
 
 };
 

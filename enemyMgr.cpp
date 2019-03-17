@@ -26,6 +26,11 @@ void enemyMgr::update()
 {
 	for (int i = 0; i < _vEnemy.size(); i++) {
 		_vEnemy[i]->update();
+		if (_vEnemy[i]->_deleteDelayCount > _vEnemy[i]->DELETE_DELAY_MAX) {
+			_vEnemy[i]->release();
+			_vEnemy.erase(_vEnemy.begin() + i);
+			i--;
+		}
 	}
 }
 

@@ -2,6 +2,7 @@
 #include "objects.h"
 #include "eStatePattern.h"
 #include "tileNode.h"
+#include "enemyHpBar.h"
 
 class Character;
 typedef vector<Character*> vChara;
@@ -203,11 +204,13 @@ public:
 	int _targetCharIdx;
 	int _moveTileCount;
 	int _atkCount;
+	int _deleteDelayCount;
 
 	RECT _targetedRc;
 	
 	vvMap* _vvMap;
 	vChara* _vChara;
+	enemyHpBar* _hpBar;
 
 
 	const int STUNNED_COUNTMAX = 240;
@@ -218,6 +221,7 @@ public:
 	const int LEN_TO_TOP_FROM_CENTERPOS = 120;
 	const int LEN_TO_BOTTOM_FROM_CENTERPOS = 30;
 	const int WID_FROM_CENTERPOS = 50;
+	const int DELETE_DELAY_MAX = 300;
 
 
 public:
@@ -303,9 +307,15 @@ public:
 
 	void patternUpdate();
 	void MakeIdleByEndAni();
+	void ChkDead();
+
 	
 	void setCurHpAug(float augVal) {
 		_statValue[E_STATS::E_CURHP] += augVal;
+		if (_statValue[E_STATS::E_CURHP] > _statValue[E_STATS::E_MAXHP])
+			_statValue[E_STATS::E_CURHP] = _statValue[E_STATS::E_MAXHP];
+		if (_statValue[E_STATS::E_CURHP] < 0)
+			_statValue[E_STATS::E_CURHP] = 0;
 		_preState = _state;
 		_state = E_STATE::E_GETDMG;
 		_isStateChanged = true;
@@ -317,6 +327,7 @@ public:
 		_isStateChanged = true;
 	}
 
+	void setHpBar(POINT augPos);
 
 
 	TILE* getCurTile() { return _pCurTile; }

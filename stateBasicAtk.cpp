@@ -78,8 +78,9 @@ void stateBasicAtk::update(Character * character)
 	if (character->_ani->isLastFrame()) {
 		vEnemy* _vEnemy = character->_vEnemy;
 
-		(*_vEnemy)[character->_targetEnemyIdx]->setCurHpAug(character->_charValue[0][CHAR_VALUE_KINDS::ATK] +
-			character->_charValue[1][CHAR_VALUE_KINDS::ATK]);
+		(*_vEnemy)[character->_targetEnemyIdx]->setCurHpAug(
+			-(character->_charValue[0][CHAR_VALUE_KINDS::ATK] +
+			character->_charValue[1][CHAR_VALUE_KINDS::ATK]));
 
 
 

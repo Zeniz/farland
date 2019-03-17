@@ -66,6 +66,7 @@ HRESULT testMap::init()
 	
 	tmpEnemy->InitObjectiveValDefault({ 10,10 });
 	tmpEnemy->InitCharacteristicValDefault();
+	tmpEnemy->setHpBar(PointMake(0,-130));
 
 	_enemyMgr->AddEnemy(tmpEnemy);
 	

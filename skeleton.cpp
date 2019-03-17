@@ -118,7 +118,6 @@ HRESULT skeleton::init()
 		_attrValue[i] = 0;
 	}
 
-	
 
 	return S_OK;
 }
@@ -179,11 +178,11 @@ void skeleton::update()
 	setAni();
 	MakeIdleByEndAni();
 	patternUpdate();
+	ChkDead();
+
+	_hpBar->update();
 
 	
-
-
-
 
 }
 
@@ -209,6 +208,8 @@ void skeleton::render()
 	else {
 		_img->aniRender(_rc.left, _rc.top - _pCurTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
 	}
+
+	_hpBar->render();
 
 	D2D_RECT_F rc = { _pos.x - 5, _pos.y - 5, _pos.x + 5, _pos.y + 5 };
 	D2DMANAGER->fillRectangle(0xFFFFFF, rc);
