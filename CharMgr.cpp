@@ -17,9 +17,7 @@ HRESULT CharMgr::init()
 	InitArrStatePattern();
 
 	_vChara.clear();
-
-	_charInfoUI = new CharInfoUI;
-	_charInfoUI->init();
+	_selectedChar = -1;
 
 	return S_OK;
 }
@@ -32,50 +30,6 @@ void CharMgr::update()
 {
 	for (int i = 0; i < _vChara.size(); i++) {
 		_vChara[i]->update();
-		//	캐릭이 선택중인거면, 업뎃!
-		if (_vChara[i]->_isSelectedChar) {
-			_charInfoUI->update();
-		}
-	}
-	//	캐릭선택 취소.
-	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON)) {
-		for (int i = 0; i < _vChara.size(); i++) {
-			_vChara[i]->setIsSelectedChar(false);
-		}
-	}
-	//	첫번째캐릭선택
-	if (KEYMANAGER->isOnceKeyDown(VK_F1)) {
-		for (int i = 0; i < _vChara.size(); i++) {
-			_vChara[i]->setIsSelectedChar(false);
-			
-		}
-		_vChara[0]->setIsSelectedChar(true);
-
-		
-		
-
-		_charInfoUI->setValue(_vChara[0]->_name, &(_vChara[0]->_state), &(_vChara[0]->_lOrderList), (_vChara[0]->_charValue[0]), (_vChara[0]->_charValue[1]));
-	}
-	//	2번째캐릭선택
-	if (KEYMANAGER->isOnceKeyDown(VK_F2)) {
-		for (int i = 0; i < _vChara.size(); i++) {
-			_vChara[i]->setIsSelectedChar(false);
-		}
-		if (_vChara.size() >= 2) {
-			_vChara[1]->setIsSelectedChar(true);
-			_charInfoUI->setValue(_vChara[1]->_name, &(_vChara[1]->_state), &(_vChara[1]->_lOrderList), (_vChara[1]->_charValue[0]), (_vChara[1]->_charValue[1]));
-		}
-			
-	}
-	//	3번째캐릭선택
-	if (KEYMANAGER->isOnceKeyDown(VK_F3)) {
-		for (int i = 0; i < _vChara.size(); i++) {
-			_vChara[i]->setIsSelectedChar(false);
-		}
-		if (_vChara.size() >= 3) {
-			_vChara[2]->setIsSelectedChar(true);
-			_charInfoUI->setValue(_vChara[2]->_name, &(_vChara[2]->_state), &(_vChara[2]->_lOrderList), (_vChara[2]->_charValue[0]), (_vChara[2]->_charValue[1]));
-		}
 	}
 }
 
@@ -89,15 +43,6 @@ void CharMgr::render(int idxX, int idxY)
 	}
 }
 
-void CharMgr::RenderCharInfo()
-{
-	for (int i = 0; i < _vChara.size(); i++) {
-		if (_vChara[i]->_isSelectedChar) {
-			_charInfoUI->render();
-			return;
-		}
-	}
-}
 
 
 
@@ -124,7 +69,6 @@ Character * CharMgr::MakeNewChara(CHAR_NAME charName)
 	case CHAR_NAME::LEON:
 		_charaAddr = new charLeon;
 		_charaAddr->init();
-		
 
 		break;
 
@@ -161,4 +105,12 @@ Character * CharMgr::MakeNewChara(CHAR_NAME charName)
 void CharMgr::AddCharacter(Character* chara)
 {
 	_vChara.push_back(chara);
+}
+
+void CharMgr::setSelectChar(int idx, bool value)
+{
+	if (-1 < idx && idx < _vChara.size()) {
+		_vChara[idx]->setIsSelectedChar(value);
+	}
+	
 }

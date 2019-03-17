@@ -9,11 +9,11 @@ charLeon::charLeon()
 
 	int leonIdleFrontAry[] = { 0,1,2,3 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "idleFront", "charLeon", 
-		leonIdleFrontAry, 3, 5, true);
+		leonIdleFrontAry, 4, 5, true);
 
 	int leonIdleBackAry[] = { 8,9,10,11 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "idleBack", "charLeon",
-		leonIdleBackAry, 3, 5, true);
+		leonIdleBackAry, 4, 5, true);
 
 	int leonMoveFrontAry[] = { 16,17,18,19 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "moveFront", "charLeon",
@@ -23,44 +23,44 @@ charLeon::charLeon()
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "moveBack", "charLeon",
 		leonMoveBackAry, 4, 5, true);
 
-	int leonCastFrontAry[] = { 32 };
+	int leonCastFrontAry[] = { 32,33,34 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "castFront", "charLeon",
-		leonCastFrontAry, 1, 5, true);
+		leonCastFrontAry, 3, 5, true);
 
-	int leonCastBackAry[] = { 40 };
+	int leonCastBackAry[] = { 40,41,42 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "castBack", "charLeon",
-		leonCastBackAry, 1, 5, true);
+		leonCastBackAry, 3, 5, true);
 
 	int leonAtk1FrontAry [] = { 48,49,50,51 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk1Front", "charLeon",
-		leonAtk1FrontAry, 3, 5, false);
+		leonAtk1FrontAry, 4, 5, false);
 
 	int leonAtk1BackAry[] = { 56,57,58,59 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk1Back", "charLeon",
-		leonAtk1BackAry, 3, 5, false);
+		leonAtk1BackAry, 4, 5, false);
 
 	int leonAtk2FrontAry[] = { 64,65,66,67,68,69 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk2Front", "charLeon",
-		leonAtk2FrontAry, 5, 5, false);
+		leonAtk2FrontAry, 6, 5, false);
 
 	int leonAtk2BackAry[] = { 72,73,74,75,76,77 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk2Back", "charLeon",
-		leonAtk2BackAry, 5, 5, false);
+		leonAtk2BackAry, 6, 5, false);
 
 	int leonAtk3FrontAry[] = { 80,81,82,83,84 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk3Front", "charLeon",
-		leonAtk3FrontAry, 4, 5, false);
+		leonAtk3FrontAry, 5, 5, false);
 	int leonAtk3BackAry[] = { 88,89,90,91,92 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk3Back", "charLeon",
-		leonAtk3BackAry, 4, 5, false);
+		leonAtk3BackAry, 5, 5, false);
 
 	int leonAtk4FrontAry[] = { 96,97,98,99,100,101,102 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk4Front", "charLeon",
-		leonAtk4FrontAry, 6, 5, false);
+		leonAtk4FrontAry, 7, 5, false);
 
 	int leonAtk4BackAry[] = { 104,105,106,107,108,109,110 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "atk4Back", "charLeon",
-		leonAtk4BackAry, 6, 5, false);
+		leonAtk4BackAry, 7, 5, false);
 
 	int stateIdleFront[] = { 112 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateIdleFront", "charLeon",
@@ -68,11 +68,11 @@ charLeon::charLeon()
 
 	int stateDeadFront[] = { 113 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateDeadFront", "charLeon",
-		stateDeadFront, 1, 1, true);
+		stateDeadFront, 1, 5, true);
 
 	int stateGethitFront[] = { 114 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateGetHitFront", "charLeon",
-		stateGethitFront, 1, 1, false);
+		stateGethitFront, 1, 2, false);
 
 	int stateStoneFront[] = { 115 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateStoneFront", "charLeon",
@@ -84,7 +84,7 @@ charLeon::charLeon()
 
 	int stateGetHit2Front[] = { 117 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateGetHit2Front", "charLeon",
-		stateGetHit2Front, 1, 1, false);
+		stateGetHit2Front, 1, 5, false);
 
 	int stateExhaustedFront[] = { 118 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateExhaustedFront", "charLeon",
@@ -92,7 +92,7 @@ charLeon::charLeon()
 
 	int stateBlockFront[] = { 119 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateBlockFront", "charLeon",
-		stateBlockFront, 1, 1, false);
+		stateBlockFront, 1, 5, true);
 
 
 	int stateIdleBack[] = { 120 };
@@ -104,8 +104,8 @@ charLeon::charLeon()
 		stateDeadBack, 1, 5, true);
 
 	int stateGethitBack[] = { 122 };
-	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateGethitBack", "charLeon",
-		stateGethitBack, 1, 1, false);
+	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateGetHitBack", "charLeon",
+		stateGethitBack, 1, 2, false);
 
 	int stateStoneBack[] = { 123 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateStoneBack", "charLeon",
@@ -117,17 +117,15 @@ charLeon::charLeon()
 
 	int stateGetHit2Back[] = { 125 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateGetHit2Back", "charLeon",
-		stateGetHit2Back, 1, 1, false);
+		stateGetHit2Back, 1, 5, false);
 
-	int stateExhaustedBack[] = { 118 };
+	int stateExhaustedBack[] = { 126 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateExhaustedBack", "charLeon",
-		stateExhaustedFront, 1, 5, true);
+		stateExhaustedBack, 1, 5, true);
 
-	int stateBlockBack[] = { 119 };
+	int stateBlockBack[] = { 127 };
 	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateBlockBack", "charLeon",
-		stateBlockFront, 1, 1, false);
-
-
+		stateBlockBack, 1, 5, true);
 
 
 }
@@ -248,52 +246,17 @@ void charLeon::update()
 {
 	//	애니메이션 세팅
 	setAni();
-	makeIdleByEndAni();
+	//makeIdleByEndAni();
+	MakeIdleByEndAni();
+	CoolDownFunc();
 
 	if (_isSelectedChar) {
-		if (KEYMANAGER->isOnceKeyDown('M')) {
-			if (_mode == MODE_KINDS::MOVE) {
-				_mode = MODE_KINDS::MODE_KINDS_NONE;
-			}
-			else {
-				_mode = MODE_KINDS::MOVE;
-			}
-		}
-
-
-
-		switch (_mode)
-		{
-		case MODE_KINDS::MOVE:
-			if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
-				POINT ClickedIdx;
-				ClickedIdx = ConvertPosToIdx(_ptMouse.x, _ptMouse.y, TILESIZE_WID, TILESIZE_HEI);
-
-				//	맵 인덱스 안쪽이라면,
-				if (0 <= ClickedIdx.x && ClickedIdx.x < (*_vvMap)[0].size() &&
-					0 <= ClickedIdx.y && ClickedIdx.y < (*_vvMap).size()) {
-					//	찍은곳이 갈 수 있는 곳이라면,
-					if ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]->_terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
-						//_targetTile = ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]);
-						ASTARFUNC->PathFind(mapIdx, PointMake(ClickedIdx.x, ClickedIdx.y), mapIdx, _lWayIdxList);
-						_lOrderList.push_back(ORDER_KINDS::MOVE);
-
-
-					}
-				}
-
-			}
-			break;
-		default:
-			break;
-		}
+		SetModeFunc();
+		MakeOrder();
 	}
 
 	
 
-
-	//	애니메이션 테스트용
-	//stateAniTest();
 	
 	
 	_curState->update(this);
@@ -310,16 +273,103 @@ void charLeon::aniRender()
 	else {
 		_img->aniRender(_rc.left, _rc.top - _curTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
 	}
-
-	//WCHAR str[128];
-	//swprintf_s(str, L"cameraX : %d", CAMERA2D->getCamPosX());
-	//D2DMANAGER->drawText(str, CAMERA2D->getCamPosX(), CAMERA2D->getCamPosY() + 80);
+	
 	WCHAR str[128];
-	swprintf_s(str, L"Dir : [%d]", _dir);
-	D2DMANAGER->drawText(str, CAMERA2D->getCamPosX(), CAMERA2D->getCamPosY() + 130);
+	switch (_state)
+	{
+	case CHAR_STATE::NONE:
+		swprintf_s(str, L"state : NONE");
+		break;
+	case CHAR_STATE::IDLE:
+		swprintf_s(str, L"state : IDLE");
+		break;
+	case CHAR_STATE::MOVE:
+		swprintf_s(str, L"state : MOVE");
+		break;
+	case CHAR_STATE::CASTING:
+		swprintf_s(str, L"state : CASTING");
+		break;
+	case CHAR_STATE::DEAD:
+		swprintf_s(str, L"state : DEAD");
+		break;
+	case CHAR_STATE::GETHIT:
+		swprintf_s(str, L"state : GETHIT");
+		break;
+	case CHAR_STATE::STONE:
+		swprintf_s(str, L"state : STONE");
+		break;
+	case CHAR_STATE::FROZEN:
+		swprintf_s(str, L"state : FROZEN");
+		break;
+	case CHAR_STATE::GETHIT2:
+		swprintf_s(str, L"state : GETHIT2");
+		break;
+	case CHAR_STATE::BLOCK:
+		swprintf_s(str, L"state : BLOCK");
+		break;
+	case CHAR_STATE::BASIC_ATK:
+		swprintf_s(str, L"state : BASIC_ATK");
+		break;
+	case CHAR_STATE::SKILL1:
+		swprintf_s(str, L"state : SKILL1");
+		break;
+	case CHAR_STATE::SKILL2:
+		swprintf_s(str, L"state : SKILL2");
+		break;
+	case CHAR_STATE::SKILL3:
+		swprintf_s(str, L"state : SKILL3");
+		break;
+	case CHAR_STATE::SKILL4:
+		swprintf_s(str, L"state : SKILL4");
+		break;
+	case CHAR_STATE::CHAR_STATE_END:
+		swprintf_s(str, L"state : CHAR_STATE_END");
+		break;
+	default:
+		break;
+	}
+
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+	//D2DMANAGER->drawText(str, _rc.left, _rc.top - 20);
+
+	switch (_dir)
+	{
+	case CHAR_DIR::NONE:
+		swprintf_s(str, L"dir : NONE");
+		break;
+	case CHAR_DIR::LT:
+		swprintf_s(str, L"dir : LT");
+		break;
+	case CHAR_DIR::RT:
+		swprintf_s(str, L"dir : RT");
+		break;
+	case CHAR_DIR::LB:
+		swprintf_s(str, L"dir : LB");
+		break;
+	case CHAR_DIR::RB:
+		swprintf_s(str, L"dir : RB");
+		break;
+	case CHAR_DIR::CHAR_DIR_END:
+		break;
+	default:
+		break;
+	}
+	//D2DMANAGER->drawText(str, _rc.left, _rc.top - 40);
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xFF1111, 1.0f), L"consolas", 20, str, _rc.left, _rc.top-20, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+	
+	swprintf_s(str, L"mapIdx : [%d,%d]",_curTile->_idx.x, _curTile->_idx.y);
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 40, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+
+	swprintf_s(str, L"isOnAtk : [%d]", _isOnAtking);
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 60, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+	
+	swprintf_s(str, L"waylistSize : [%d]", _lWayIdxList.size());
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 80, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+	
 	
 }
 
+/*
 void charLeon::KnowingTileFunc()
 {
 	//mapIdx = ConvertPosToIdx(_pos.x, _pos.y, TILESIZE_WID, TILESIZE_HEI);
@@ -384,7 +434,7 @@ void charLeon::CalTileforRenderFunc()
 		_tileForRender = _curTile;
 	}
 }
-
+*/
 void charLeon::setAni()
 {
 	if (_isStateChanged) {
@@ -476,7 +526,7 @@ void charLeon::setAni()
 				_ani = KEYANIMANAGER->findAnimation("leon", "stateGetHit2Back");
 				break;
 			case CHAR_STATE::BLOCK:
-				_ani = KEYANIMANAGER->findAnimation("leon", "stateStoneBack");
+				_ani = KEYANIMANAGER->findAnimation("leon", "stateBlockBack");
 				break;
 
 			case CHAR_STATE::BASIC_ATK:
@@ -506,6 +556,7 @@ void charLeon::setAni()
 	
 }
 
+/*
 void charLeon::makeIdleByEndAni()
 {
 	if (!_ani->isPlay()) {
@@ -514,18 +565,33 @@ void charLeon::makeIdleByEndAni()
 	}
 }
 
+void charLeon::CoolDownFunc()
+{
+	for (int i = 0; i < 7; i++) {
+		if (_coolDownTimer[0][i] < _coolDownTimer[1][i]) {
+			_coolDownTimer[0][i]++;
+		}
+		
+		else if (_coolDownTimer[0][i] >= _coolDownTimer[1][i]) {
+			_coolDownTimer[0][i] = _coolDownTimer[1][i];
+		}
+	}
+}
+*/
+/*
 void charLeon::OrderPerform()
 {
 	if (_lOrderList.size() != 0) {
-		ORDER_KINDS order = *_lOrderList.begin();
+		tagOrderInfo order = *_lOrderList.begin();
 		
-		switch (order)
+		switch (order.kinds)
 		{
 		case ORDER_KINDS::NONE:
 			break;
 		case ORDER_KINDS::HOLD:
 			break;
 		case ORDER_KINDS::MOVE:
+			this->MoveFunc();
 			break;
 		case ORDER_KINDS::ATK:
 			break;
@@ -545,7 +611,7 @@ void charLeon::OrderPerform()
 	
 	
 }
-
+*/
 void charLeon::AddOrderMove()
 {
 }

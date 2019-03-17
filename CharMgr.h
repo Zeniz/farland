@@ -17,7 +17,6 @@
 #include "stateGetHit2.h"
 #include "stateBlock.h"
 
-#include "CharInfoUI.h"
 
 
 
@@ -27,12 +26,11 @@ class CharMgr : public gameNode
 
 	charStatePattern* _arrStatePattern[static_cast<const int>(CHAR_STATE::CHAR_STATE_END)];
 	vector<Character*> _vChara;
-	
-	CharInfoUI* _charInfoUI;
-
+	int _selectedChar;
 	
 	vvMap* _vvMap;
 	vEnemy* _vEnemy;
+	
 
 public:
 	CharMgr();
@@ -42,7 +40,7 @@ public:
 	void release();
 	void update();
 	void render(int idxX, int idxY);
-	void RenderCharInfo();
+	
 
 
 	void InitArrStatePattern();		
@@ -66,9 +64,28 @@ public:
 
  	void AddCharacter(Character* chara);
 
+	void setSelectChar(int idx, bool value);
+	
+	ORDER_KINDS getCharMode(int idx) { return _vChara[idx]->getModeKinds(); }
+//	list<ORDER_KINDS>* getOrderList(int idx) {return _vChara[idx] }
+	
+	TILE* getCurTile(int idx) { return _vChara[idx]->getCurTile(); }
+	TILE* getTargetTile(int idx) { return _vChara[idx]->getTartgetTile(); }
+
+	void setCurHpAug(int idx, int augVal) { _vChara[idx]->setCurHpAug(augVal); }
+	void setCurMpAug(int idx, int augVal) { _vChara[idx]->setCurMpAug(augVal); }
+	void setCurSpAug(int idx, int augVal) { _vChara[idx]->setCurSpAug(augVal); }
+
+
+	vector<Character*>* getVChara() { return &_vChara; }
+
 
 	void LinkToVvMap(vvMap* vvMapAddr) { _vvMap = vvMapAddr; }
+	//void LinkToEnemyMgr(enemyMgr* enemyMgrAddr) { _enemyMgr = enemyMgrAddr; }
 	void LinkToVEnemy(vEnemy* vEnemyAddr) { _vEnemy = vEnemyAddr; }
+	
+
+
 
 
 	//	테스트용

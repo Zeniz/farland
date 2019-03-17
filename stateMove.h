@@ -24,6 +24,8 @@ public:
 
 	void update(Character* character) override;
 
+
+	
 	void CalDirFunc(Character* character);
 	void CalTileForRender(Character* character);
 };

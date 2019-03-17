@@ -72,6 +72,37 @@ void stateMove::update(Character* character)
 {
 	CalTileForRender(character);
 
+	//	공격하러 가는중이면,
+	if (character->_isOnAtking) {
+		//	일정시간마다 astar로 길 재갱신
+		character->_aStarCount++;
+		if (character->_aStarCount > character->ASTAR_COUNT_MAX) {
+			character->_aStarCount = 0;
+
+			vEnemy* _vEnemy = character->_vEnemy;
+			ASTARFUNC->PathFind(character->mapIdx,
+				(*_vEnemy)[character->_targetEnemyIdx]->_mapIdx,
+				character->mapIdx, character->_lWayIdxList);
+			//	길을 찾았으면 -> 마지막인덱스(몹이 있는 곳) pop
+			if (character->_lWayIdxList.size() != 0 && character->_lWayIdxList.begin()->x != -1) {
+				
+				if (character->_lWayIdxList.size() != 1) {
+					character->_lWayIdxList.pop_back();
+				}
+				//character->_lWayIdxList.pop_back();
+
+				character->_liWayIdxList = character->_lWayIdxList.end();
+				character->_liWayIdxList--;
+
+				vvMap* _vvMap = character->_vvMap;
+				character->_targetTile = (*_vvMap)[character->_liWayIdxList->y][character->_liWayIdxList->x];
+			}
+		}
+
+	}
+	
+
+
 	if (character->_lWayIdxList.size() != 0) {
 		POINT targetIdx = { character->_lWayIdxList.begin()->x, character->_lWayIdxList.begin()->y };
 		//	못가는 곳 판정이 났으면, 아이들로 바꾸고 지워라
@@ -79,7 +110,7 @@ void stateMove::update(Character* character)
 			character->_state = CHAR_STATE::IDLE;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
 			character->_isStateChanged = true;
-			if (*(character->_lOrderList.begin()) == ORDER_KINDS::MOVE)
+			if ((character->_lOrderList.begin()->kinds) == ORDER_KINDS::MOVE)
 				character->_lOrderList.pop_front();
 
 		}
@@ -120,14 +151,26 @@ void stateMove::update(Character* character)
 			character->_img->GetFrameWidth(), character->_img->GetFrameHeight());
 
 	}
-	//	목적지 도착
-	else {
+
+	//	단순이동 & 목적지 도착
+	if (character->_lWayIdxList.size() == 0 && !character->_isOnAtking) {
+		//	목적지 도착
+	//else {
 		character->_state = CHAR_STATE::IDLE;
 		character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
 		character->_isStateChanged = true;
-		if(*(character->_lOrderList.begin()) == ORDER_KINDS::MOVE)
+		if ((character->_lOrderList.begin()->kinds) == ORDER_KINDS::MOVE)
 			character->_lOrderList.pop_front();
+	//}
 	}
+
+	//	공격이동 & 목적지 도착 -> 일단 아이들로 보냄 -> idle에서 공격카운트 되면, 최종 공격 할거임.
+	else if (character->_lWayIdxList.size() == 0 && character->_isOnAtking) {
+		character->_state = CHAR_STATE::IDLE;
+		character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
+		character->_isStateChanged = true;
+	}
+	
 }
 
 void stateMove::CalDirFunc(Character* character)

@@ -71,34 +71,97 @@ void stateIdle::update(Character* character)
 {
 	character->_tileForRender = character->_curTile;
 
-	//	오더리스트가 있다면,
-	if (character->_lOrderList.size() != 0) {
-		ORDER_KINDS order = *(character->_lOrderList.begin());
-		switch (order)
-		{
-		case ORDER_KINDS::NONE:
-			break;
-		case ORDER_KINDS::HOLD:
-			break;
-		case ORDER_KINDS::MOVE:
-			character->_state = CHAR_STATE::MOVE;
-			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
-			character->_isStateChanged = true;
-			break;
-		case ORDER_KINDS::ATK:
-			break;
-		case ORDER_KINDS::SKILL1:
-			break;
-		case ORDER_KINDS::SKILL2:
-			break;
-		case ORDER_KINDS::SKILL3:
-			break;
-		case ORDER_KINDS::SKILL4:
-			break;
-		default:
-			break;
-		}
+	//	공격오더중, 재이동을 위해 명령재실행(move로 시작하는)을 판단하는 변수.
+	bool isNeedMoveAgain = true;
 
+	//	ATK으로 가는 코드
+	//	공격준비중이라면, ATK
+	//if (character->_lOrderList.size() != 0 && character->_lOrderList.begin()->kinds == ORDER_KINDS::ATTACK) {
+	//	//	이동을 다 했고, 쿨타임 준비가됐다면,
+	//	if (character->_lWayIdxList.size() == 0) {
+	//		if (character->_coolDownTimer[0][ORDER_KINDS::ATTACK] >= character->_coolDownTimer[1][ORDER_KINDS::ATTACK]) {
+	//			bool isNearEnemy = false;
+	//			//	상하좌우에 적이 있나?
+	//			ChkNearbyEnemy(character, &isNearEnemy);
+	//			if (isNearEnemy) {
+	//				//	character->_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
+	//
+	//				character->_state = CHAR_STATE::BASIC_ATK;
+	//				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::BASIC_ATK)];
+	//				character->_isStateChanged = true;
+	//				return;
+	//			}
+	//			else { return; }
+	//
+	//
+	//		}
+	//		else {
+	//			return;
+	//		}
+	//	}
+	//}
+	
+	//	ATK/SKILL1234 로 가는 통합 함수
+	if (character->_lOrderList.size() != 0) {
+		if (character->_lOrderList.begin()->kinds == ORDER_KINDS::ATTACK) {
+			CalForJumptoAtkState(character, ORDER_KINDS::ATTACK, &isNeedMoveAgain);
+		}
+		else if (character->_lOrderList.begin()->kinds == ORDER_KINDS::SKILL1) {
+			CalForJumptoAtkState(character, ORDER_KINDS::SKILL1, &isNeedMoveAgain);
+		}
+		else if (character->_lOrderList.begin()->kinds == ORDER_KINDS::SKILL2) {
+			CalForJumptoAtkState(character, ORDER_KINDS::SKILL2, &isNeedMoveAgain);
+		}
+		else if (character->_lOrderList.begin()->kinds == ORDER_KINDS::SKILL3) {
+			CalForJumptoAtkState(character, ORDER_KINDS::SKILL3, &isNeedMoveAgain);
+		}
+		else if (character->_lOrderList.begin()->kinds == ORDER_KINDS::SKILL4) {
+			CalForJumptoAtkState(character, ORDER_KINDS::SKILL4, &isNeedMoveAgain);
+		}
+	}
+
+	if (isNeedMoveAgain) {
+		//	오더리스트가 있다면, -> 오더 실행하라(state에 따라 패턴넣어줌)
+		if (character->_lOrderList.size() != 0) {
+			ORDER_KINDS order = (character->_lOrderList.begin()->kinds);
+			switch (order)
+			{
+			case ORDER_KINDS::NONE:
+				break;
+			case ORDER_KINDS::HOLD:
+				character->_coolDownTimer[0][ORDER_KINDS::HOLD] = 0;
+				character->_state = CHAR_STATE::BLOCK;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::BLOCK)];
+				character->_isStateChanged = true;
+				character->_isOnAtking = false;
+				break;
+			case ORDER_KINDS::MOVE:
+				character->_coolDownTimer[0][ORDER_KINDS::MOVE] = 0;
+				character->_state = CHAR_STATE::MOVE;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
+				character->_isStateChanged = true;
+				character->_isOnAtking = false;
+				break;
+			case ORDER_KINDS::ATTACK:
+				//_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;	//	-> move부터 시작되므로, Attk패턴 중에 계속 0 으로 만들자.
+				character->_state = CHAR_STATE::MOVE;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
+				character->_isStateChanged = true;
+				character->_isOnAtking = true;
+				break;
+			case ORDER_KINDS::SKILL1: case ORDER_KINDS::SKILL2:
+			case ORDER_KINDS::SKILL3: case ORDER_KINDS::SKILL4:
+				character->_state = CHAR_STATE::MOVE;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
+				character->_isStateChanged = true;
+				character->_isOnAtking = true;
+
+				break;
+			default:
+				break;
+			}
+
+		}
 	}
 
 	
@@ -120,4 +183,108 @@ void stateIdle::update(Character* character)
 	//	}
 	//	
 	//}
+}
+
+void stateIdle::ChkNearbyEnemy(Character * chara, bool * isNearEnemy)
+{
+	POINT curMapIdx = chara->mapIdx;
+	vEnemy* _vEnemy = chara->_vEnemy;
+
+	if (curMapIdx.x - 1 == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.x) &&
+		curMapIdx.y == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.y)) {
+		*isNearEnemy = true;
+		chara->_dir = CHAR_DIR::LT;
+		return;
+	}
+	if (curMapIdx.x + 1 == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.x) &&
+		curMapIdx.y == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.y)) {
+		*isNearEnemy = true;
+		chara->_dir = CHAR_DIR::RB;
+		return;
+	}
+	if (curMapIdx.x == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.x) &&
+		curMapIdx.y - 1 == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.y)) {
+		*isNearEnemy = true;
+		chara->_dir = CHAR_DIR::RT;
+		return;
+	}
+	if (curMapIdx.x == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.x) &&
+		curMapIdx.y + 1 == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.y)) {
+		*isNearEnemy = true;
+		chara->_dir = CHAR_DIR::LB;
+		return;
+	}
+	//	나랑 겹쳐진곳 추가
+	if (curMapIdx.x == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.x) &&
+		curMapIdx.y == ((*_vEnemy)[chara->_targetEnemyIdx]->_mapIdx.y)) {
+		*isNearEnemy = true;
+		return;
+	}
+
+
+	*isNearEnemy = false;
+	return;
+}
+
+void stateIdle::CalForJumptoAtkState(Character * character, ORDER_KINDS proceedOrder, bool* isNeedMoveAgain)
+{
+	*isNeedMoveAgain = true;
+	if (character->_lOrderList.size() != 0 && character->_lOrderList.begin()->kinds == proceedOrder) {
+		//	이동을 다 했고, 쿨타임 준비가됐다면,
+		if (character->_lWayIdxList.size() == 0) {
+			if (character->_coolDownTimer[0][proceedOrder] >= character->_coolDownTimer[1][proceedOrder]) {
+				bool isNearEnemy = false;
+				//	상하좌우에 적이 있나?
+				ChkNearbyEnemy(character, &isNearEnemy);
+				if (isNearEnemy) {
+					//	character->_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
+					CHAR_STATE destState;
+					switch (proceedOrder)
+					{
+					case NONE:
+						break;
+					case MOVE:
+						break;
+					case HOLD:
+						break;
+					case ATTACK:
+						destState = CHAR_STATE::BASIC_ATK;
+						break;
+					case SKILL1:
+						destState = CHAR_STATE::CASTING;
+						break;
+					case SKILL2:
+						destState = CHAR_STATE::CASTING;
+						break;
+					case SKILL3:
+						destState = CHAR_STATE::CASTING;
+						break;
+					case SKILL4:
+						destState = CHAR_STATE::CASTING;
+						break;
+					case ORDER_END:
+						break;
+					default:
+						break;
+					}
+
+					character->_state = destState;
+					character->_curState = character->_arrStatePattern[static_cast<const int>(destState)];
+					character->_isStateChanged = true;
+					*isNeedMoveAgain = false;
+					return;
+				}
+				else {
+					*isNeedMoveAgain = false;
+					return;
+				}
+
+
+			}
+			else {
+				*isNeedMoveAgain = false;
+				return;
+			}
+		}
+	}
 }

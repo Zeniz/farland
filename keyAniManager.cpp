@@ -102,50 +102,95 @@ void keyAniManager::addDefaultFrameAnimation(string type, string animationKeyNam
 
 void keyAniManager::addArrayFrameAnimation(string type, string animationKeyName, const char * imageKeyName, int * arr, int arrLen, int fps, bool loop)
 {
-	image* img = IMAGEMANAGER->findImage(imageKeyName);
-
-	animation* ani = new animation;
-
-	ani->init(img->GetWidth(), img->GetHeight(), img->GetFrameWidth(), img->GetFrameHeight());
-	ani->setPlayFrame(arr, arrLen, loop);
-	ani->setFPS(fps);
+	//iterAnimationType typeIter = _mTotalAnimation.find(type);
+	//if (typeIter != _mTotalAnimation.end())
+	//{
+	//	iterAnimation iter = typeIter->second.find(animationKeyName);
+	//	if (iter != typeIter->second.end())
+	//		return;
+	//}
 	iterAnimationType typeIter = _mTotalAnimation.find(type);
-	if (typeIter != _mTotalAnimation.end())
-	{
-		typeIter->second.insert(pair<string, animation*>(animationKeyName, ani));
+	iterAnimation iter = typeIter->second.find(animationKeyName);
+
+	if (typeIter != _mTotalAnimation.end() && iter != typeIter->second.end()) {
+		return;
 	}
+	else {
+		image* img = IMAGEMANAGER->findImage(imageKeyName);
+
+		animation* ani = new animation;
+
+		ani->init(img->GetWidth(), img->GetHeight(), img->GetFrameWidth(), img->GetFrameHeight());
+		ani->setPlayFrame(arr, arrLen, loop);
+		ani->setFPS(fps);
+		iterAnimationType typeIter = _mTotalAnimation.find(type);
+		if (typeIter != _mTotalAnimation.end())
+		{
+			typeIter->second.insert(pair<string, animation*>(animationKeyName, ani));
+		}
+	}
+
+	
 }
 
 void keyAniManager::addArrayFrameAnimation(string type, string animationKeyName, const char * imageKeyName, int * arr, int arrLen, int fps, bool loop, void * cbFunction)
 {
-	image* img = IMAGEMANAGER->findImage(imageKeyName);
-
-	animation* ani = new animation;
-
-	ani->init(img->GetWidth(), img->GetHeight(), img->GetFrameWidth(), img->GetFrameHeight());
-	ani->setPlayFrame(arr, arrLen, loop, CALLBACK_FUNCTION(cbFunction));
-	ani->setFPS(fps);
+	//iterAnimationType typeIter = _mTotalAnimation.find(type);
+	//if (typeIter != _mTotalAnimation.end())
+	//{
+	//	iterAnimation iter = typeIter->second.find(animationKeyName);
+	//	if (iter != typeIter->second.end())
+	//		return;
+	//}
 	iterAnimationType typeIter = _mTotalAnimation.find(type);
-	if (typeIter != _mTotalAnimation.end())
-	{
-		typeIter->second.insert(pair<string, animation*>(animationKeyName, ani));
+	iterAnimation iter = typeIter->second.find(animationKeyName);
+
+	if (typeIter != _mTotalAnimation.end() && iter != typeIter->second.end()) {
+		return;
 	}
+	else {
+		image* img = IMAGEMANAGER->findImage(imageKeyName);
+
+		animation* ani = new animation;
+
+		ani->init(img->GetWidth(), img->GetHeight(), img->GetFrameWidth(), img->GetFrameHeight());
+		ani->setPlayFrame(arr, arrLen, loop, CALLBACK_FUNCTION(cbFunction));
+		ani->setFPS(fps);
+		iterAnimationType typeIter = _mTotalAnimation.find(type);
+		if (typeIter != _mTotalAnimation.end())
+		{
+			typeIter->second.insert(pair<string, animation*>(animationKeyName, ani));
+		}
+	}
+
 }
 
 void keyAniManager::addArrayFrameAnimation(string type, string animationKeyName, const char * imageKeyName, int * arr, int arrLen, int fps, bool loop, void * cbFunction, void * obj)
 {
-	image* img = IMAGEMANAGER->findImage(imageKeyName);
-
-	animation* ani = new animation;
-
-	ani->init(img->GetWidth(), img->GetHeight(), img->GetFrameWidth(), img->GetFrameHeight());
-	ani->setPlayFrame(arr, arrLen, loop, (CALLBACK_FUNCTION_PARAMETER)cbFunction, obj);
-	ani->setFPS(fps);
 	iterAnimationType typeIter = _mTotalAnimation.find(type);
-	if (typeIter != _mTotalAnimation.end())
-	{
-		typeIter->second.insert(pair<string, animation*>(animationKeyName, ani));
+	iterAnimation iter = typeIter->second.find(animationKeyName);
+
+	if (typeIter != _mTotalAnimation.end() && iter != typeIter->second.end()) {
+		return;
 	}
+		
+	
+	else {
+		image* img = IMAGEMANAGER->findImage(imageKeyName);
+
+		animation* ani = new animation;
+
+		ani->init(img->GetWidth(), img->GetHeight(), img->GetFrameWidth(), img->GetFrameHeight());
+		ani->setPlayFrame(arr, arrLen, loop, (CALLBACK_FUNCTION_PARAMETER)cbFunction, obj);
+		ani->setFPS(fps);
+		iterAnimationType typeIter = _mTotalAnimation.find(type);
+		if (typeIter != _mTotalAnimation.end())
+		{
+			typeIter->second.insert(pair<string, animation*>(animationKeyName, ani));
+		}
+	}
+
+	
 }
 
 void keyAniManager::addCoordinateFrameAnimation(string type, string animationKeyName, const char * imageKeyName, int start, int end, int fps, bool reverse, bool loop)

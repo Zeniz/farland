@@ -23,36 +23,52 @@ HRESULT testMap::init()
 	_mapLoader->LoadMap(10, &_vvMap, &_tileNum, &_vObj, &_vEnemy);
 
 	_charMgr = new CharMgr;
+	_charMgr->init();
 	_charMgr->LinkToVvMap(&_vvMap);
-	_charMgr->LinkToVEnemy(&_vEnemy);
+	
+	_enemyMgr = new enemyMgr;
+	_enemyMgr->init();
+	_enemyMgr->LinkToMap(&_vvMap);
 
+	_charMgr->LinkToVEnemy(_enemyMgr->getVEnemy());
+	_enemyMgr->LinkToVChara(_charMgr->getVChara());
+
+
+	_UIMgr = new UIMgr;
+	_UIMgr->init();
+	_UIMgr->LinkToMap(&_vvMap);
+	_UIMgr->LinkToCharMgr(_charMgr);
+
+	_selectedUI = UI_KINDS::UI_KINDS_NONE;
+	_selectedUI |= UI_KINDS::MASK_TILE;
+	_selectedUI |= UI_KINDS::CHARINFO;
+
+	_UIMgr->setSelectUI(_selectedUI);
+
+
+	//	============캐릭터 추가=======
 
 	Character* tmpChar;
-	_charMgr->init();
-	tmpChar = _charMgr->MakeNewChara(CHAR_NAME::LEON);
+	tmpChar = _charMgr->MakeNewChara(CHAR_NAME::LEON);		//	뉴떄려줌, 링크걸고 리턴
 
 	tmpChar->InitObjectiveValDefault({ 0,0 });
 	tmpChar->InitCharacteristicValDefault();
 	tmpChar->InitCharacteristicAugValDefault();
-	//tmpChar->InitObjectiveVal(
-	//	IMAGEMANAGER->findImage("charLeon"),
-	//	ConvertIdxToPosFloat(0, 0, TILESIZE_WID, TILESIZE_HEI),
-	//	0,
-	//	KEYANIMANAGER->findAnimation("leon", "idle"),
-	//	_vvMap[0][0]
-	//);
-	//tmpChar->InitCharacteristicVal(100, 100, 1, 100, 100, 1,
-	//	1, 1, 10, 10, 10, 10,
-	//	CHAR_NAME::LEON, CHAR_DIR::LB, CHAR_STATE::IDLE);
+	
 	_charMgr->AddCharacter(tmpChar);
-
-
+	_UIMgr->AddChar(tmpChar);
 	
-	_maskTile = new MaskTile;
-	_maskTile->init(&_vvMap);
 	
+	//	=============적 추가 ===========
+	
+	enemy* tmpEnemy;
+	tmpEnemy = _enemyMgr->MakeNewEnemy(E_IMGNUM::MOB_SKEL);		//	뉴 떄리고, 링크걸고 리턴
+	
+	tmpEnemy->InitObjectiveValDefault({ 10,10 });
+	tmpEnemy->InitCharacteristicValDefault();
 
-
+	_enemyMgr->AddEnemy(tmpEnemy);
+	
 
 	SAFE_DELETE(_mapLoader);
 
@@ -67,11 +83,16 @@ void testMap::update()
 {
 	CAMERA2D->update();
 	KEYANIMANAGER->update("leon");
+	KEYANIMANAGER->update("skel");
 	SetClipRangeFunc();
 
 	_charMgr->update();
+	_enemyMgr->update();
 
-	_maskTile->update();
+
+	_UIMgr->update();
+
+	//_maskTile->update();
 }
 
 void testMap::render()
@@ -122,12 +143,17 @@ void testMap::render()
 			if (j > _tileNum.x - 1)	continue;
 			//D2DMANAGER->drawDiamondLine(_vvMap[i][j]->_pos.x, _vvMap[i][j]->_pos.y, TILESIZE_WID, TILESIZE_HEI);
 
-			//	enemy
-			EnemyRender(j, i, enemyRenderCount);
+			
 			//	높이 타일
 			ZTileRender(j, i);
+			
+			//	enemy
+			
+			EnemyRender(j, i, enemyRenderCount);
+			
 			//	player
 			_charMgr->render(j, i);
+			
 
 			
 
@@ -138,7 +164,8 @@ void testMap::render()
 		}
 	}
 
-	_maskTile->render();
+	
+	//_maskTile->render();
 
 	//	astar테스트용 출력
 	list<POINT>* tmpWaylistAddr = _charMgr->getWayListAddr(0);
@@ -159,8 +186,10 @@ void testMap::render()
 		}
 	}
 
+	_UIMgr->render();
+
 	//	캐릭터 정보 UI
-	_charMgr->RenderCharInfo();
+	//_charMgr->RenderCharInfo();
 
 
 }
@@ -234,23 +263,26 @@ void testMap::PlayerRender(int idxX, int idxY)
 
 void testMap::EnemyRender(int idxX, int idxY, int& enemyCount)
 {
-	//	애니들어가야함
-	if (enemyCount < _vEnemy.size()) {
-		while (_vEnemy[enemyCount]->_mapIdx.x == idxX && _vEnemy[enemyCount]->_mapIdx.y == idxY) {
-			_vEnemy[enemyCount]->_sampleImg->render(
-				_vEnemy[enemyCount]->_rc.left,
-				_vEnemy[enemyCount]->_rc.top,
-				_vEnemy[enemyCount]->_sampleRc.left,
-				_vEnemy[enemyCount]->_sampleRc.top,
-				_vEnemy[enemyCount]->getWid(),
-				_vEnemy[enemyCount]->getHei(),
-				1.0f
-			);
+	_enemyMgr->render(idxX, idxY);
 
-			enemyCount++;
-			if (enemyCount >= _vEnemy.size())		break;
-		}
-	}
+
+	//	애니들어가야함
+	//if (enemyCount < _vEnemy.size()) {
+	//	while (_vEnemy[enemyCount]->_mapIdx.x == idxX && _vEnemy[enemyCount]->_mapIdx.y == idxY) {
+	//		_vEnemy[enemyCount]->_sampleImg->render(
+	//			_vEnemy[enemyCount]->_rc.left,
+	//			_vEnemy[enemyCount]->_rc.top,
+	//			_vEnemy[enemyCount]->_sampleRc.left,
+	//			_vEnemy[enemyCount]->_sampleRc.top,
+	//			_vEnemy[enemyCount]->getWid(),
+	//			_vEnemy[enemyCount]->getHei(),
+	//			1.0f
+	//		);
+	//
+	//		enemyCount++;
+	//		if (enemyCount >= _vEnemy.size())		break;
+	//	}
+	//}
 }
 
 void testMap::ObjRender(int idxX, int idxY, int& objCount)

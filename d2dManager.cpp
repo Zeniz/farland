@@ -414,6 +414,23 @@ void d2dManager::drawTextD2D(ID2D1SolidColorBrush * brush, LPCWSTR string, float
 	_renderTarget->DrawTextA(string, lstrlenW(string), _defaultTextFormat, rcf, brush);
 }
 
+void d2dManager::drawTextD2D(ID2D1SolidColorBrush * brush, LPCWSTR fontName, float fontSize, LPCWSTR string, float startX, float startY)
+{
+	D2D1_RECT_F rcf = getDrawRectfArea(startX, startY, startX + lstrlenW(string) * fontSize, startY + fontSize);
+
+	if (!isRectFInRangeWindow(rcf))
+		return;
+
+	//	TextFormat 持失
+	_writeFactory->CreateTextFormat(fontName, NULL, DWRITE_FONT_WEIGHT_REGULAR,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &_customTextFormat);
+
+
+	_renderTarget->DrawTextA(string, lstrlenW(string), _customTextFormat, rcf, brush);
+
+	SAFE_RELEASE2(_customTextFormat);
+}
+
 void d2dManager::drawTextD2D(ID2D1SolidColorBrush * brush, LPCWSTR fontName, float fontSize, LPCWSTR string, float startX, float startY, float endX, float endY)
 {
 	D2D1_RECT_F rcf = getDrawRectfArea(startX, startY, endX, endY);
@@ -426,6 +443,26 @@ void d2dManager::drawTextD2D(ID2D1SolidColorBrush * brush, LPCWSTR fontName, flo
 		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &_customTextFormat);
 
 
+	_renderTarget->DrawTextA(string, lstrlenW(string), _customTextFormat, rcf, brush);
+
+	SAFE_RELEASE2(_customTextFormat);
+}
+
+void d2dManager::drawTextD2D(ID2D1SolidColorBrush * brush, LPCWSTR fontName, float fontSize, LPCWSTR string, float startX, float startY, bool BkMode, ID2D1SolidColorBrush * BkBrush)
+{
+	D2D1_RECT_F rcf = getDrawRectfArea(startX, startY, startX + lstrlenW(string) * fontSize, startY + fontSize);
+
+	if (!isRectFInRangeWindow(rcf))
+		return;
+
+	//	TextFormat 持失
+	_writeFactory->CreateTextFormat(fontName, NULL, DWRITE_FONT_WEIGHT_REGULAR,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &_customTextFormat);
+
+	if (BkMode) {
+		_renderTarget->FillRectangle(rcf, BkBrush);
+	}
+	
 	_renderTarget->DrawTextA(string, lstrlenW(string), _customTextFormat, rcf, brush);
 
 	SAFE_RELEASE2(_customTextFormat);

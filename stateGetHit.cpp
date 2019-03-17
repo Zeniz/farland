@@ -69,4 +69,9 @@ void stateGetHit::onSkillFour(Character * character)
 
 void stateGetHit::update(Character* character)
 {
+	if (!character->_ani->isPlay()) {
+		character->_state = character->_preState;
+		character->_isStateChanged = true;
+		character->_curState = character->_arrStatePattern[static_cast<const int>(character->_state)];		
+	}
 }

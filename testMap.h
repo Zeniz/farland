@@ -1,15 +1,17 @@
 #pragma once
 #include "gameNode.h"
 #include "tileNode.h"
-#include "enemy.h"
-#include "skeleton.h"
+
 
 #include "CharMgr.h"
+#include "enemyMgr.h"
 
 #include "mapLoader.h"
 
+#include "UIMgr.h"
 
-#include "MaskTile.h"
+
+
 
 
 
@@ -23,6 +25,8 @@ private:
 	vEnemy _vEnemy;
 	
 	CharMgr* _charMgr;
+	enemyMgr* _enemyMgr;
+
 	mapLoader* _mapLoader;
 
 	POINT _clipMapIdx[2];
@@ -30,7 +34,8 @@ private:
 	const int CLIP_TILENUM_HEI = 60;
 	
 	
-	MaskTile* _maskTile;
+	UIMgr* _UIMgr;
+	unsigned char _selectedUI;
 
 	
 

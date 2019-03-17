@@ -76,6 +76,9 @@
     <Filter Include="PlayGround\UI">
       <UniqueIdentifier>{aa54e69b-6856-4108-8579-c9eece535481}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\enemy\enemyState">
+      <UniqueIdentifier>{6050f181-8b34-4587-b357-8b3b13713f8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -247,7 +250,19 @@
       <Filter>PlayGround\UI</Filter>
     </ClInclude>
     <ClInclude Include="CharInfoUI.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>PlayGround\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMgr.h">
+      <Filter>PlayGround\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObjects.h">
+      <Filter>PlayGround\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyMgr.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="eStatePattern.h">
+      <Filter>PlayGround\enemy\enemyState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -405,7 +420,19 @@
       <Filter>PlayGround\UI</Filter>
     </ClCompile>
     <ClCompile Include="CharInfoUI.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>PlayGround\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMgr.cpp">
+      <Filter>PlayGround\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObjects.cpp">
+      <Filter>PlayGround\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyMgr.cpp">
+      <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="eStatePattern.cpp">
+      <Filter>PlayGround\enemy\enemyState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

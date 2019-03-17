@@ -27,5 +27,8 @@ public:
 	void onSkillFour(Character* character) override;
 
 	void update(Character* character) override;
+
+	void ChkNearbyEnemy(Character* chara, bool* isNearEnemy);
+	void CalForJumptoAtkState(Character* character, ORDER_KINDS proceedOrder, bool* isNeedMoveAgain);
 };
 

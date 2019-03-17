@@ -8,7 +8,7 @@ gameNode::gameNode()
 
 
 gameNode::~gameNode()
-{
+{ 
 }
 
 HRESULT gameNode::init()

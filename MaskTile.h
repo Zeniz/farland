@@ -33,7 +33,9 @@ public:
 
 
 
-
+	void LinkToMap(vvMap* vvMapAddr) { 
+		_vvMap = vvMapAddr;
+	}
 	//void LinkToCharMgr(CharMgr* charMgrAddr) { _charMgrAddr = charMgrAddr; }
 };
 

@@ -87,5 +87,8 @@ public:
 
 	// 이벤트 프레임인가
 	bool isEventFrame() { return _nowPlayIndex  == _eventFrameIndex; }
+
+	//	마지막 프레임에 도달했는가
+	bool isLastFrame() { return _nowPlayIndex == _playList.size() - 1; }
 };
 

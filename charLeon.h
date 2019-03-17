@@ -36,14 +36,14 @@ public:
 	void aniRender() override;
 	
 
-
-	void KnowingTileFunc();
-	void CalTileforRenderFunc();
+	//stateMoveø°¿÷¿Ω
+	//void KnowingTileFunc();
+	//void CalTileforRenderFunc();		
 
 	void setAni();
-	void makeIdleByEndAni();
+	//void makeIdleByEndAni();
+	//void CoolDownFunc();
 
-	void OrderPerform();
 	void AddOrderMove();
 
 

@@ -24,5 +24,9 @@ public:
 	void onSkillFour(Character* character) override;
 
 	void update(Character* character) override;
+
+	void ChkNearbyEnemy(Character* chara, bool* isNearEnemy);
+	void CalDirFunc(Character* character);
+	void CalTileForRender(Character* character);
 };
 
