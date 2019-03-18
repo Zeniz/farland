@@ -37,8 +37,8 @@ void enemyMgr::update()
 void enemyMgr::render(int idxX, int idxY)
 {
 	for (int i = 0; i < _vEnemy.size(); i++) {
-		if (_vEnemy[i]->getTileForRender()->_idx.x == idxX &&
-			_vEnemy[i]->getTileForRender()->_idx.y == idxY) {
+		if (_vEnemy[i]->getTileForRender()->_mapIdx.x == idxX &&
+			_vEnemy[i]->getTileForRender()->_mapIdx.y == idxY) {
 			_vEnemy[i]->render();
 		}
 	}
@@ -54,18 +54,18 @@ void enemyMgr::render()
 }
 */
 
-enemy* enemyMgr::MakeNewEnemy(E_IMGNUM mobKind)
+enemy* enemyMgr::MakeNewEnemy(ENEMY_NAME mobName)
 {
 	enemy* tmpEnemy = nullptr;
-	switch (mobKind)
+	switch (mobName)
 	{
-	case E_IMG_NONE:
+	case ENEMY_NAME::E_NAME_NONE:
 		break;
-	case MOB_SKEL:
+	case ENEMY_NAME::MOB_SKEL:
 		tmpEnemy = new skeleton;
 		tmpEnemy->init();
 		break;
-	case E_IMG_END:
+	case ENEMY_NAME::E_NAME_END:
 		break;
 	default:
 		break;

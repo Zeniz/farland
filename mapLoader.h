@@ -1,6 +1,7 @@
 #pragma once
 #include "tileNode.h"
 #include "aStarTileNode.h"
+#include "enemyForMapEditor.h"
 #include "enemy.h"
 #include "skeleton.h"
 typedef vector<enemy*> vEnemy;
@@ -18,7 +19,7 @@ public:
 
 
 
-	void LoadMap(int mapIdx, vvMap* vvMapAddr, POINT* tileNum, vObj* vObjAddr, vEnemy* vEnemyAddr);
+	void LoadMap(int mapIdx, vvMap* vvMapAddr, POINT* tileNum, vEnemy* vEnemyAddr);
 
 };
 

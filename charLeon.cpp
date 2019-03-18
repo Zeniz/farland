@@ -357,7 +357,7 @@ void charLeon::aniRender()
 	//D2DMANAGER->drawText(str, _rc.left, _rc.top - 40);
 	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xFF1111, 1.0f), L"consolas", 20, str, _rc.left, _rc.top-20, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 	
-	swprintf_s(str, L"mapIdx : [%d,%d]",_curTile->_idx.x, _curTile->_idx.y);
+	swprintf_s(str, L"mapIdx : [%d,%d]",_curTile->_mapIdx.x, _curTile->_mapIdx.y);
 	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 40, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 
 	swprintf_s(str, L"isOnAtk : [%d]", _isOnAtking);

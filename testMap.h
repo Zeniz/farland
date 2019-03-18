@@ -21,7 +21,7 @@ private:
 	//	===	기본적으로 필요한 것들 ===	//
 	vvMap _vvMap;
 	POINT _tileNum;
-	vObj _vObj;
+	//vObj _vObj;
 	vEnemy _vEnemy;
 	
 	CharMgr* _charMgr;
@@ -62,7 +62,7 @@ public:
 	void ZTileRender(int idxX, int idxY);
 	void PlayerRender(int idxX, int idxY);
 	void EnemyRender(int idxX, int idxY, int& enemyCount);
-	void ObjRender(int idx, int idxY, int& objCount);
+	void ObjRender(int idx, int idxY);
 
 
 };

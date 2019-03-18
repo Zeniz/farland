@@ -15,582 +15,297 @@ enum T_ATTRIBUTE
 	T_ATTR_UNITON = 0x00000002UL,
 };
 
-enum O_ATTRIBUTE
-{
-	O_ATTR_NONE = 0x00000000UL,
-	O_ATTR_UNMOVE = 0x00000001UL,
-};
-
 //지형 이미지 키값 배열 번호
 typedef enum TERRAIN_ARRAY_NUM
 {
 	TERNUM_NONE = -1,
-	TERNUM_BASIC,
+	TER_BASIC,
 
 	TERNUM_END,
 
 
 
 }TERNUM;
-//지형 이미지 키값
-static string _terrainImageKey[10] = { "tile1","","","","","","","","","" };
 
-
-//오브젝트 이미지 키값 배열 번호
 typedef enum OBJECT_ARRAY_NUM
 {
 	OBJNUM_NONE = -1,
-	OBJNUM_BASIC,
-	OBJNUM_HOUSE,
-	OBJNUM_COMB,
-	OBJNUM_CRYSTAL,
-
+	OBJ_BASIC,
+	OBJ_HOUSE,
+	OBJ_COMB,
+	OBJ_CRYSTAL,
 
 	
 	OBJNUM_END,
-
-
 }OBJNUM;
-//오브젝트 이미지 키값
+//지형 이미지 키값
+static string _terrainImageKey[10] = { "tile1","","","","","","","","","" };
 static string _objectImageKey[10] = { "objSample1","objSample2","objSample3","objSample4","","","","","","" };
 
 
-//	맵 에디터용...맵 에디터에 넣을까?
-struct tagObjSpriteInfo {
-	POINTFLOAT centerPosInImg;
-	RECT sampleRc;
-	POINT objTileSize;
-	OBJECT_ARRAY_NUM imgNum;
-	image* img;
-	int zLvl;
-	O_ATTRIBUTE attr;
-
-	POINTFLOAT pos;
-	RECT rc;
-	POINT mapIdx;
-
-	int getPixPosToTop() {
-		return centerPosInImg.y - sampleRc.top;
-	}
-	int getPixPosToBot() {
-		return sampleRc.bottom - centerPosInImg.y;
-	}
-	int getPixPosToLeft() {
-		return centerPosInImg.x - sampleRc.left;
-	}
-	int getPixPosToRight() {
-		return sampleRc.right - centerPosInImg.x;
-	}
-	int getWid() {
-		return sampleRc.right - sampleRc.left;
-	}
-	int getHei() {
-		return sampleRc.bottom - sampleRc.top;
-	}
-	void init() {
-		this->centerPosInImg = { -1,-1 };		//	초기화 조건이 -1임.ObjSampleFunc()에서 쓰임
-		this->sampleRc = { NULL,NULL,NULL,NULL };
-		this->objTileSize = { NULL,NULL };
-		this->imgNum = OBJNUM_NONE;
-		this->img = nullptr;
-		this->zLvl = NULL;
-		this->attr = O_ATTR_NONE;
-		
-		this->pos = { NULL,NULL };
-		this->rc = { NULL, NULL, NULL, NULL };
-		this->mapIdx = { NULL,NULL };
-		
-	}
-
-};
-
-
-
-//	맵 에디터용...맵 에디터에 넣을까?
-static tagObjSpriteInfo _objImgInfo[OBJNUM_END][12];
-
-
-
-
-
 struct tagTileInfo {
+
+	image* img;
 	TERRAIN_ARRAY_NUM terImgNum;
 	int frameX;
 	int frameY;
-	POINT idx;
 	POINT pickIdx;
 
 	T_ATTRIBUTE terAttr;
-	POINTFLOAT pos;
 	RECT rc;
-	int zLevel;
 
+	int zlvl;
+	
 	void setTileInfo(TERRAIN_ARRAY_NUM terImgNum,
-		int frameX, int frameY, POINT idx, POINT pickIdx,
-		T_ATTRIBUTE terAttr, POINTFLOAT pos, RECT rc, int zlvl) {
+		int frameX, int frameY, POINT pickIdx,
+		T_ATTRIBUTE terAttr, RECT rc, int zlvl) {
 		
 		this->terImgNum = terImgNum;
 		this->frameX = frameX;
 		this->frameY = frameY;
-		this->idx = idx;
-		this->pickIdx = idx;
+		this->pickIdx = pickIdx;
 
 		this->terAttr = terAttr;
-		this->pos = pos;
+		
 		this->rc = rc;
-		this->zLevel = zlvl;
+		this->zlvl = zlvl;
+
+
+		if (terImgNum != TERNUM::TERNUM_NONE) {
+			switch (terImgNum)
+			{
+			case TERNUM_NONE:
+				break;
+			case TER_BASIC:
+				img = IMAGEMANAGER->findImage(_terrainImageKey[TER_BASIC].c_str());
+				break;
+			case TERNUM_END:
+				break;
+			default:
+				break;
+			}
+		}
+
 	}
+
+	void BrushTileInfo(TERRAIN_ARRAY_NUM terImgNum,
+		int frameX, int frameY) {
+
+		this->terImgNum = terImgNum;
+		this->frameX = frameX;
+		this->frameY = frameY;
+		
+		if (terImgNum != TERNUM::TERNUM_NONE) {
+			switch (terImgNum)
+			{
+			case TERNUM_NONE:
+				break;
+			case TER_BASIC:
+				img = IMAGEMANAGER->findImage(_terrainImageKey[TER_BASIC].c_str());
+				break;
+			case TERNUM_END:
+				break;
+			default:
+				break;
+			}
+		}
+
+	}
+
+	tagTileInfo getTileInfo() {
+		tagTileInfo tileInfo;
+		tileInfo.img = this->img;
+		tileInfo.terImgNum = this->terImgNum;
+		tileInfo.frameX = this->frameX;
+		tileInfo.frameY = this->frameY;
+		tileInfo.pickIdx = this->pickIdx;
+		tileInfo.terAttr = this->terAttr;
+		tileInfo.rc = this->rc;
+		tileInfo.zlvl = this->zlvl;
+		
+
+		return tileInfo;
+	}
+
 	void init() {
+		this->img = nullptr;
 		this->terImgNum = TERNUM_NONE;
 		this->frameX = NULL;
 		this->frameY = NULL;
-		this->idx = { NULL,NULL };
 		this->pickIdx = { NULL,NULL };
 
 		this->terAttr = T_ATTR_NONE;
-		this->pos = { NULL,NULL };
 		this->rc = { NULL,NULL,NULL,NULL };
-		this->zLevel = NULL;
+		this->zlvl = NULL;
+		
 	}
 
 };
 
 struct tagObjInfo {
 
-	OBJNUM	objImgNum;
-	int frameX;		//	필요없음
-	int frameY;		//	필요없음
+	image* img;
+	OBJNUM objNum;
+	RECT sampleRc;
+	POINT mapIdx;
+
 	POINTFLOAT pos;
 	RECT rc;
-	O_ATTRIBUTE	objAttr;
+	//int zLevel;
 
-	POINT botTileIdx;
-	POINT objTileSize;
+	//	맵에디터에서 쓰이는 용도
+	POINT centerPosInImg;		// 선택시, 중심이 되는좌표 (마우스가 끌고다니는 좌표)
+	POINT objTileSize;			//	중심좌표로부터, x,y방향으로 타일사이즈 크기
 
-	int zLevel;
+
+
+	void setObjInfo(OBJNUM objImgNum,
+		RECT sampleRc, POINT idx,
+		POINTFLOAT pos, RECT rc, int zlvl, 
+		POINT centerPosInImg, POINT objTileSize) {
+
+		this->objNum = objImgNum;
+		this->sampleRc = sampleRc;
+		this->mapIdx = idx;
+		
+		this->pos = pos;
+		this->rc = rc;
+
+		this->centerPosInImg = centerPosInImg;
+		this->objTileSize = objTileSize;
+		
+		
+
+		if (this->objNum != OBJNUM_NONE) {
+			switch (this->objNum)
+			{
+				//	오브제 종류에 따라서, 이미지매니저한테서 img 넣어줌
+			case OBJ_BASIC:
+				this->img = IMAGEMANAGER->findImage(_objectImageKey[OBJ_BASIC].c_str());
+				break;
+
+			default:
+				break;
+			}
+		}
+
+	}
+
+	tagObjInfo getObjInfo() {
+		tagObjInfo objInfo;
+		objInfo.img = this->img;
+		objInfo.objNum = this->objNum;
+		objInfo.sampleRc = this->sampleRc;
+		objInfo.mapIdx = this->mapIdx;
+		objInfo.pos = this->pos;
+		objInfo.rc = this->rc;
+		objInfo.centerPosInImg = this->centerPosInImg;
+		objInfo.objTileSize = this->objTileSize;
+
+
+
+		return objInfo;
+	}
+
+
+	void init() {
+		this->img = nullptr;
+		this->objNum = OBJNUM_NONE;
+		this->sampleRc = { NULL,NULL,NULL,NULL };
+		this->mapIdx = { NULL,NULL };
+		
+
+		this->pos = { NULL,NULL };
+		this->rc = { NULL,NULL,NULL,NULL };
+		
+		this->centerPosInImg = { NULL,NULL };
+		this->objTileSize = { NULL,NULL };
+	}
+
+	int getWid() {
+		return this->sampleRc.right - this->sampleRc.left;
+	}
+	int getHei() {
+		return this->sampleRc.bottom - this->sampleRc.top;
+	}
+
+	int getHeiPosToTop() {
+		return this->centerPosInImg.y - this->sampleRc.top;
+	}
+	int getWidPosToLeft() {
+		return this->centerPosInImg.x - this->sampleRc.left;
+	}
 
 
 };
 
-typedef class objNode : public objects
-{
-public:
-	
-	OBJNUM			_imgNum;
-	O_ATTRIBUTE		_attr;
-//	POINT _botTileIdx;
-	POINT _objTileSize;
-	POINT _mapIdx;
-
-	RECT _sampleRc;
-	POINTFLOAT _centerPosInImg;
-
-public:
-	objNode() :
-		_imgNum(OBJNUM_NONE), _attr(O_ATTR_NONE) {};
-
-	objNode(const objNode& obj) :
-		_imgNum(obj._imgNum),	_attr(obj._attr) {};
-
-	~objNode() {};
-
-	HRESULT init() 
-	{
-		_img = nullptr;
-		_imgNum = OBJNUM_NONE;
-		_frameX = NULL;
-		_frameY = NULL;
-		_mapIdx = { NULL, NULL };
-
-		_pos = { NULL, NULL };
-		_rc = { NULL,NULL,NULL,NULL };
-		_attr = O_ATTR_NONE;
-		_zLevel = NULL;
-
-		_sampleRc = { NULL, NULL, NULL, NULL };
-		_centerPosInImg = { NULL, NULL };
-
-		return S_OK;
-	}
-
-	HRESULT init(OBJNUM imgNum, O_ATTRIBUTE attr, POINT mapIdx, POINTFLOAT pos,
-		RECT rc, RECT sampleRc, int zlvl, POINT objTileSize) {
-		this->_imgNum = imgNum;
-		this->_img = IMAGEMANAGER->findImage(_objectImageKey[imgNum].c_str());
-		this->_attr = attr;
-		this->_mapIdx = mapIdx;
-		this->_pos = pos;
-		this->_rc = rc;
-		this->_sampleRc = sampleRc;
-		this->_zLevel = zlvl;
-		this->_objTileSize = objTileSize;
 
 
-		this->_frameX = NULL;
-		this->_frameY = NULL;
-		this->_centerPosInImg = { NULL, NULL };
-		
-		return S_OK;
-
-	}
-		
-
-	//objNode& operator = (const objNode& obj) 
-	void operator = (const objNode& obj)
-	{
-		this->_img = obj._img;
-		this->_imgNum = obj._imgNum;
-		this->_frameX = obj._frameX;
-		this->_frameY = obj._frameY;
-
-		//this->_pos = obj._pos;
-		//this->_rc = obj._rc;
-		this->_attr = obj._attr;
-		this->_zLevel = obj._zLevel;
-
-	}
-
-	bool operator == (const objNode& obj)
-	{
-		if (this->_img == obj._img						&&
-			this->_imgNum == obj._imgNum				&&
-			this->_frameX == obj._frameX				&&
-			this->_frameY == obj._frameY				&&
-			//this->_pos.x == obj._pos.x					&&
-			//this->_pos.y == obj._pos.y					&&
-			//this->_rc.left == obj._rc.left				&&
-			//this->_rc.top == obj._rc.top				&&
-			//this->_rc.right == obj._rc.right			&&
-			//this->_rc.bottom == obj._rc.bottom			&&
-			this->_attr == obj._attr					&&
-			this->_zLevel == obj._zLevel
-			)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	bool operator != (const objNode& obj)
-	{
-		if (this->_img == obj._img						&&
-			this->_imgNum == obj._imgNum				&&
-			this->_frameX == obj._frameX				&&
-			this->_frameY == obj._frameY				&&
-			//this->_pos.x == obj._pos.x					&&
-			//this->_pos.y == obj._pos.y					&&
-			//this->_rc.left == obj._rc.left				&&
-			//this->_rc.top == obj._rc.top				&&
-			//this->_rc.right == obj._rc.right			&&
-			//this->_rc.bottom == obj._rc.bottom			&&
-			this->_attr == obj._attr					&&
-			this->_zLevel == obj._zLevel
-			)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-	
-
-	void setObjInfo(tagObjInfo objInfo) {
-		this->_imgNum = objInfo.objImgNum;
-		this->_frameX = objInfo.frameX;
-		this->_frameY = objInfo.frameY;
-
-		this->_pos = objInfo.pos;
-		this->_rc = objInfo.rc;
-		this->_attr = objInfo.objAttr;
-
-		this->_zLevel = objInfo.zLevel;
-
-		//this->_botTileIdx = objInfo.botTileIdx;
-		this->_objTileSize = objInfo.objTileSize;
-		
-
-
-		this->_img = IMAGEMANAGER->findImage(_objectImageKey[_imgNum].c_str());
-	}
-	tagObjInfo getObjInfo() {
-		tagObjInfo objInfo;
-		
-		objInfo.objImgNum = this->_imgNum;
-		objInfo.frameX = this->_frameX;
-		objInfo.frameY = this->_frameY;
-
-		objInfo.pos = this->_pos;
-		objInfo.rc = this->_rc;
-		objInfo.objAttr = this->_attr;
-
-		objInfo.zLevel = this->_zLevel;
-
-		//objInfo.botTileIdx = this->_botTileIdx;
-		objInfo.objTileSize = this->_objTileSize;
-
-		return objInfo;
-	}
-	tagObjSpriteInfo getObjSpirteInfo() {
-		tagObjSpriteInfo objInfo;
-
-		objInfo.centerPosInImg	= this->_centerPosInImg;
-		objInfo.sampleRc		= this->_sampleRc;
-		objInfo.objTileSize		= this->_objTileSize;
-		objInfo.imgNum			= this->_imgNum;
-		objInfo.img				= NULL;
-		objInfo.zLvl			= this->_zLevel;
-		objInfo.attr			= this->_attr;
-
-		objInfo.pos				= this->_pos;
-		objInfo.rc				= this->_rc;
-		objInfo.mapIdx			= this->_mapIdx;
-
-		return objInfo;
-	}
-	void setObjFromSpriteInfo(tagObjSpriteInfo objInfo) {
-		this->_centerPosInImg = objInfo.centerPosInImg;
-		this->_sampleRc = objInfo.sampleRc;
-		this->_objTileSize = objInfo.objTileSize;
-		this->_imgNum = objInfo.imgNum;
-		this->_img = IMAGEMANAGER->findImage(_objectImageKey[objInfo.imgNum].c_str());
-		this->_zLevel = objInfo.zLvl;
-		this->_attr = objInfo.attr;
-
-		this->_pos = objInfo.pos;
-		this->_rc = objInfo.rc;
-		this->_mapIdx = objInfo.mapIdx;
-
-	}
-	
-
-
-
-}OBJ;
 
 typedef class tileNode : public objects
 {
 public:
-	//image* _terImg;
-	TERNUM _terImgNum;
-	//int _terFrameX;
-	//int _terFrameY;
-	POINT _idx;
-	POINT _pickIdx;
-
-	T_ATTRIBUTE _terAttr;
-	//POINT _pos;
+	//	object로 받아옴
+	//image* _img;
+	//int _frameX;
+	//int _frameY;
+	//POINT _mapIdx;
+	//POINTFLOAT _pos;
 	//RECT _rc;
+	//int _zLevel;
+	//OBJ_KINDS _objKinds;
 	
+	//	=================
+
+	tagTileInfo _tileInfo;
+	tagObjInfo _objInfo;
+
 public:
 	//생성자
-	tileNode() :
-		//_terImg(nullptr), _terImgNum(TERNUM_NONE), _terFrameX(NULL), _terFrameY(NULL), _idx({ NULL,NULL }),
-		//_terAttr(T_ATTR_NONE), _pos({ NULL,NULL }), _rc({ NULL,NULL,NULL,NULL }) {};
-		_terImgNum(TERNUM_NONE), _idx({ NULL,NULL }), _pickIdx({ NULL,NULL }), _terAttr(T_ATTR_NONE) {};
+	tileNode()
+	{
+		_tileInfo.init();
+		_objInfo.init();
+	}
 		
-	tileNode(const tileNode& tile) :
-		_terImgNum(tile._terImgNum), _idx(tile._idx),
-		_terAttr(tile._terAttr) {};
-	
 	~tileNode() {};
 
 	//초기화
 	HRESULT init()
 	{
-		//_terImg = nullptr;
-		//_terImgNum = TERNUM_NONE;
-		//_terFrameX = NULL;
-		//_terFrameY = NULL;
-		//_idx = { NULL,NULL };
-		//
-		//_terAttr = T_ATTR_NONE;
-		//_pos = { NULL,NULL };
-		//_rc = { NULL,NULL,NULL,NULL };
-		_img = nullptr;
-		_terImgNum = TERNUM_NONE;
-		_frameX = NULL;
-		_frameY = NULL;
-		_idx = { NULL, NULL };
-		_pickIdx = { NULL, NULL };
-		_terAttr = T_ATTR_NONE;
-		_pos = { NULL,NULL };
-		_rc = { NULL,NULL,NULL,NULL };
-		_zLevel = NULL;
-
-
+		_tileInfo.init();
+		_objInfo.init();
+		
 		return S_OK;
 	}
 	
-	//HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, T_ATTRIBUTE T_attr, POINT pos, RECT rc) {
-	//	_img = img;
-	//	_terImgNum = terImgNum;
-	//	_frameX = frameX;
-	//	_frameY = frameY;
-	//	_idx = idx;
-	//
-	//	_terAttr = T_attr;
-	//	POINTFLOAT tmpPos;
-	//	tmpPos.x = pos.x;
-	//	tmpPos.y = pos.y;
-	//	_pos = tmpPos;
-	//	_rc = rc;
-	//
-	//	return S_OK;
-	//}
-	//HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, T_ATTRIBUTE T_attr, POINTFLOAT pos, RECT rc) {
-	//	_img = img;
-	//	_terImgNum = terImgNum;
-	//	_frameX = frameX;
-	//	_frameY = frameY;
-	//	_idx = idx;
-	//
-	//	_terAttr = T_attr;
-	//	_pos = pos;
-	//	_rc = rc;
-	//
-	//	_zLevel = NULL;
-	//	return S_OK;
-	//}
-	HRESULT init(image* img, TERRAIN_ARRAY_NUM terImgNum, int frameX, int frameY, POINT idx, POINT pickIdx,	T_ATTRIBUTE T_attr, POINTFLOAT pos, RECT rc, int zLvl) {
-		_img = img;
-		_terImgNum = terImgNum;
-		_frameX = frameX;
-		_frameY = frameY;
-		_idx = idx;
-		_pickIdx = pickIdx;
 
-		_terAttr = T_attr;
-		_pos = pos;
-		_rc = rc;
 
-		_zLevel = zLvl;
-
-		return S_OK;
+	void setObjectiveVal(int idxX, int idxY) {
+		this->_pos = ConvertIdxToPosFloat(idxX, idxY, TILESIZE_WID, TILESIZE_HEI);
+		this->_rc = RectMakeCenter(this->_pos.x, this->_pos.y, TILESIZE_WID, TILESIZE_HEI);
+		this->_mapIdx = PointMake(idxX, idxY);
 	}
 
 	void setTileInfo(tagTileInfo tileInfo) {
-		this->_terImgNum = tileInfo.terImgNum;
-		this->_frameX = tileInfo.frameX;
-		this->_frameY = tileInfo.frameY;
-
-		this->_idx = tileInfo.idx;
-		this->_pickIdx = tileInfo.pickIdx;
-		this->_terAttr = tileInfo.terAttr;
-
-		this->_pos = tileInfo.pos;
-		this->_rc = tileInfo.rc;
-		this->_zLevel = tileInfo.zLevel;
+		this->_tileInfo = tileInfo;
+		this->_zLevel = tileInfo.zlvl;
 		
-		this->_img = IMAGEMANAGER->findImage(_terrainImageKey[_terImgNum]);
 
 	}
+	void setObjInfo(tagObjInfo objInfo) {
+		this->_objInfo = objInfo;
+	}
+
 	tagTileInfo getTileInfo() {
-		tagTileInfo tileInfo;
-		tileInfo.terImgNum = this->_terImgNum;
-		tileInfo.frameX = this->_frameX;
-		tileInfo.frameY = this->_frameY;
-		
-		tileInfo.idx = this->_idx;
-		tileInfo.pickIdx = this->_pickIdx;
-		tileInfo.terAttr = this->_terAttr;
-
-		tileInfo.pos = this->_pos;
-		tileInfo.rc = this->_rc;
-		tileInfo.zLevel = this->_zLevel;
-
-		return tileInfo;
-
+		return this->_tileInfo.getTileInfo();
 	}
-
-
-
-	//
-	////----------------------------------------------------
-	////------------------O P E R A T O R-------------------
-	////----------------------------------------------------
-
-	//tileNode& operator = (const tileNode& tile)
-	void operator = (const tileNode& tile)
-	{
-		//this->_terImg = tile._terImg;
-		//this->_terImgNum = tile._terImgNum;
-		//this->_terFrameX = tile._terFrameX;
-		//this->_terFrameY = tile._terFrameY;
-		//
-		//this->_terAttr = tile._terAttr;
-		//this->_pos = tile._pos;
-		//this->_rc = tile._rc;
-
-
+	tagObjInfo getObjInfo() {
+		return this->_objInfo.getObjInfo();
 	}
-	bool operator == (const tileNode& tile)
-	{
-		//if (this->_terImg == tile._terImg	&&
-		//	this->_terImgNum == tile._terImgNum		&&
-		//	this->_terFrameX == tile._terFrameX		&&
-		//	this->_terFrameY == tile._terFrameY		&&
-		//	this->_terAttr == tile._terAttr			
-		//	//this->_pos.x == tile._pos.x				&&
-		//	//this->_pos.y == tile._pos.y				&&
-		//	//this->_rc.left == tile._rc.left			&&
-		//	//this->_rc.top == tile._rc.top				&&
-		//	//this->_rc.right == tile._rc.right			&&
-		//	//this->_rc.bottom == tile._rc.bottom		
-		//	)
-		//{
-		//	return true;
-		//}
-		//else
-		//{
-		//	return false;
-		//}
-	}
-	bool operator != (const tileNode& tile)
-	{
-		//if (this->_terImg == tile._terImg	&&
-		//	this->_terImgNum == tile._terImgNum		&&
-		//	this->_terFrameX == tile._terFrameX		&&
-		//	this->_terFrameY == tile._terFrameY		&&
-		//	this->_terAttr == tile._terAttr			
-		//	//this->_pos.x == tile._pos.x				&&
-		//	//this->_pos.y == tile._pos.y				&&
-		//	//this->_rc.left == tile._rc.left			&&
-		//	//this->_rc.top == tile._rc.top				&&
-		//	//this->_rc.right == tile._rc.right			&&
-		//	//this->_rc.bottom == tile._rc.bottom
-		//	)
-		//{
-		//	return false;
-		//}
-		//else
-		//{
-		//	return true;
-		//}
-	}
-
-	//image* getImg() { return _terImg; }
-	//void setImg(image* img) { _terImg = img; }
-	//
-	//TERNUM getTerImgNum() { return _terImgNum; }
-	//void setTerImgNum(TERNUM imgNum) { _terImgNum = imgNum; }
-	//
-	//POINT getPos() { return _pos; }
-	//void setPos(POINT pos) { _pos = pos; }
-	//
-	//RECT getRc() { return _rc; }
-	//void setRc(RECT rc) { _rc = rc; }
-
 
 
 }TILE;
 
-bool compareObj(OBJ* obj1, OBJ* obj2);
-
-
 typedef vector<TILE*> vLine;
 typedef vector<vLine> vvMap;
-typedef vector<OBJ*> vObj;

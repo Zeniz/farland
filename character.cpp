@@ -367,13 +367,13 @@ void Character::MakeOrder()
 				if (0 <= ClickedIdx.x && ClickedIdx.x < (*_vvMap)[0].size() &&
 					0 <= ClickedIdx.y && ClickedIdx.y < (*_vvMap).size()) {
 					//	찍은곳이 갈 수 있는 곳이라면,
-					if ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]->_terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
+					if ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]->_tileInfo.terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
 						ASTARFUNC->PathFind(mapIdx, PointMake(ClickedIdx.x, ClickedIdx.y), mapIdx, _lWayIdxList);
 						if (_lWayIdxList.size() != 0) {
 							_targetTile = ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]);
 
 							order.kinds = ORDER_KINDS::MOVE;
-							order.targetMapIdx = _targetTile->_pickIdx;		//	인덱스
+							order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
 							//	넣기전, 기존 move/hold삭제
 							for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
 								if (_liOrderList->kinds == ORDER_KINDS::MOVE ||
@@ -423,7 +423,7 @@ void Character::MakeOrder()
 		//	위 조건에서 break안되면, 오더추가!
 		if (this->_coolDownTimer[0][ORDER_KINDS::HOLD] >= this->_coolDownTimer[1][ORDER_KINDS::HOLD]) {
 			order.kinds = ORDER_KINDS::HOLD;
-			order.targetMapIdx = _curTile->_idx;
+			order.targetMapIdx = _curTile->_mapIdx;
 			//	넣기전, 기존 hold삭제 + 가장 마지막Move의 targetIdx찾음
 			for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
 				if (_liOrderList->kinds == ORDER_KINDS::HOLD) {
@@ -465,7 +465,7 @@ void Character::MakeOrder()
 					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
 					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
 					order.kinds = ORDER_KINDS::ATTACK;
-					order.targetMapIdx = _targetTile->_pickIdx;		//	인덱스
+					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
@@ -507,7 +507,7 @@ void Character::MakeOrder()
 					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
 					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
 					order.kinds = ORDER_KINDS::SKILL1;
-					order.targetMapIdx = _targetTile->_pickIdx;		//	인덱스
+					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
@@ -551,7 +551,7 @@ void Character::MakeOrder()
 					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
 					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
 					order.kinds = ORDER_KINDS::SKILL2;
-					order.targetMapIdx = _targetTile->_pickIdx;		//	인덱스
+					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
@@ -595,7 +595,7 @@ void Character::MakeOrder()
 					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
 					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
 					order.kinds = ORDER_KINDS::SKILL3;
-					order.targetMapIdx = _targetTile->_pickIdx;		//	인덱스
+					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
@@ -639,7 +639,7 @@ void Character::MakeOrder()
 					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
 					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
 					order.kinds = ORDER_KINDS::SKILL4;
-					order.targetMapIdx = _targetTile->_pickIdx;		//	인덱스
+					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
 
 					//	넣기전, 기존 hold삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {

@@ -44,7 +44,7 @@ public:
 	//	float curHp, float maxHp, float curMp, float maxMp, POINT mapIdx, float attrValue);
 
 	//void setNewSkel()
-	void setNewSkelforMapEditor(E_IMGNUM imgNum, POINT mapIdx);
+	void setNewSkelforMapEditor(ENEMY_NAME mobName, POINT mapIdx);
 
 
 };

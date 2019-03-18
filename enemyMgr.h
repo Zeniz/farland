@@ -26,7 +26,7 @@ public:
 	void render(int idxX, int idxY);
 
 	//	종류별로 뉴 떄리고 주소 돌려줌
-	enemy* MakeNewEnemy(E_IMGNUM mobKind);
+	enemy* MakeNewEnemy(ENEMY_NAME mobName);
 	void AddEnemy(enemy* enemy);
 	
 

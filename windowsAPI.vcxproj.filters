@@ -267,6 +267,9 @@
     <ClInclude Include="enemyHpBar.h">
       <Filter>PlayGround\enemy</Filter>
     </ClInclude>
+    <ClInclude Include="enemyForMapEditor.h">
+      <Filter>PlayGround</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -439,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="enemyHpBar.cpp">
       <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyForMapEditor.cpp">
+      <Filter>PlayGround</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

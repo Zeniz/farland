@@ -20,7 +20,7 @@ HRESULT testMap::init()
 	CAMERA2D->setState(cameraState::PLAYER_CAMERA);
 
 	_mapLoader = new mapLoader;
-	_mapLoader->LoadMap(10, &_vvMap, &_tileNum, &_vObj, &_vEnemy);
+	_mapLoader->LoadMap(10, &_vvMap, &_tileNum, &_vEnemy);
 
 	_charMgr = new CharMgr;
 	_charMgr->init();
@@ -62,7 +62,7 @@ HRESULT testMap::init()
 	//	=============적 추가 ===========
 	
 	enemy* tmpEnemy;
-	tmpEnemy = _enemyMgr->MakeNewEnemy(E_IMGNUM::MOB_SKEL);		//	뉴 떄리고, 링크걸고 리턴
+	tmpEnemy = _enemyMgr->MakeNewEnemy(ENEMY_NAME::MOB_SKEL);		//	뉴 떄리고, 링크걸고 리턴
 	
 	tmpEnemy->InitObjectiveValDefault({ 10,10 });
 	tmpEnemy->InitCharacteristicValDefault();
@@ -98,11 +98,8 @@ void testMap::update()
 
 void testMap::render()
 {
-	int objRenderCount = 0;
-	int enemyRenderCount = 0;
-	bool isFoundObjStart = false;
-	bool isFoundEnemyStart = false;
-
+	
+	/*
 	//	obj, enemy의 첫 렌더 인덱스 찾기. (vObj, vEnemy가 맵인덱스로  sort되어있음)
 	for (int i = _clipMapIdx[0].y; i < _clipMapIdx[1].y; i++) {
 		for (int j = _clipMapIdx[0].x; j < _clipMapIdx[1].x; j++) {
@@ -131,7 +128,7 @@ void testMap::render()
 			
 		}
 	}
-
+	*/
 	//	바닥타일 깔고,
 	FloorTileRender();
 
@@ -149,8 +146,8 @@ void testMap::render()
 			ZTileRender(j, i);
 			
 			//	enemy
+			_enemyMgr->render(j, i);
 			
-			EnemyRender(j, i, enemyRenderCount);
 			
 			//	player
 			_charMgr->render(j, i);
@@ -159,7 +156,7 @@ void testMap::render()
 			
 
 			//	obj
-			ObjRender(j, i, objRenderCount);
+			ObjRender(j, i);
 
 
 		}
@@ -286,24 +283,17 @@ void testMap::EnemyRender(int idxX, int idxY, int& enemyCount)
 	//}
 }
 
-void testMap::ObjRender(int idxX, int idxY, int& objCount)
+void testMap::ObjRender(int idxX, int idxY)
 {
-	if (objCount < _vObj.size()) {
-		while (_vObj[objCount]->_mapIdx.x == idxX && _vObj[objCount]->_mapIdx.y == idxY) {
-			_vObj[objCount]->_img->render(
-				_vObj[objCount]->_rc.left,
-				_vObj[objCount]->_rc.top,
-				_vObj[objCount]->_sampleRc.left,
-				_vObj[objCount]->_sampleRc.top,
-				_vObj[objCount]->_sampleRc.right - _vObj[objCount]->_sampleRc.left,
-				_vObj[objCount]->_sampleRc.bottom - _vObj[objCount]->_sampleRc.top,
-				1.0f
-			);
-
-			objCount++;
-
-			if (objCount >= _vObj.size())		break;
-		}
+	if (_vvMap[idxY][idxX]->_objInfo.img != nullptr) {
+		_vvMap[idxY][idxX]->_objInfo.img->render(
+			_vvMap[idxY][idxX]->_objInfo.rc.left,
+			_vvMap[idxY][idxX]->_objInfo.rc.top,
+			_vvMap[idxY][idxX]->_objInfo.sampleRc.left,
+			_vvMap[idxY][idxX]->_objInfo.sampleRc.top,
+			_vvMap[idxY][idxX]->_objInfo.getWid(),
+			_vvMap[idxY][idxX]->_objInfo.getHei(),
+			1.0f);
 	}
 
 

@@ -2,21 +2,13 @@
 #include "objects.h"
 #include "eStatePattern.h"
 #include "tileNode.h"
+#include "enemyForMapEditor.h"
 #include "enemyHpBar.h"
 
 class Character;
 typedef vector<Character*> vChara;
 
 
-enum E_IMGNUM {
-	E_IMG_NONE = -1,
-	
-	MOB_SKEL,
-
-
-
-	E_IMG_END,
-};
 
 enum E_STATS {
 	E_STATS_NONE = -1,
@@ -36,50 +28,10 @@ enum E_STATS {
 };
 
 
-static string _enemyImgKey[E_IMG_END] = {
+static string _enemyImgKey[ENEMY_NAME::E_NAME_END] = {
 	"mobSkel",
 };
-//	맵 에디터용...맵 에디터에 넣을까?
-static struct tagEnemySpriteInfoForMapEditor {
-	POINT tileCenterPosAtSprite;
-	RECT sampleRc;
-	POINTFLOAT pos;
-	RECT rc;
-	POINT mobTileSize;
 
-
-	E_IMGNUM imgNum;
-	image* sampleImg;
-
-	int zLvl;
-	POINT mapIdx;
-	
-	void init() {
-		tileCenterPosAtSprite = { NULL,NULL };
-		sampleRc = { NULL,NULL,NULL,NULL };
-		mobTileSize = { NULL ,NULL };
-		imgNum = E_IMG_NONE;
-		sampleImg = nullptr;
-		mapIdx = { NULL, NULL };
-	}
-	
-	int getPixPosToLeft() {
-		return tileCenterPosAtSprite.x - sampleRc.left;
-	}
-	int getPixPosToTop() {
-		return tileCenterPosAtSprite.y - sampleRc.top;
-	}
-	int getWid() {
-		return sampleRc.right - sampleRc.left;
-	}
-	int getHei() {
-		return sampleRc.bottom - sampleRc.top;
-	}
-
-
-};
-
-static tagEnemySpriteInfoForMapEditor _enemyInfo[E_IMG_END];
 
 //=============================================
 
@@ -169,7 +121,7 @@ public:
 
 
 	POINT _mapIdx;
-	E_IMGNUM _imgNum;
+	ENEMY_NAME _name;
 	
 	
 	eStatePattern _pattern;
@@ -264,33 +216,16 @@ public:
 	}
 	
 
-	tagEnemySpriteInfoForMapEditor getEnemyInfo() {
-		tagEnemySpriteInfoForMapEditor tmpEnemyInfo;
-
-
-		tmpEnemyInfo.tileCenterPosAtSprite = this->_tileCenterPosAtSprite;
-		tmpEnemyInfo.sampleRc = this->_sampleRc;
-		tmpEnemyInfo.pos = this->_pos;		// 다 먹여주고 맵 세이버/로드 적용시작
-		tmpEnemyInfo.mobTileSize = this->_mobTileSize;
-		tmpEnemyInfo.imgNum = this->_imgNum;
-		tmpEnemyInfo.sampleImg = IMAGEMANAGER->findImage("mobSprite");
-		tmpEnemyInfo.zLvl = this->_zLevel;
-		tmpEnemyInfo.mapIdx = this->_mapIdx;
-		tmpEnemyInfo.rc = this->_rc;
-
-		return tmpEnemyInfo;
-
-	}
 	void setEnemyInfo(POINT tileCenterPosAtSprite,
-		RECT sampleRc, POINTFLOAT pos, POINT mobTileSize, E_IMGNUM imgNum,
+		RECT sampleRc, POINTFLOAT pos, POINT mobTileSize, ENEMY_NAME name,
 		int zlvl, POINT mapIdx, RECT rc) {
 
 		this->_tileCenterPosAtSprite = tileCenterPosAtSprite;
 		this->_sampleRc = sampleRc;
 		this->_pos = pos;
 		this->_mobTileSize = mobTileSize;
-		this->_imgNum = imgNum;
-		this->_img = IMAGEMANAGER->findImage(_enemyImgKey[this->_imgNum]);
+		this->_name = name;
+		this->_img = IMAGEMANAGER->findImage(_enemyImgKey[this->_name].c_str());
 		this->_zLevel = zlvl;
 		this->_mapIdx = mapIdx;
 		this->_rc = rc;

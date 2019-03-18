@@ -17,10 +17,12 @@ public:
 	int _frameX;
 	int _frameY;
 
+	POINT _mapIdx;
 	POINTFLOAT _pos;
 	RECT _rc;
 	int _zLevel;
 	OBJ_KINDS _objKinds;
+	
 	
 
 

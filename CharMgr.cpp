@@ -36,7 +36,7 @@ void CharMgr::update()
 void CharMgr::render(int idxX, int idxY)
 {
 	for (int i = 0; i < _vChara.size(); i++) {
-		if (_vChara[i]->getTileforRender()->_idx.x == idxX && _vChara[i]->getTileforRender()->_idx.y == idxY) {
+		if (_vChara[i]->getTileforRender()->_mapIdx.x == idxX && _vChara[i]->getTileforRender()->_mapIdx.y == idxY) {
 			_vChara[i]->aniRender();
 		}
 

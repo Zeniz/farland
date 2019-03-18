@@ -1,15 +1,14 @@
 #pragma once
 #include "gameNode.h"
 #include "tileNode.h"
-#include "enemy.h"
-#include "skeleton.h"
-#include "objects.h"
-#include <algorithm>
+#include "enemyForMapEditor.h"
+
+
 
 class mapEditor : public gameNode
 {
 private:
-	typedef vector<enemy*> vEnemy;
+	
 
 	struct tagButtons {
 		image* img;
@@ -44,20 +43,20 @@ private:
 	};
 
 	
-	vvMap _vvTerSamples[TERNUM_END];
+	vvMap _vvTerSamples[TERNUM_END];							//	바닥타일 샘플 저장소
+	tagObjInfo _objSamples[OBJNUM::OBJNUM_END][20];				//	obj	샘플 저장소
+	enemyForMapEditor _enemySamples[ENEMY_NAME::E_NAME_END];
+
+	vector<enemyForMapEditor> _vEnemyInfo;
+
 	vector<POINT> _vMagicSelectList;
 
 
 	POINT _tileNum;
 	vvMap _vvMap;
-	vObj _vObj;						//	info만 저장하도록 고쳐야함. 나중에 로드할때 진짜 세팅->zorder떄무네 써야함...
-	vEnemy _vEnemy;
-
-	vector<tagObjSpriteInfo*> _vObjInfo;		//	안씀 ㅠㅠ zorder때무네...
-	vector<tagEnemySpriteInfoForMapEditor*> _vEnemyInfo;		//	안씀 ㅠㅠ zorder때무네...
-	vector<objects> _vZOrder;
 	
-	image* _frameImg;
+	
+	image* _frameImg;					//맵툴 이미지
 	tagButtons _buttons[MENU_END];
 	tagButtons _toolIcons[TOOL_END];
 
@@ -76,9 +75,10 @@ private:
 	int _curTerSampleIdx;		//	현재 샘플이미지 번호		   -> 현재 페이지 1개라 의미없음
 	int _curObjSampleIdx;		//	현재 오브젝 샘플이미지 인덱스
 	int _curUnitSampleIdx;		//	현재 유닛 샘플이미지 인덱스  -> 현재 페이지1개라 의미없음
-	TILE* _cursorTile;			//	커서에 뭍힌 오브젝트
-	tagObjSpriteInfo _cursorObjInfo;
-	tagEnemySpriteInfoForMapEditor _cursorUnitInfo;
+	TILE* _cursorTile;			//	커서에 뭍힌 타일
+	tagObjInfo _cursorObj;
+	enemyForMapEditor _cursorEnemy;	//	커서에 묻힌 적
+	
 	
 
 	POINTF _ptMousePrePos;	//	핸드툴용
@@ -93,8 +93,8 @@ private:
 	const int SAMPLE_PALLET_START_X = 65;
 	const int SAMPLE_PALLET_START_Y = 33;
 
-	const int CLIP_TILENUM_WID = 27;
-	const int CLIP_TILENUM_HEI = 27;
+	const int CLIP_TILENUM_WID = 35;
+	const int CLIP_TILENUM_HEI = 35;
 	
 
 public:
@@ -142,8 +142,7 @@ public:
 	void HandFunc();
 
 	void MakeHillFunc(int augZlvl);
-	void AdjustHillToObj(int idxX, int idxY, int augHeiLvl);	//언덕이 생기면, rc를 움직일거냐, 렌더를 계산해줄거냐...-> 일단 rc움직이는걸로
-	void AdjustHillToEnemy(int idxX, int idxY, int augHeiLvl);	//언덕이 생기면, rc를 움직일거냐, 렌더를 계산해줄거냐...-> 일단 rc움직이는걸로
+	
 
 	//	=== MenusFunc ===
 	void SaveMapFunc();
@@ -156,9 +155,12 @@ public:
 	//	===	utils ===
 	POINT CursorPtToSampleIdx();
 	void TransTileValue(TILE* sour, TILE* dest);
+	void TransObjValue(TILE* sour, TILE* dest);
+	void DeleteUnit(int idxX, int idxY);
 	bool IsSameTile(TILE* sour, TILE* dest);
-	void MakeObjOnMap(tagObjSpriteInfo obj, int idxX, int idxY);
-	void MakeUnitOnMap(tagEnemySpriteInfoForMapEditor unit, int idxX, int idxY);
+	void MakeTileOnMap(TILE* sour, int idxX, int idxY);
+	void MakeObjOnMap(tagObjInfo sour, int idxX, int idxY);
+	void MakeUnitOnMap(enemyForMapEditor unit, int idxX, int idxY);
 	
 
 	//	===	render ===
@@ -170,12 +172,10 @@ public:
 	void SampleRender();
 
 	void TileRender(int idxX, int idxY);
-	void ObjRender();		//	z-order로 바꿔야함
-	void UnitRender();		//	z-order로 바꿔야함
+	
 	void SortedRender(int idxX, int idxY, int& objCount, int& unitCount);
-	void ObjRender(int idx);		//	sort 되어있음! render만 ㄱㄱ
-	void UnitRender(int idx);
-
+	
+	void MoveableTileRender();
 	
 
 };

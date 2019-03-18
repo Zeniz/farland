@@ -163,6 +163,7 @@
     <ClInclude Include="effect.h" />
     <ClInclude Include="effectManager.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="enemyForMapEditor.h" />
     <ClInclude Include="enemyHpBar.h" />
     <ClInclude Include="enemyMgr.h" />
     <ClInclude Include="eStatePattern.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="enemyForMapEditor.cpp" />
     <ClCompile Include="enemyHpBar.cpp" />
     <ClCompile Include="enemyMgr.cpp" />
     <ClCompile Include="eStatePattern.cpp" />

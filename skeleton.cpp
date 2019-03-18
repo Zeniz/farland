@@ -110,7 +110,7 @@ HRESULT skeleton::init()
 {
 	_img = IMAGEMANAGER->findImage("mobSkel");
 	_ani = KEYANIMANAGER->findAnimation("skel", "idleFront");
-	_imgNum = E_IMGNUM::MOB_SKEL;
+	_name = ENEMY_NAME::MOB_SKEL;
 
 	_mapIdx = { NULL,NULL };
 	_pCurTile = nullptr;
@@ -159,7 +159,7 @@ void skeleton::InitCharacteristicValDefault()
 	_moveVec = { NULL,NULL };
 	_probePos = { NULL,NULL };
 
-	_imgNum = E_IMGNUM::MOB_SKEL;
+	_name = ENEMY_NAME::MOB_SKEL;
 	_dir = E_DIR::DIR_LB;
 	_state = E_STATE::E_IDLE;
 
@@ -383,10 +383,10 @@ void skeleton::setNewSkel(E_IMGNUM imgNum, animation * ani, POINTFLOAT pos, RECT
 	_frameY = NULL;
 }
 */
-void skeleton::setNewSkelforMapEditor(E_IMGNUM imgNum, POINT mapIdx)
+void skeleton::setNewSkelforMapEditor(ENEMY_NAME mobName, POINT mapIdx)
 {
-	_imgNum = imgNum;
-	_img = IMAGEMANAGER->findImage(_enemyImgKey[imgNum].c_str());
+	_name = mobName;
+	_img = IMAGEMANAGER->findImage(_enemyImgKey[_name].c_str());
 	_mapIdx = mapIdx;
 	_pos = ConvertIdxToPosFloat(_mapIdx.x, _mapIdx.y, TILESIZE_WID, TILESIZE_HEI);		
 	_rc = RectMake(_pos.x - TILESIZE_WID / 2, _pos.y + TILESIZE_HEI / 2 - _img->GetFrameHeight(),
