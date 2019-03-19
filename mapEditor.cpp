@@ -318,7 +318,10 @@ void mapEditor::render()
 		
 	}
 	
-
+	//	갈수있는길 표시
+	if (KEYMANAGER->isToggleKey(VK_HOME)) {
+		MoveableTileRender();
+	}
 
 
 	//	프레임 -> 마지막에 출력
@@ -340,9 +343,7 @@ void mapEditor::render()
 	//	커서가 잡고있는 타일
 	CursorSampleRender();
 
-	if(KEYMANAGER->isToggleKey(VK_HOME)) {
-		MoveableTileRender();
-	}
+	
 	
 	
 

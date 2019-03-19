@@ -213,8 +213,8 @@ void testMap::FloorTileRender()
 			if (j > _tileNum.x - 1)	continue;
 			D2DMANAGER->drawDiamondLine(_vvMap[i][j]->_pos.x, _vvMap[i][j]->_pos.y, TILESIZE_WID, TILESIZE_HEI);
 			
-			_vvMap[i][j]->_img->frameRender(_vvMap[i][j]->_pos.x - TILESIZE_WID / 2, _vvMap[i][j]->_pos.y - TILESIZE_HEI / 2,
-				_vvMap[i][j]->_frameX, _vvMap[i][j]->_frameY, 1.0f);
+			_vvMap[i][j]->_tileInfo.img->frameRender(_vvMap[i][j]->_pos.x - TILESIZE_WID / 2, _vvMap[i][j]->_pos.y - TILESIZE_HEI / 2,
+				_vvMap[i][j]->_tileInfo.frameX, _vvMap[i][j]->_tileInfo.frameY, 1.0f);
 			
 		}
 	}
@@ -236,17 +236,17 @@ void testMap::ZTileRender(int idxX, int idxY)
 			//		_vvMap[idxY][idxX]->_frameX, _vvMap[idxY][idxX]->_frameY, 1.0f);
 			//}
 			if (i == 0) {
-				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
-					_vvMap[idxY][idxX]->_frameX, _vvMap[idxY][idxX]->_frameY, 1.0f);
+				_vvMap[idxY][idxX]->_tileInfo.img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_tileInfo.frameX, _vvMap[idxY][idxX]->_tileInfo.frameY, 1.0f);
 			}
 
 			else if(i == 1) {
-				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
-					_vvMap[idxY][idxX]->_frameX, 4, 1.0f);
+				_vvMap[idxY][idxX]->_tileInfo.img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_tileInfo.frameX, 4, 1.0f);
 			}
 			else {
-				_vvMap[idxY][idxX]->_img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
-					_vvMap[idxY][idxX]->_frameX, 5, 1.0f);
+				_vvMap[idxY][idxX]->_tileInfo.img->frameRender(_vvMap[idxY][idxX]->_pos.x - TILESIZE_WID / 2, _vvMap[idxY][idxX]->_pos.y - TILESIZE_HEI / 2 - (TILESIZE_HEI / 2) * (_vvMap[idxY][idxX]->_zLevel - i),
+					_vvMap[idxY][idxX]->_tileInfo.frameX, 5, 1.0f);
 			}
 
 

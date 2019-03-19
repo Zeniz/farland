@@ -99,6 +99,9 @@ void mapLoader::LoadMap(int mapIdx, vvMap * vvMapAddr, POINT* tileNum, vEnemy * 
 		for (int j = 0; j < tileNum->x; j++) {
 			TILE* tmpTile = new TILE;
 			tmpTile->setTileInfo(savedTileAry[i*tileNum->x + j]);
+			tmpTile->_tileInfo.img = IMAGEMANAGER->findImage(_terrainImageKey[tmpTile->_tileInfo.terImgNum].c_str());		//	이미지 잡아넣어줘야함
+			tmpTile->setObjectiveVal(j, i);
+			tmpTile->_zLevel = tmpTile->_tileInfo.zlvl;
 			tmpVLine.push_back(tmpTile);
 		}
 		vvMapAddr->push_back(tmpVLine);
@@ -117,6 +120,7 @@ void mapLoader::LoadMap(int mapIdx, vvMap * vvMapAddr, POINT* tileNum, vEnemy * 
 	for (int i = 0; i < tileNum->y; i++) {
 		for (int j = 0; j < tileNum->x; j++) {
 			(*vvMapAddr)[i][j]->setObjInfo(savedObjAry[i*tileNum->x + j]);
+			(*vvMapAddr)[i][j]->_objInfo.img = IMAGEMANAGER->findImage(_objectImageKey[(*vvMapAddr)[i][j]->_objInfo.objNum].c_str());	//	이미지 잡아넣어줘야함
 		}
 	}
 
