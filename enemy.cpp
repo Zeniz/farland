@@ -42,6 +42,22 @@ void enemy::update()
 
 void enemy::render()
 {
+	if (_dir == E_DIR::DIR_LT || _dir == E_DIR::DIR_RB) {
+		_img->aniRenderReverseX(_rc.left, _rc.top - _zLevel*(TILESIZE_HEI / 2), this->_ani);
+	}
+	else {
+		_img->aniRender(_rc.left, _rc.top - _zLevel*(TILESIZE_HEI / 2), this->_ani);
+	}
+
+	_hpBar->render();
+
+	D2D_RECT_F rc = { _pos.x - 5, _pos.y - 5, _pos.x + 5, _pos.y + 5 };
+	D2DMANAGER->fillRectangle(0xFFFFFF, rc);
+
+	//	테스트 출력
+	//WCHAR wstr[128];
+	//swprintf_s(wstr, L"pTile->Zlvl : %d", _pCurTile->_zLevel);
+	//D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xFF0000, 1.0f), L"consolas", 15, wstr, _rc.left, _rc.top - 20, true, D2DMANAGER->createBrush(0x000000, 1.0f));
 }
 
 
@@ -133,10 +149,24 @@ void enemy::ChkDead()
 	}
 }
 
+void enemy::NoticeFunc(int noticeRange)
+{
+	int minDifferIdxSize = 99999;
+	for (int i = 0; i < _vChara->size(); i++) {
+		int distance = abs((*_vChara)[i]->mapIdx.x - _mapIdx.x) + abs((*_vChara)[i]->mapIdx.y - _mapIdx.y);
+		if (minDifferIdxSize > distance) {
+			minDifferIdxSize = distance;
+		}	
+	}
+	if (minDifferIdxSize <= noticeRange) {
+		_isNotice = true;
+	}
+}
+
 void enemy::setHpBar(POINT augPos)
 {
 	_hpBar = new enemyHpBar;
-	_hpBar->init(&_statValue[E_STATS::E_CURHP], &_statValue[E_STATS::E_MAXHP], &_pos, augPos);
+	_hpBar->init(&_statValue[E_STATS::E_CURHP], &_statValue[E_STATS::E_MAXHP], &_zLevel, &_pos, augPos);
 }
 
 

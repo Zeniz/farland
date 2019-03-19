@@ -176,6 +176,7 @@ public:
 	void SortedRender(int idxX, int idxY, int& objCount, int& unitCount);
 	
 	void MoveableTileRender();
+	void MapIdxRender();
 	
 
 };

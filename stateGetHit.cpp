@@ -69,6 +69,7 @@ void stateGetHit::onSkillFour(Character * character)
 
 void stateGetHit::update(Character* character)
 {
+	character->_portraitKinds = CHAR_PORTRAIT_KINDS::GETDMG;
 	if (!character->_ani->isPlay()) {
 		character->_state = character->_preState;
 		character->_isStateChanged = true;

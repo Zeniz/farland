@@ -103,6 +103,11 @@ Character::Character()
 	_basicAtkCount = 0;
 
 	_isOnAtking = false;
+	
+	EFFECTMANAGER->addEffect("atkMode", "images/skillEffect/atkModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);
+	EFFECTMANAGER->addEffect("defMode", "images/skillEffect/defModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);
+	EFFECTMANAGER->addEffect("meteor", "images/skillEffect/meteor.png", 8338, 490, 758, 490, 5, 0.167f, 5);
+
 }
 
 
@@ -152,8 +157,111 @@ HRESULT Character::init()
 	_holdCounter = 0;
 	_holdCounterMax = 60;
 	
+	
 
 	return S_OK;
+}
+
+void Character::aniRender()
+{
+	if (_dir == CHAR_DIR::LT || _dir == CHAR_DIR::RB) {
+		_img->aniRenderReverseX(_rc.left, _rc.top - _curTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
+	}
+	else {
+		_img->aniRender(_rc.left, _rc.top - _curTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
+	}
+
+	WCHAR str[128];
+	switch (_state)
+	{
+	case CHAR_STATE::NONE:
+		swprintf_s(str, L"state : NONE");
+		break;
+	case CHAR_STATE::IDLE:
+		swprintf_s(str, L"state : IDLE");
+		break;
+	case CHAR_STATE::MOVE:
+		swprintf_s(str, L"state : MOVE");
+		break;
+	case CHAR_STATE::CASTING:
+		swprintf_s(str, L"state : CASTING");
+		break;
+	case CHAR_STATE::DEAD:
+		swprintf_s(str, L"state : DEAD");
+		break;
+	case CHAR_STATE::GETHIT:
+		swprintf_s(str, L"state : GETHIT");
+		break;
+	case CHAR_STATE::STONE:
+		swprintf_s(str, L"state : STONE");
+		break;
+	case CHAR_STATE::FROZEN:
+		swprintf_s(str, L"state : FROZEN");
+		break;
+	case CHAR_STATE::GETHIT2:
+		swprintf_s(str, L"state : GETHIT2");
+		break;
+	case CHAR_STATE::BLOCK:
+		swprintf_s(str, L"state : BLOCK");
+		break;
+	case CHAR_STATE::BASIC_ATK:
+		swprintf_s(str, L"state : BASIC_ATK");
+		break;
+	case CHAR_STATE::SKILL1:
+		swprintf_s(str, L"state : SKILL1");
+		break;
+	case CHAR_STATE::SKILL2:
+		swprintf_s(str, L"state : SKILL2");
+		break;
+	case CHAR_STATE::SKILL3:
+		swprintf_s(str, L"state : SKILL3");
+		break;
+	case CHAR_STATE::SKILL4:
+		swprintf_s(str, L"state : SKILL4");
+		break;
+	case CHAR_STATE::CHAR_STATE_END:
+		swprintf_s(str, L"state : CHAR_STATE_END");
+		break;
+	default:
+		break;
+	}
+
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+	//D2DMANAGER->drawText(str, _rc.left, _rc.top - 20);
+
+	switch (_dir)
+	{
+	case CHAR_DIR::NONE:
+		swprintf_s(str, L"dir : NONE");
+		break;
+	case CHAR_DIR::LT:
+		swprintf_s(str, L"dir : LT");
+		break;
+	case CHAR_DIR::RT:
+		swprintf_s(str, L"dir : RT");
+		break;
+	case CHAR_DIR::LB:
+		swprintf_s(str, L"dir : LB");
+		break;
+	case CHAR_DIR::RB:
+		swprintf_s(str, L"dir : RB");
+		break;
+	case CHAR_DIR::CHAR_DIR_END:
+		break;
+	default:
+		break;
+	}
+	//D2DMANAGER->drawText(str, _rc.left, _rc.top - 40);
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xFF1111, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 20, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+
+	swprintf_s(str, L"mapIdx : [%d,%d]", _curTile->_mapIdx.x, _curTile->_mapIdx.y);
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 40, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+
+	swprintf_s(str, L"isOnAtk : [%d]", _isOnAtking);
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 60, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+
+	swprintf_s(str, L"waylistSize : [%d]", _lWayIdxList.size());
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 80, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 }
 
 

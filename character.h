@@ -235,6 +235,8 @@ public:
 	const int UI_WID = 0;
 	const int UI_HEI = 0;
 	
+	const int DEF_MAX = 50;
+	const float DEFRATIO_MAX = 0.90;
 
 public:
 	Character();
@@ -242,7 +244,7 @@ public:
 
 	HRESULT init();
 	virtual void update() abstract;
-	virtual void aniRender() abstract;
+	void aniRender();
 
 	virtual void InitObjectiveValDefault(POINT mapIdx)		abstract;
 	virtual void InitCharacteristicValDefault()				abstract;
@@ -294,7 +296,15 @@ public:
 	float* getCharValueAug() { return _charValue[CUR]; }
 
 	void setCurHpAug(float augVal) { 
-		_charValue[0][CHAR_VALUE_KINDS::CUR_HP] += augVal;
+		float def = _charValue[0][CHAR_VALUE_KINDS::DEF] + _charValue[1][CHAR_VALUE_KINDS::DEF];
+		if (_state == CHAR_STATE::BLOCK) {
+			def *= 2;
+		}
+			
+		float defRatio = (def / DEF_MAX);
+		if (defRatio > DEFRATIO_MAX)
+			defRatio = DEFRATIO_MAX;
+		_charValue[0][CHAR_VALUE_KINDS::CUR_HP] += augVal * (1-defRatio);
 		_preState = _state;
 		_state = CHAR_STATE::GETHIT;
 		_isStateChanged = true;

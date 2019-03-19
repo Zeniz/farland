@@ -17,10 +17,12 @@ private:
 	const float BASIC_MOVESPD = 100;
 	const float BASIC_CASTSPD = 1.0f;
 
-	const float BASIC_ATK = 5;
+	const float BASIC_ATK = 10;
 	const float BASIC_DEF = 1;
 	const float BASIC_MATK = 3;
 	const float BASIC_MDEF = 5;
+
+	const int NOTICE_RANGE = 10; //	맵인덱스 차이로 거리 계산.
 
 	
 
@@ -35,7 +37,7 @@ public:
 	void InitCharacteristicValDefault()			override;
 	void release() override;
 	void update() override;
-	void render() override;
+	//void render() override;
 
 	void setAni();
 

@@ -116,6 +116,7 @@ public:
 
 	void CalRatios(tagCharInfo* charInfo);
 	void SelectCharFunc();
+	void SelectPortrait(tagCharInfo* charInfo);
 
 
 

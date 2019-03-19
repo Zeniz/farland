@@ -244,6 +244,7 @@ void charLeon::release()
 
 void charLeon::update()
 {
+	mapIdx = _curTile->_mapIdx;
 	//	애니메이션 세팅
 	setAni();
 	//makeIdleByEndAni();
@@ -264,7 +265,7 @@ void charLeon::update()
 
 
 }
-
+/*
 void charLeon::aniRender()
 {
 	if (_dir == CHAR_DIR::LT || _dir == CHAR_DIR::RB) {
@@ -368,6 +369,8 @@ void charLeon::aniRender()
 	
 	
 }
+*/
+
 
 /*
 void charLeon::KnowingTileFunc()
@@ -612,9 +615,6 @@ void charLeon::OrderPerform()
 	
 }
 */
-void charLeon::AddOrderMove()
-{
-}
 
 
 

@@ -96,18 +96,19 @@ struct tagTileInfo {
 		this->frameY = frameY;
 		
 		if (terImgNum != TERNUM::TERNUM_NONE) {
-			switch (terImgNum)
-			{
-			case TERNUM_NONE:
-				break;
-			case TER_BASIC:
-				img = IMAGEMANAGER->findImage(_terrainImageKey[TER_BASIC].c_str());
-				break;
-			case TERNUM_END:
-				break;
-			default:
-				break;
-			}
+			img = IMAGEMANAGER->findImage(_terrainImageKey[terImgNum].c_str());
+			//switch (terImgNum)
+			//{
+			//case TERNUM_NONE:
+			//	break;
+			//case TER_BASIC:
+			//	img = IMAGEMANAGER->findImage(_terrainImageKey[TER_BASIC].c_str());
+			//	break;
+			//case TERNUM_END:
+			//	break;
+			//default:
+			//	break;
+			//}
 		}
 
 	}
@@ -148,6 +149,7 @@ struct tagObjInfo {
 	OBJNUM objNum;
 	RECT sampleRc;
 	POINT mapIdx;
+	T_ATTRIBUTE terAttr;
 
 	POINTFLOAT pos;
 	RECT rc;
@@ -162,7 +164,7 @@ struct tagObjInfo {
 	void setObjInfo(OBJNUM objImgNum,
 		RECT sampleRc, POINT idx,
 		POINTFLOAT pos, RECT rc, int zlvl, 
-		POINT centerPosInImg, POINT objTileSize) {
+		POINT centerPosInImg, POINT objTileSize, T_ATTRIBUTE terAttr) {
 
 		this->objNum = objImgNum;
 		this->sampleRc = sampleRc;
@@ -173,20 +175,13 @@ struct tagObjInfo {
 
 		this->centerPosInImg = centerPosInImg;
 		this->objTileSize = objTileSize;
+		this->terAttr = terAttr;
 		
 		
 
 		if (this->objNum != OBJNUM_NONE) {
-			switch (this->objNum)
-			{
-				//	오브제 종류에 따라서, 이미지매니저한테서 img 넣어줌
-			case OBJ_BASIC:
-				this->img = IMAGEMANAGER->findImage(_objectImageKey[OBJ_BASIC].c_str());
-				break;
-
-			default:
-				break;
-			}
+			this->img = IMAGEMANAGER->findImage(_objectImageKey[this->objNum].c_str());
+			
 		}
 
 	}
@@ -201,7 +196,7 @@ struct tagObjInfo {
 		objInfo.rc = this->rc;
 		objInfo.centerPosInImg = this->centerPosInImg;
 		objInfo.objTileSize = this->objTileSize;
-
+		objInfo.terAttr = this->terAttr;
 
 
 		return objInfo;
@@ -220,6 +215,7 @@ struct tagObjInfo {
 		
 		this->centerPosInImg = { NULL,NULL };
 		this->objTileSize = { NULL,NULL };
+		this->terAttr = T_ATTRIBUTE::T_ATTR_NONE;
 	}
 
 	int getWid() {

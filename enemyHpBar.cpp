@@ -24,10 +24,11 @@ HRESULT enemyHpBar::init()
 	return S_OK;
 }
 
-HRESULT enemyHpBar::init(float * curHpAddr, float * maxHpAddr, POINTFLOAT* centerPos, POINT augPosForRender)
+HRESULT enemyHpBar::init(float * curHpAddr, float * maxHpAddr, int* zlvlAddr, POINTFLOAT* centerPos, POINT augPosForRender)
 {
 	_curHp = curHpAddr;
 	_maxHp = maxHpAddr;
+	_zlvl = zlvlAddr;
 	_centerPos = centerPos;
 	_augPosForRender = augPosForRender;
 
@@ -48,12 +49,12 @@ void enemyHpBar::update()
 void enemyHpBar::render()
 {
 	_barImg[0]->frameRender(_centerPos->x + _augPosForRender.x - _barImg[0]->GetFrameWidth() / 2,
-		_centerPos->y + _augPosForRender.y - _barImg[0]->GetFrameHeight() / 2,
+		_centerPos->y + _augPosForRender.y - _barImg[0]->GetFrameHeight() / 2 - (*_zlvl * TILESIZE_HEI/2),
 		0, 0,
 		1.0f);
 	
 	_barImg[1]->frameRender(_centerPos->x + _augPosForRender.x - _barImg[0]->GetFrameWidth() / 2,
-		_centerPos->y + _augPosForRender.y - _barImg[0]->GetFrameHeight() / 2,
+		_centerPos->y + _augPosForRender.y - _barImg[0]->GetFrameHeight() / 2 - (*_zlvl * TILESIZE_HEI / 2),
 		(_barImg[0]->GetFrameWidth()-2) * _hpRatio,
 		_barImg[0]->GetFrameHeight(),
 		0,1,

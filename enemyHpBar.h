@@ -1,5 +1,6 @@
 #pragma once
 #include "gameNode.h"
+
 class enemyHpBar : public gameNode
 {
 private:
@@ -12,13 +13,17 @@ private:
 	POINTFLOAT* _centerPos;
 
 	POINT _augPosForRender;
+	int* _zlvl;
+
+	const int TILESIZE_HEI = 64;
+	
 
 public:
 	enemyHpBar();
 	~enemyHpBar();
 
 	HRESULT init();
-	HRESULT init(float* curHpAddr, float* maxHpAddr, POINTFLOAT* centerPos, POINT augPosForRender);
+	HRESULT init(float* curHpAddr, float* maxHpAddr, int* zlvlAddr, POINTFLOAT* centerPos, POINT augPosForRender);
 	void release();
 	void update();
 	void render();

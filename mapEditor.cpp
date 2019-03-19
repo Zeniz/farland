@@ -321,6 +321,9 @@ void mapEditor::render()
 	//	갈수있는길 표시
 	if (KEYMANAGER->isToggleKey(VK_HOME)) {
 		MoveableTileRender();
+	} 
+	if (KEYMANAGER->isToggleKey(VK_END)) {
+		MapIdxRender();
 	}
 
 
@@ -406,30 +409,34 @@ HRESULT mapEditor::InitObjSamples()
 			_objSamples[OBJNUM::OBJ_BASIC][i].sampleRc = RectMake(i * 128, 0, 128, 272);
 			_objSamples[OBJNUM::OBJ_BASIC][i].objTileSize = { 1,1 };
 
+			_objSamples[OBJNUM::OBJ_BASIC][i].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 			
 		}
-		for (int i = 4; i < 9; i++) {
+		for (int i = 4; i < 8; i++) {
 			_objSamples[OBJNUM::OBJ_BASIC][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJ_BASIC].c_str());
 			_objSamples[OBJNUM::OBJ_BASIC][i].objNum = OBJ_BASIC;
 
-			_objSamples[OBJNUM::OBJ_BASIC][i].centerPosInImg.x = 50 + (i - 4) * 96;
+			_objSamples[OBJNUM::OBJ_BASIC][i].centerPosInImg.x = 50 + (i - 4) * 128;
 			_objSamples[OBJNUM::OBJ_BASIC][i].centerPosInImg.y = 400;
-			_objSamples[OBJNUM::OBJ_BASIC][i].sampleRc = RectMake((i - 4) * 96, 273, 96, 144);
+			_objSamples[OBJNUM::OBJ_BASIC][i].sampleRc = RectMake((i - 4) * 128, 273, 128, 142);
 			_objSamples[OBJNUM::OBJ_BASIC][i].objTileSize = { 1,1 };
+
+			_objSamples[OBJNUM::OBJ_BASIC][i].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 			
 			
 		}
-		for (int i = 9; i < 12; i++) {
+		for (int i = 8; i < 12; i++) {
 			_objSamples[OBJNUM::OBJ_BASIC][i].img = IMAGEMANAGER->findImage(_objectImageKey[OBJ_BASIC].c_str());
 			_objSamples[OBJNUM::OBJ_BASIC][i].objNum = OBJ_BASIC;
 
 
-			_objSamples[OBJNUM::OBJ_BASIC][i].centerPosInImg.x = 64 + (i - 9) * 128;
+			_objSamples[OBJNUM::OBJ_BASIC][i].centerPosInImg.x = 64 + (i - 8) * 128;
 			_objSamples[OBJNUM::OBJ_BASIC][i].centerPosInImg.y = 512;
 
-			_objSamples[OBJNUM::OBJ_BASIC][i].sampleRc = RectMake((i - 9) * 128, 416, 128, 128);
+			_objSamples[OBJNUM::OBJ_BASIC][i].sampleRc = RectMake((i - 8) * 128, 416, 128, 128);
 			_objSamples[OBJNUM::OBJ_BASIC][i].objTileSize = { 1,1 };
 			
+			_objSamples[OBJNUM::OBJ_BASIC][i].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 		}
 	}
 	//	2페이지
@@ -441,6 +448,8 @@ HRESULT mapEditor::InitObjSamples()
 		_objSamples[OBJNUM::OBJ_HOUSE][0].centerPosInImg.y = 544 - TILESIZE_HEI / 2;
 		_objSamples[OBJNUM::OBJ_HOUSE][0].sampleRc = RectMake(0, 0, 576, 544);
 		_objSamples[OBJNUM::OBJ_HOUSE][0].objTileSize = { 4,5 };
+
+		_objSamples[OBJNUM::OBJ_HOUSE][0].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 		
 
 		_objSamples[OBJNUM::OBJ_HOUSE][1].img = IMAGEMANAGER->findImage(_objectImageKey[OBJ_HOUSE].c_str());
@@ -451,6 +460,7 @@ HRESULT mapEditor::InitObjSamples()
 		_objSamples[OBJNUM::OBJ_HOUSE][1].sampleRc = RectMake(576, 0, 576, 544);
 		_objSamples[OBJNUM::OBJ_HOUSE][1].objTileSize = { 5,4 };
 		
+		_objSamples[OBJNUM::OBJ_HOUSE][1].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 	}
 	
 	//	3페이지
@@ -463,6 +473,8 @@ HRESULT mapEditor::InitObjSamples()
 			_objSamples[OBJNUM::OBJ_COMB][i].centerPosInImg.y = 160;
 			_objSamples[OBJNUM::OBJ_COMB][i].sampleRc = RectMake(0 + (i * 128), 0, 128, 192);
 			_objSamples[OBJNUM::OBJ_COMB][i].objTileSize = { 1,1 };
+
+			_objSamples[OBJNUM::OBJ_COMB][i].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 			
 		}
 		for (int i = 4; i < 6; i++) {
@@ -473,6 +485,8 @@ HRESULT mapEditor::InitObjSamples()
 			_objSamples[OBJNUM::OBJ_COMB][i].centerPosInImg.y = 352;
 			_objSamples[OBJNUM::OBJ_COMB][i].sampleRc = RectMake(0 + (i - 4) * 128, 192, 128, 192);
 			_objSamples[OBJNUM::OBJ_COMB][i].objTileSize = { 1,1 };
+
+			_objSamples[OBJNUM::OBJ_COMB][i].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 			
 		} 
 		//	풀떼기
@@ -484,6 +498,8 @@ HRESULT mapEditor::InitObjSamples()
 			_objSamples[OBJNUM::OBJ_COMB][i].centerPosInImg.y = 480;
 			_objSamples[OBJNUM::OBJ_COMB][i].sampleRc = RectMake(0 + (i - 6) * 128, 384, 128, 128);
 			_objSamples[OBJNUM::OBJ_COMB][i].objTileSize = { 1,1 };
+
+			_objSamples[OBJNUM::OBJ_COMB][i].terAttr = T_ATTRIBUTE::T_ATTR_NONE;
 			
 		}
 	}
@@ -497,6 +513,8 @@ HRESULT mapEditor::InitObjSamples()
 			_objSamples[OBJNUM::OBJ_CRYSTAL][i].centerPosInImg.y = 304;
 			_objSamples[OBJNUM::OBJ_CRYSTAL][i].sampleRc = RectMake(0 + (i * 256), 0, 256, 336);
 			_objSamples[OBJNUM::OBJ_CRYSTAL][i].objTileSize = { 2,2 };
+
+			_objSamples[OBJNUM::OBJ_CRYSTAL][i].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 			
 			
 		}
@@ -508,6 +526,8 @@ HRESULT mapEditor::InitObjSamples()
 			_objSamples[OBJNUM::OBJ_CRYSTAL][i].centerPosInImg.y = 512;
 			_objSamples[OBJNUM::OBJ_CRYSTAL][i].sampleRc = RectMake(0 + (i - 4) * 128, 337, 128, 208);
 			_objSamples[OBJNUM::OBJ_CRYSTAL][i].objTileSize = { 1,1 };
+
+			_objSamples[OBJNUM::OBJ_CRYSTAL][i].terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
 			
 		}
 		
@@ -1891,7 +1911,10 @@ void mapEditor::MakeObjOnMap(tagObjInfo sour, int idxX, int idxY)
 
 			_vvMap[idxY - i][idxX - j]->_objInfo = splitedObj;
 			
-			_vvMap[idxY - i][idxX - j]->_tileInfo.terAttr = T_ATTRIBUTE::T_ATTR_UNMOVE;
+			
+			_vvMap[idxY - i][idxX - j]->_tileInfo.terAttr = sour.terAttr;
+			
+			
 
 		}
 	}
@@ -2186,6 +2209,18 @@ void mapEditor::MoveableTileRender()
 				D2DMANAGER->drawDiamondLine(0x00CC00, _vvMap[i][j]->_pos.x, _vvMap[i][j]->_pos.y, TILESIZE_WID, TILESIZE_HEI, 5.0f);
 			}
 			
+		}
+	}
+}
+
+void mapEditor::MapIdxRender()
+{
+	WCHAR wstr[128];
+
+	for (int i = 0; i < _tileNum.y; i++) {
+		for (int j = 0; j < _tileNum.x; j++) {
+			swprintf_s(wstr, L"[%d/%d]", _vvMap[i][j]->_mapIdx.x, _vvMap[i][j]->_mapIdx.y);
+			D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0x000000, 1.0f), L"consolas", 15, wstr, _vvMap[i][j]->_pos.x, _vvMap[i][j]->_pos.y, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 		}
 	}
 }

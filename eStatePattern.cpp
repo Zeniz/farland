@@ -22,47 +22,51 @@ void eStatePattern::Idle(enemy * enemy)
 	int targetCharDistance = 999999;
 	int nearCharIdx = -1;
 	
-	//	자기 주변에 캐릭터 있나 검색
-	for (int i = 0; i < enemy->_vChara->size(); i++) {
-		int differIdxSize = abs(enemy->getChara(i)->mapIdx.x - enemy->_mapIdx.x) + abs(enemy->getChara(i)->mapIdx.y - enemy->_mapIdx.y);
-		//	idx차이가 1,0 이라면, (한칸떨어졌거나, 겹쳐있든가)
-		if (differIdxSize < 2) {
-			targetCharIdx = i;
-			isNearChar = true;
-		}
+	//	isNoticeTrue,
+	if (enemy->_isNotice) {
 
-		//	idx차이가 많이나면, 가장 가까운놈 저장
-		else {
-			if (differIdxSize < targetCharDistance) {
-				targetCharDistance = differIdxSize;
-				nearCharIdx = i;
+		//	자기 주변에 캐릭터 있나 검색
+		for (int i = 0; i < enemy->_vChara->size(); i++) {
+			int differIdxSize = abs(enemy->getChara(i)->mapIdx.x - enemy->_mapIdx.x) + abs(enemy->getChara(i)->mapIdx.y - enemy->_mapIdx.y);
+			//	idx차이가 1,0 이라면, (한칸떨어졌거나, 겹쳐있든가)
+			if (differIdxSize < 2) {
+				targetCharIdx = i;
+				isNearChar = true;
+			}
+
+			//	idx차이가 많이나면, 가장 가까운놈 저장
+			else {
+				if (differIdxSize < targetCharDistance) {
+					targetCharDistance = differIdxSize;
+					nearCharIdx = i;
+				}
 			}
 		}
-	}
 
-	//	근처 캐릭터 있으면 공격
-	if (isNearChar) {
-		enemy->_atkCount++;
-		if (enemy->_atkCount > enemy->ATKCOUNT_MAX) {
-			enemy->_atkCount = 0;
-			enemy->_targetCharIdx = targetCharIdx;
-			enemy->_state = E_STATE::E_ATK1;
+		//	근처 캐릭터 있으면 공격
+		if (isNearChar) {
+			enemy->_atkCount++;
+			if (enemy->_atkCount > enemy->ATKCOUNT_MAX) {
+				enemy->_atkCount = 0;
+				enemy->_targetCharIdx = targetCharIdx;
+				enemy->_state = E_STATE::E_ATK1;
+				enemy->_isStateChanged = true;
+			}
+
+		}
+
+		//	캐릭터 없으면 이동
+		else {
+			enemy->_targetCharIdx = nearCharIdx;
+			enemy->_state = E_STATE::E_MOVE;
 			enemy->_isStateChanged = true;
-		}
-		
-	}
-	
-	//	캐릭터 없으면 이동
-	else {
-		enemy->_targetCharIdx = nearCharIdx;
-		enemy->_state = E_STATE::E_MOVE;
-		enemy->_isStateChanged = true;
-		ASTARFUNC->PathFind(enemy->_mapIdx, enemy->getChara(nearCharIdx)->mapIdx, enemy->_mapIdx, enemy->_lWayIdxList);
-		//	검색이 됐고, -1,-,1 이 아니라면 -> 마지막좌표(플레이어)는 뺴라.
-		if (enemy->_lWayIdxList.size() != 0 && enemy->_lWayIdxList.begin()->x != -1) {
-			enemy->_lWayIdxList.pop_back();
-		}
+			ASTARFUNC->PathFind(enemy->_mapIdx, enemy->getChara(nearCharIdx)->mapIdx, enemy->_mapIdx, enemy->_lWayIdxList);
+			//	검색이 됐고, -1,-,1 이 아니라면 -> 마지막좌표(플레이어)는 뺴라.
+			if (enemy->_lWayIdxList.size() != 0 && enemy->_lWayIdxList.begin()->x != -1) {
+				enemy->_lWayIdxList.pop_back();
+			}
 
+		}
 	}
 		
 

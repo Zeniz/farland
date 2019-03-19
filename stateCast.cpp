@@ -70,6 +70,7 @@ void stateCast::onSkillFour(Character * character)
 void stateCast::update(Character * character)
 {
 	character->_castingCount++;
+	character->_portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
 	switch (character->_lOrderList.begin()->kinds)
 	{
 	case ORDER_KINDS::SKILL1:

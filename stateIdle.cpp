@@ -69,6 +69,7 @@ void stateIdle::onSkillFour(Character * character)
 
 void stateIdle::update(Character* character)
 {
+	character->_portraitKinds = CHAR_PORTRAIT_KINDS::BASIC;
 	character->_tileForRender = character->_curTile;
 
 	//	공격오더중, 재이동을 위해 명령재실행(move로 시작하는)을 판단하는 변수.
@@ -134,6 +135,8 @@ void stateIdle::update(Character* character)
 				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::BLOCK)];
 				character->_isStateChanged = true;
 				character->_isOnAtking = false;
+				EFFECTMANAGER->play("defMode", character->_pos.x, character->_rc.top);
+				
 				break;
 			case ORDER_KINDS::MOVE:
 				character->_coolDownTimer[0][ORDER_KINDS::MOVE] = 0;
@@ -148,6 +151,7 @@ void stateIdle::update(Character* character)
 				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
 				character->_isStateChanged = true;
 				character->_isOnAtking = true;
+				EFFECTMANAGER->play("atkMode", character->_pos.x, character->_rc.top);
 				break;
 			case ORDER_KINDS::SKILL1: case ORDER_KINDS::SKILL2:
 			case ORDER_KINDS::SKILL3: case ORDER_KINDS::SKILL4:
@@ -286,6 +290,61 @@ void stateIdle::CalForJumptoAtkState(Character * character, ORDER_KINDS proceedO
 					*isNeedMoveAgain = false;
 					return;
 				}
+
+
+			}
+			else {
+				*isNeedMoveAgain = false;
+				return;
+			}
+		}
+	}
+}
+
+void stateIdle::CalForJumptoCastState(Character * character, ORDER_KINDS proceedOrder, bool * isNeedMoveAgain)
+{
+	*isNeedMoveAgain = true;
+	if (character->_lOrderList.size() != 0 && character->_lOrderList.begin()->kinds == proceedOrder) {
+		//	이동을 다 했고, 쿨타임 준비가됐다면,
+		if (character->_lWayIdxList.size() == 0) {
+			if (character->_coolDownTimer[0][proceedOrder] >= character->_coolDownTimer[1][proceedOrder]) {
+				//	character->_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
+				CHAR_STATE destState;
+				switch (proceedOrder)
+				{
+				case NONE:
+					break;
+				case MOVE:
+					break;
+				case HOLD:
+					break;
+				case ATTACK:
+					destState = CHAR_STATE::BASIC_ATK;
+					break;
+				case SKILL1:
+					destState = CHAR_STATE::CASTING;
+					break;
+				case SKILL2:
+					destState = CHAR_STATE::CASTING;
+					break;
+				case SKILL3:
+					destState = CHAR_STATE::CASTING;
+					break;
+				case SKILL4:
+					destState = CHAR_STATE::CASTING;
+					break;
+				case ORDER_END:
+					break;
+				default:
+					break;
+				}
+
+				character->_state = destState;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(destState)];
+				character->_isStateChanged = true;
+				*isNeedMoveAgain = false;
+				return;
+				
 
 
 			}

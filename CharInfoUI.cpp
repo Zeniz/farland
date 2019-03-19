@@ -68,9 +68,10 @@ void CharInfoUI::update()
 {
 	SelectCharFunc();
 	
-
+	//캐릭이 선택되었다면,
 	if(-1 < _curSelectChar && _curSelectChar < _vCharInfo.size()){
 		CalRatios(&_vCharInfo[_curSelectChar]);
+		SelectPortrait(&_vCharInfo[_curSelectChar]);
 		_mode = _charMgr->getCharMode(_curSelectChar);
 	}
 
@@ -90,6 +91,7 @@ void CharInfoUI::render()
 		_backImg->renderABS(BACKIMG_START.x, BACKIMG_START.y, 1.0f);
 		//	초상화 뽑고
 		_portrait->frameRenderABS(BACKIMG_START.x, BACKIMG_START.y, (int)_vCharInfo[_curSelectChar].portraitKinds, (int)_vCharInfo[_curSelectChar].name, 1.0f);
+		
 		//	이름 써주고,
 		D2DMANAGER->drawTextD2D(_brush, L"consolas", 25, _vCharInfo[_curSelectChar].nameStr,
 			NAME_START.x + CAMERA2D->getCamPosX(), NAME_START.y + CAMERA2D->getCamPosY(),
@@ -423,3 +425,58 @@ void CharInfoUI::SelectCharFunc()
 	}
 }
 
+void CharInfoUI::SelectPortrait(tagCharInfo * charInfo)
+{
+	CHAR_STATE charState = *(charInfo[_curSelectChar].stateAddr);
+	switch (charState)
+	{
+	case CHAR_STATE::NONE:
+		break;
+	case CHAR_STATE::IDLE:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::BASIC;
+		break;
+	case CHAR_STATE::MOVE:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::JOYFUL;
+		break;
+	case CHAR_STATE::CASTING:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
+		break;
+	case CHAR_STATE::DEAD:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::DEAD;
+		break;
+	case CHAR_STATE::GETHIT:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::GETDMG;
+		break;
+	case CHAR_STATE::STONE:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::GETDMG;
+		break;
+	case CHAR_STATE::FROZEN:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::GETDMG;
+		break;
+	case CHAR_STATE::GETHIT2:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::GETDMG;
+		break;
+	case CHAR_STATE::BLOCK:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::SURPRISED;
+		break;
+	case CHAR_STATE::BASIC_ATK:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
+		break;
+	case CHAR_STATE::SKILL1:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
+		break;
+	case CHAR_STATE::SKILL2:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
+		break;
+	case CHAR_STATE::SKILL3:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
+		break;
+	case CHAR_STATE::SKILL4:
+		_vCharInfo[_curSelectChar].portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
+		break;
+	case CHAR_STATE::CHAR_STATE_END:
+		break;
+	default:
+		break;
+	}
+}

@@ -270,6 +270,9 @@
     <ClInclude Include="enemyForMapEditor.h">
       <Filter>PlayGround</Filter>
     </ClInclude>
+    <ClInclude Include="stage1.h">
+      <Filter>PlayGround\scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -445,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="enemyForMapEditor.cpp">
       <Filter>PlayGround</Filter>
+    </ClCompile>
+    <ClCompile Include="stage1.cpp">
+      <Filter>PlayGround\scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

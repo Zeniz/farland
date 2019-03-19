@@ -71,6 +71,7 @@ void stateMove::onSkillFour(Character * character)
 void stateMove::update(Character* character)
 {
 	CalTileForRender(character);
+	character->_portraitKinds = CHAR_PORTRAIT_KINDS::JOYFUL;
 
 	//	공격하러 가는중이면,
 	if (character->_isOnAtking) {

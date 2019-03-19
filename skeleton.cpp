@@ -117,6 +117,7 @@ HRESULT skeleton::init()
 	for (int i = 0; i < E_ATTR::ATTR_END; i++) {
 		_attrValue[i] = 0;
 	}
+	_isNotice = false;
 
 
 	return S_OK;
@@ -173,8 +174,14 @@ void skeleton::release()
 void skeleton::update()
 {
 	//_mapIdx = ConvertPosToIdx(_pos.x, _pos.y, TILESIZE_WID, TILESIZE_HEI);
-	_pCurTile = (*_vvMap)[_mapIdx.y][_mapIdx.x];
-
+	_pCurTile = (*_vvMap)[_mapIdx.y][_mapIdx.x];						//필수
+	_zLevel = _pCurTile->_zLevel;										//필수
+	
+	//	적 발견하는 조건
+	if (!_isNotice) {
+		NoticeFunc(this->NOTICE_RANGE);						
+	}
+	
 	setAni();
 	MakeIdleByEndAni();
 	patternUpdate();
@@ -185,7 +192,7 @@ void skeleton::update()
 	
 
 }
-
+/*
 void skeleton::render()
 {
 	//D2D_RECT_F playerRc = { _rc.left, _rc.top, _rc.right, _rc.bottom };
@@ -217,6 +224,7 @@ void skeleton::render()
 
 
 }
+*/
 void skeleton::setAni()
 {
 	if (_isStateChanged) {

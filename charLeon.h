@@ -33,7 +33,7 @@ public:
 
 	void release();
 	void update() override;
-	void aniRender() override;
+	//void aniRender() override;
 	
 
 	//stateMoveø°¿÷¿Ω
@@ -44,7 +44,6 @@ public:
 	//void makeIdleByEndAni();
 	//void CoolDownFunc();
 
-	void AddOrderMove();
 
 
 	

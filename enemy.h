@@ -135,11 +135,14 @@ public:
 
 	animation* _ani;
 	float _attrValue[ATTR_END];				//	속성점수.
+	int _zLevel;
+
+	bool _isNotice;
 
 	//	맵에디터용 ㅠㅠ
 	POINT _tileCenterPosAtSprite;
 	POINT _mobTileSize;
-	int _zLevel;
+	
 	RECT _sampleRc;
 	image* _sampleImg;
 	
@@ -243,6 +246,7 @@ public:
 	void patternUpdate();
 	void MakeIdleByEndAni();
 	void ChkDead();
+	void NoticeFunc(int noticeRange);
 
 	
 	void setCurHpAug(float augVal) {
@@ -268,6 +272,7 @@ public:
 	TILE* getCurTile() { return _pCurTile; }
 	TILE* getTileForRender() { return _tileForRender; }
 	Character* getChara(int idx) { return (*_vChara)[idx]; }
+
 
 
 
