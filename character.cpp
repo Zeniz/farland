@@ -56,7 +56,7 @@ Character::Character()
 
 	_portraitKinds = CHAR_PORTRAIT_KINDS::NONE;
 	_portraitFrameIdx = { NULL,NULL };
-	_curSkill = CUR_SKILL::NONE;
+	_curSkill = SKILL_NUM::NONE;
 	_lOrderList.clear();
 	_lWayIdxList.clear();
 
@@ -107,7 +107,7 @@ Character::Character()
 	EFFECTMANAGER->addEffect("atkMode", "images/skillEffect/atkModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);
 	EFFECTMANAGER->addEffect("defMode", "images/skillEffect/defModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);
 	EFFECTMANAGER->addEffect("meteor", "images/skillEffect/meteor.png", 8338, 490, 758, 490, 5, 0.167f, 5);
-
+	
 }
 
 
@@ -150,7 +150,7 @@ HRESULT Character::init()
 
 	_portraitKinds = CHAR_PORTRAIT_KINDS::NONE;
 	_portraitFrameIdx = { NULL,NULL };
-	_curSkill = CUR_SKILL::NONE;
+	_curSkill = SKILL_NUM::NONE;
 	_lOrderList.clear();
 	_lWayIdxList.clear();
 
@@ -328,6 +328,8 @@ void Character::InitCharacteristicAugVal(float augMaxHp, float augCurHp, float a
 	_charValue[AUG][M_ATK] = augMAtk;
 	_charValue[AUG][M_DEF] = augMDef;
 }
+
+
 
 void Character::InitCharacteristicAugVal()
 {

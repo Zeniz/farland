@@ -84,6 +84,25 @@ void effectManager::render()
 
 }
 
+void effectManager::renderReverseX()
+{
+	iterTotalEffect vIter;
+	iterEffect		mIter;
+
+	for (vIter = _vTotalEffect.begin(); vIter != _vTotalEffect.end(); ++vIter)
+	{
+		for (mIter = vIter->begin(); mIter != vIter->end(); ++mIter)
+		{
+			iterEffects vArrIter;
+			for (vArrIter = mIter->second.begin(); vArrIter != mIter->second.end(); ++vArrIter)
+			{
+				//effect* 렌더함수를 실행
+				(*vArrIter)->renderReverseX();
+			}
+		}
+	}
+}
+
 void effectManager::addEffect(string effectName, string imageName, int imageWidth, int imageHeight, int effectWidth, int effectHeight, int fps, float elapsedTime, int buffer)
 {
 	image* img;

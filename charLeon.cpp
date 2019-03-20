@@ -245,6 +245,7 @@ void charLeon::release()
 void charLeon::update()
 {
 	mapIdx = _curTile->_mapIdx;
+	_mapIdx = _curTile->_mapIdx;
 	//	애니메이션 세팅
 	setAni();
 	//makeIdleByEndAni();

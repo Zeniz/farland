@@ -62,6 +62,14 @@ void effect::render()
 	_effectImage->aniRender(_x, _y, _effectAnimation);
 }
 
+void effect::renderReverseX()
+{
+	//애니메이션이 재생중이 아니라면 렌더링 하지 않는다
+	if (!_isRunning) return;
+
+	_effectImage->aniRenderReverseX(_x, _y, _effectAnimation);
+}
+
 void effect::startEffect(int x, int y)
 {
 	//이펙트이미지 or 이펙트애니메이션 셋팅이 되어있지않으면 이펙트 실행중지

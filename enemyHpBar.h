@@ -15,7 +15,7 @@ private:
 	POINT _augPosForRender;
 	int* _zlvl;
 
-	const int TILESIZE_HEI = 64;
+	//const int TILESIZE_HEI = 64;
 	
 
 public:

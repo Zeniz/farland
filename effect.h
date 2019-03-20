@@ -23,6 +23,7 @@ public:
 	virtual void release();
 	virtual void update();
 	virtual void render();
+	virtual void renderReverseX();
 
 	void startEffect(int x, int y);
 

@@ -2,8 +2,8 @@
 #include "gameNode.h"
 #include "objects.h"
 
-const int TILESIZE_WID = 128;
-const int TILESIZE_HEI = 64;
+//const int TILESIZE_WID = 128;
+//const int TILESIZE_HEI = 64;
 
 
 

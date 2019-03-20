@@ -54,6 +54,7 @@ HRESULT testMap::init()
 	tmpChar->InitObjectiveValDefault({ 0,9 });
 	tmpChar->InitCharacteristicValDefault();
 	tmpChar->InitCharacteristicAugValDefault();
+	tmpChar->AddSkill(SKILL_NUM::SKILL1, "slashOne");
 	
 	_charMgr->AddCharacter(tmpChar);
 	_UIMgr->AddChar(tmpChar);

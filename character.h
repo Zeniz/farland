@@ -6,18 +6,21 @@
 #include "charStatePattern.h"
 
 
+
 typedef vector<enemy*> vEnemy;
 
 
-
-class charSkills;
 class charStatePattern;
 
 enum class CHAR_DIR {
 	NONE = -1,
+	//LT,
+	//RT,
+	//LB,
+	//RB,
 	LT,
-	RT,
 	LB,
+	RT,
 	RB,
 
 	CHAR_DIR_END,
@@ -44,14 +47,14 @@ enum class CHAR_STATE {
 	CHAR_STATE_END,
 };
 
-enum class CUR_SKILL {
+enum class SKILL_NUM {
 	NONE = -1,
 	SKILL1,
 	SKILL2,
 	SKILL3,
 	SKILL4,
 
-	CUR_SKILL_END,
+	SKILL_NUM_END,
 };
 
 enum class CHAR_NAME {
@@ -189,8 +192,11 @@ public:
 	CHAR_PORTRAIT_KINDS _portraitKinds;
 	POINT _portraitFrameIdx;
 
-	CUR_SKILL _curSkill;
-	charSkills* _arySkill[static_cast<const int>(CUR_SKILL::CUR_SKILL_END)];
+	SKILL_NUM _curSkill;
+	string _skillName[static_cast<const int>(SKILL_NUM::SKILL_NUM_END)];
+	 
+	
+	
 
 
 	list<tagOrderInfo> _lOrderList;
@@ -262,6 +268,8 @@ public:
 		float augMoveSpd, float augCastSpd,
 		float augAtk, float augDef, float augMAtk, float augMDef
 	);
+
+	void AddSkill(SKILL_NUM skillNum, string skillName) { _skillName[(int)skillNum] = skillName; }
 
 	
 

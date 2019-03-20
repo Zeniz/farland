@@ -216,9 +216,6 @@
     <ClInclude Include="character.h">
       <Filter>PlayGround\characters\chars</Filter>
     </ClInclude>
-    <ClInclude Include="charSkills.h">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClInclude>
     <ClInclude Include="testMap.h">
       <Filter>PlayGround\scenes</Filter>
     </ClInclude>
@@ -272,6 +269,15 @@
     </ClInclude>
     <ClInclude Include="stage1.h">
       <Filter>PlayGround\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="skillManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="skillNode.h">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClInclude>
+    <ClInclude Include="slashOne.h">
+      <Filter>PlayGround\characters\skills</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -398,9 +404,6 @@
     <ClCompile Include="character.cpp">
       <Filter>PlayGround\characters\chars</Filter>
     </ClCompile>
-    <ClCompile Include="charSkills.cpp">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClCompile>
     <ClCompile Include="testMap.cpp">
       <Filter>PlayGround\scenes</Filter>
     </ClCompile>
@@ -451,6 +454,15 @@
     </ClCompile>
     <ClCompile Include="stage1.cpp">
       <Filter>PlayGround\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="skillManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="skillNode.cpp">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClCompile>
+    <ClCompile Include="slashOne.cpp">
+      <Filter>PlayGround\characters\skills</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

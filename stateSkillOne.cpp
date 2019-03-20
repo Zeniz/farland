@@ -71,6 +71,11 @@ void stateSkillOne::update(Character * character)
 {
 	//	프레임이 끝나면, 공격적용!
 	if (character->_ani->isLastFrame()) {
+		SKILLMANAGER->FindSkill(character->_skillName[(int)SKILL_NUM::SKILL1])->StartSkillEffect(
+			character->mapIdx, (int)character->_dir);
+		
+
+
 		vEnemy* _vEnemy = character->_vEnemy;
 		character->_coolDownTimer[0][ORDER_KINDS::SKILL1] = 0;
 

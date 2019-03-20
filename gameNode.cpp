@@ -37,6 +37,8 @@ HRESULT gameNode::init(bool managerInit)
 		TXTDATA->init();
 		EFFECTMANAGER->init();
 		ASTARFUNC->init();
+		SKILLMANAGER->init();
+		
 	}
 
 	return S_OK;
@@ -72,6 +74,8 @@ void gameNode::release()
 		EFFECTMANAGER->releaseSingleton();
 		ASTARFUNC->release();
 		ASTARFUNC->releaseSingleton();
+		SKILLMANAGER->release();
+		SKILLMANAGER->releaseSingleton();
 	}
 }
 

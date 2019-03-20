@@ -29,6 +29,7 @@ public:
 	void release();
 	void update();
 	void render();
+	void renderReverseX();
 
 	void addEffect(string effectName, string imageName, int imageWidth, int imageHeight,
 		int effectWidth, int effectHeight, int fps, float elapsedTime, int buffer);
