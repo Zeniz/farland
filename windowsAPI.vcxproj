@@ -159,6 +159,7 @@
     <ClInclude Include="CharMgr.h" />
     <ClInclude Include="charStatePattern.h" />
     <ClInclude Include="d2dManager.h" />
+    <ClInclude Include="doubleSlash.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="effectManager.h" />
     <ClInclude Include="enemy.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="CharMgr.cpp" />
     <ClCompile Include="charStatePattern.cpp" />
     <ClCompile Include="d2dManager.cpp" />
+    <ClCompile Include="doubleSlash.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
     <ClCompile Include="enemy.cpp" />

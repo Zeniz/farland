@@ -62,6 +62,8 @@ void playGround::render()
 	//===========================================================================
 	//				##카메라 정보 마우스 정보 시간정보 출력	##===================
 	WCHAR str[128];
+	TIMEMANAGER->render();
+
 	swprintf_s(str, L"cameraX : %d", CAMERA2D->getCamPosX());
 	D2DMANAGER->drawText(str, CAMERA2D->getCamPosX(), CAMERA2D->getCamPosY() + 80);
 	swprintf_s(str, L"cameraY : %d", CAMERA2D->getCamPosY());

@@ -279,6 +279,9 @@
     <ClInclude Include="slashOne.h">
       <Filter>PlayGround\characters\skills</Filter>
     </ClInclude>
+    <ClInclude Include="doubleSlash.h">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -462,6 +465,9 @@
       <Filter>PlayGround\characters\skills</Filter>
     </ClCompile>
     <ClCompile Include="slashOne.cpp">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClCompile>
+    <ClCompile Include="doubleSlash.cpp">
       <Filter>PlayGround\characters\skills</Filter>
     </ClCompile>
   </ItemGroup>

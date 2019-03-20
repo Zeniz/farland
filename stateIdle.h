@@ -31,5 +31,7 @@ public:
 	void ChkNearbyEnemy(Character* chara, bool* isNearEnemy);
 	void CalForJumptoAtkState(Character* character, ORDER_KINDS proceedOrder, bool* isNeedMoveAgain);
 	void CalForJumptoCastState(Character* character, ORDER_KINDS proceedOrder, bool* isNeedMoveAgain);
+
+	void CalDir(POINT curIdx, POINT targetIdx, CHAR_DIR* charDir);
 };
 

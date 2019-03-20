@@ -24,5 +24,23 @@ public:
 	void onSkillFour(Character* character) override;
 
 	void update(Character* character) override;
+
+	SKILL_DIR ConvertCharDirToSkillDir(Character* chara) {
+		SKILL_DIR skillDir = SKILL_DIR::SKILL_DIR_NONE;
+		CHAR_DIR charDir = chara->_dir;
+		if (charDir == CHAR_DIR::LT) {
+			skillDir = SKILL_DIR::SKILL_DIR_LT;
+		}
+		else if (charDir == CHAR_DIR::LB) {
+			skillDir = SKILL_DIR::SKILL_DIR_LB;
+		}
+		else if (charDir == CHAR_DIR::RT) {
+			skillDir = SKILL_DIR::SKILL_DIR_RT;
+		}
+		else if (charDir == CHAR_DIR::RB) {
+			skillDir = SKILL_DIR::SKILL_DIR_RB;
+		}
+		return skillDir;
+	}
 };
 

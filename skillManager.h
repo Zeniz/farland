@@ -2,6 +2,7 @@
 #include "singletonBase.h"
 #include <map>
 #include "slashOne.h"
+#include "doubleSlash.h"
 
 class skillNode;
 

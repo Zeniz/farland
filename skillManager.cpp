@@ -19,6 +19,10 @@ HRESULT skillManager::init()
 	tmpSlashOne->init();
 	_mSkills.insert(make_pair("slashOne", tmpSlashOne));
 
+	doubleSlash* tmpDoubleSlash = new doubleSlash;
+	tmpDoubleSlash->init();
+	_mSkills.insert(make_pair("doubleSlash", tmpDoubleSlash));
+
 
 
 

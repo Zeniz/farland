@@ -128,6 +128,7 @@ enum CHAR_VALUE_KINDS {
 class Character : public objects
 {
 public:
+	
 	//	<objects> : public
 	//	image* _img;
 	//	int _frameX;

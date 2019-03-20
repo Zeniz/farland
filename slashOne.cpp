@@ -38,10 +38,10 @@ HRESULT slashOne::init()
 
 	_multiNum = MULTI_NUM;
 
-	EFFECTMANAGER->addEffect("slash1LB", "images/skillEffect/slash1LB.png", 2984, 352, 373, 352, 1, 0.167f, 5);
-	EFFECTMANAGER->addEffect("slash1LT", "images/skillEffect/slash1LT.png", 2984, 352, 373, 352, 1, 0.167f, 5);
-	EFFECTMANAGER->addEffect("slash1RB", "images/skillEffect/slash1RB.png", 2984, 352, 373, 352, 1, 0.167f, 5);
-	EFFECTMANAGER->addEffect("slash1RT", "images/skillEffect/slash1RT.png", 2984, 352, 373, 352, 1, 0.167f, 5);
+	EFFECTMANAGER->addEffect("slash1LB", "images/skillEffect/slash1LB.png", 2984, 352, 373, 352, 1, 0.167f, 2);
+	EFFECTMANAGER->addEffect("slash1LT", "images/skillEffect/slash1LT.png", 2984, 352, 373, 352, 1, 0.167f, 2);
+	EFFECTMANAGER->addEffect("slash1RB", "images/skillEffect/slash1RB.png", 2984, 352, 373, 352, 1, 0.167f, 2);
+	EFFECTMANAGER->addEffect("slash1RT", "images/skillEffect/slash1RT.png", 2984, 352, 373, 352, 1, 0.167f, 2);
 	
 	return S_OK;
 }
@@ -85,9 +85,6 @@ void slashOne::StartSkillEffect(POINT curMapIdx, int dir)
 		break;
 	default:
 		break;
-	}
-	if (dir == SKILL_DIR_LB) {
-		
 	}
 	
 }

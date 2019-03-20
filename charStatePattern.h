@@ -2,7 +2,11 @@
 #include "gameNode.h"
 #include "character.h"
 
+
 class Character;
+
+
+
 
 class charStatePattern abstract
 {
@@ -26,8 +30,6 @@ public:
 
 	virtual void update(Character* character) abstract;
 
-
-
-
+	
 };
 

@@ -72,6 +72,78 @@ void stateIdle::update(Character* character)
 	character->_portraitKinds = CHAR_PORTRAIT_KINDS::BASIC;
 	character->_tileForRender = character->_curTile;
 
+
+	//	오더리스트가 있다면, -> 오더 실행하라(state에 따라 패턴넣어줌)
+	if (character->_lOrderList.size() != 0) {
+		ORDER_KINDS order = (character->_lOrderList.begin()->kinds);
+		switch (order)
+		{
+		case ORDER_KINDS::NONE:
+			break;
+		case ORDER_KINDS::HOLD:
+			character->_coolDownTimer[0][ORDER_KINDS::HOLD] = 0;
+			character->_state = CHAR_STATE::BLOCK;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::BLOCK)];
+			character->_isStateChanged = true;
+			character->_isOnAtking = false;
+			EFFECTMANAGER->play("defMode", character->_pos.x, character->_rc.top);
+
+			break;
+		case ORDER_KINDS::MOVE:
+			character->_coolDownTimer[0][ORDER_KINDS::MOVE] = 0;
+			character->_state = CHAR_STATE::MOVE;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
+			character->_isStateChanged = true;
+			character->_isOnAtking = false;
+			break;
+		case ORDER_KINDS::ATTACK:
+			//_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;	//	-> move부터 시작되므로, Attk패턴 중에 계속 0 으로 만들자.
+			character->_state = CHAR_STATE::MOVE;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
+			character->_isStateChanged = true;
+			character->_isOnAtking = true;
+			EFFECTMANAGER->play("atkMode", character->_pos.x, character->_rc.top);
+			break;
+		case ORDER_KINDS::SKILL1:
+			character->_state = CHAR_STATE::CASTING;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
+			character->_isStateChanged = true;
+			character->_isOnAtking = true;
+			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
+			break;
+		case ORDER_KINDS::SKILL2:
+			character->_state = CHAR_STATE::CASTING;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
+			character->_isStateChanged = true;
+			character->_isOnAtking = true;
+			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
+			break;
+		case ORDER_KINDS::SKILL3:
+			character->_state = CHAR_STATE::CASTING;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
+			character->_isStateChanged = true;
+			character->_isOnAtking = true;
+			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
+			break;
+		case ORDER_KINDS::SKILL4:
+			character->_state = CHAR_STATE::CASTING;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
+			character->_isStateChanged = true;
+			character->_isOnAtking = true;
+			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
+			break;
+
+			break;
+		default:
+			break;
+		}
+
+	}
+
+
+	/*
+
+
 	//	공격오더중, 재이동을 위해 명령재실행(move로 시작하는)을 판단하는 변수.
 	bool isNeedMoveAgain = true;
 
@@ -187,6 +259,8 @@ void stateIdle::update(Character* character)
 	//	}
 	//	
 	//}
+
+	*/
 }
 
 void stateIdle::ChkNearbyEnemy(Character * chara, bool * isNearEnemy)
@@ -354,4 +428,20 @@ void stateIdle::CalForJumptoCastState(Character * character, ORDER_KINDS proceed
 			}
 		}
 	}
+}
+
+void stateIdle::CalDir(POINT curIdx, POINT targetIdx, CHAR_DIR * charDir)
+{
+	int augX = targetIdx.x - curIdx.x;
+	int augY = targetIdx.y - curIdx.y;
+
+	if (augX == 1)
+		*charDir = CHAR_DIR::RB;
+	if (augX == -1)
+		*charDir = CHAR_DIR::LT;
+	if (augY == 1)
+		*charDir = CHAR_DIR::LB;
+	if (augY == -1)
+		*charDir = CHAR_DIR::RT;
+
 }

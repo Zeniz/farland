@@ -55,6 +55,7 @@ HRESULT testMap::init()
 	tmpChar->InitCharacteristicValDefault();
 	tmpChar->InitCharacteristicAugValDefault();
 	tmpChar->AddSkill(SKILL_NUM::SKILL1, "slashOne");
+	tmpChar->AddSkill(SKILL_NUM::SKILL2, "doubleSlash");
 	
 	_charMgr->AddCharacter(tmpChar);
 	_UIMgr->AddChar(tmpChar);
@@ -153,7 +154,7 @@ void testMap::render()
 			
 			//	player
 			_charMgr->render(j, i);
-			EFFECTMANAGER->render();
+			//EFFECTMANAGER->render();
 			
 			//	obj
 			ObjRender(j, i);
