@@ -215,7 +215,7 @@ void charLeon::InitCharacteristicValDefault()
 	_probePos = { NULL,NULL };	//	¾÷µ«ÇÊ¿ä,
 
 	_name = CHAR_NAME::LEON;
-	_dir = CHAR_DIR::LB;
+	_dir = CHAR_DIR::RB;
 	_state = CHAR_STATE::IDLE;
 	_curState = _arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
 }

@@ -118,6 +118,7 @@ void stateIdle::update(Character* character)
 			
 			break;
 		case ORDER_KINDS::SKILL1:
+			character->_isCastBegin = true;
 			character->_state = CHAR_STATE::CASTING;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
 			character->_isStateChanged = true;
@@ -125,6 +126,7 @@ void stateIdle::update(Character* character)
 			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
 			break;
 		case ORDER_KINDS::SKILL2:
+			character->_isCastBegin = true;
 			character->_state = CHAR_STATE::CASTING;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
 			character->_isStateChanged = true;
@@ -132,6 +134,7 @@ void stateIdle::update(Character* character)
 			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
 			break;
 		case ORDER_KINDS::SKILL3:
+			character->_isCastBegin = true;
 			character->_state = CHAR_STATE::CASTING;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
 			character->_isStateChanged = true;
@@ -139,6 +142,7 @@ void stateIdle::update(Character* character)
 			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
 			break;
 		case ORDER_KINDS::SKILL4:
+			character->_isCastBegin = true;
 			character->_state = CHAR_STATE::CASTING;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::CASTING)];
 			character->_isStateChanged = true;

@@ -48,6 +48,7 @@ HRESULT testMap::init()
 
 	//	============캐릭터 추가=======
 
+	//	===	Leon ===
 	Character* tmpChar;
 	tmpChar = _charMgr->MakeNewChara(CHAR_NAME::LEON);		//	뉴떄려줌, 링크걸고 리턴
 
@@ -61,6 +62,21 @@ HRESULT testMap::init()
 	
 	_charMgr->AddCharacter(tmpChar);
 	_UIMgr->AddChar(tmpChar);
+
+	//	===	Caren ===
+	Character* tmpChar2;
+	tmpChar2 = _charMgr->MakeNewChara(CHAR_NAME::CAREN);
+	
+	tmpChar2->InitObjectiveValDefault({ 0,10 });
+	tmpChar2->InitCharacteristicValDefault();
+	tmpChar2->InitCharacteristicAugValDefault();
+	tmpChar2->AddSkill(SKILL_NUM::SKILL1, "thunder");
+	tmpChar2->AddSkill(SKILL_NUM::SKILL2, "flameBurst");
+	tmpChar2->AddSkill(SKILL_NUM::SKILL3, "flameNova");
+	tmpChar2->AddSkill(SKILL_NUM::SKILL4, "meteor");
+
+	_charMgr->AddCharacter(tmpChar2);
+	_UIMgr->AddChar(tmpChar2);
 	
 	
 	//	=============적 추가 ===========
@@ -88,6 +104,7 @@ void testMap::update()
 {
 	CAMERA2D->update();
 	KEYANIMANAGER->update("leon");
+	KEYANIMANAGER->update("caren");
 	KEYANIMANAGER->update("skel");
 	EFFECTMANAGER->update();
 	SetClipRangeFunc();

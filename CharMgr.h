@@ -4,6 +4,7 @@
 #include "character.h"
 #include "enemy.h"
 #include "charLeon.h"
+#include "charCaren.h"
 
 
 #include "charStatePattern.h"

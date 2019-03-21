@@ -220,6 +220,7 @@ public:
 	bool _isOnAtking;				//	공격하러 가는중인가?
 	int _castingCount;
 	
+	bool _isCastBegin;				//	처음 캐스팅 시작했나?
 
 	const int CAST1COUNT_MAX = 120;			//	캐스팅에 걸리는 시간
 	const int CAST2COUNT_MAX = 120;

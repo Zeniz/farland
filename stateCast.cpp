@@ -72,6 +72,16 @@ void stateCast::update(Character * character)
 	character->_castingCount+= character->_charValue[CUR][CASTING_SPD] + character->_charValue[AUG][CASTING_SPD];
 	character->_portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
 	string skillName;
+	
+	//	카렌 애니전환용
+	if (character->_name == CHAR_NAME::CAREN) {
+		if (character->_ani->isLastFrame()) {
+			character->_isStateChanged = true;
+			character->_isCastBegin = false;
+		}
+	}
+	
+
 	switch (character->_lOrderList.begin()->kinds)
 	{
 	case ORDER_KINDS::SKILL1:

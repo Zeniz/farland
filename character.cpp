@@ -101,8 +101,11 @@ Character::Character()
 	_targetEnemyIdx = -1;
 	_aStarCount = 0;
 	_basicAtkCount = 0;
+	
 
+	
 	_isOnAtking = false;
+	_isCastBegin = false;
 	
 	EFFECTMANAGER->addEffect("atkMode", "images/skillEffect/atkModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);
 	EFFECTMANAGER->addEffect("defMode", "images/skillEffect/defModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);

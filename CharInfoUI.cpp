@@ -440,7 +440,7 @@ void CharInfoUI::SelectCharFunc()
 
 void CharInfoUI::SelectPortrait(tagCharInfo * charInfo)
 {
-	CHAR_STATE charState = *(charInfo[_curSelectChar].stateAddr);
+	CHAR_STATE charState = *(charInfo->stateAddr);
 	switch (charState)
 	{
 	case CHAR_STATE::NONE:

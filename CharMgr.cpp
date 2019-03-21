@@ -72,6 +72,12 @@ Character * CharMgr::MakeNewChara(CHAR_NAME charName)
 
 		break;
 
+	case CHAR_NAME::CAREN:
+		_charaAddr = new charCaren;
+		_charaAddr->init();
+
+		break;
+
 
 	}
 

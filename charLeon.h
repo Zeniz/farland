@@ -19,7 +19,7 @@ private:
 	const float BASIC_MATK = 10;
 	const float BASIC_MDEF = 5;
 
-
+	
 
 public:
 	charLeon();
@@ -33,14 +33,16 @@ public:
 
 	void release();
 	void update() override;
-	//void aniRender() override;
 	
+	void setAni();
+
+	//void aniRender() override;
+
 
 	//stateMoveø°¿÷¿Ω
 	//void KnowingTileFunc();
 	//void CalTileforRenderFunc();		
 
-	void setAni();
 	//void makeIdleByEndAni();
 	//void CoolDownFunc();
 
