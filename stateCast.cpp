@@ -69,12 +69,14 @@ void stateCast::onSkillFour(Character * character)
 
 void stateCast::update(Character * character)
 {
-	character->_castingCount++;
+	character->_castingCount+= character->_charValue[CUR][CASTING_SPD] + character->_charValue[AUG][CASTING_SPD];
 	character->_portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
+	string skillName;
 	switch (character->_lOrderList.begin()->kinds)
 	{
 	case ORDER_KINDS::SKILL1:
-		if (character->_castingCount >= character->CAST1COUNT_MAX) {
+		skillName = character->_skillName[(int)SKILL_NUM::SKILL1];
+		if (character->_castingCount >= SKILLMANAGER->FindSkill(skillName)->getCastCountMax()) {
 			character->_castingCount = 0;
 			character->_state = CHAR_STATE::SKILL1;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL1)];
@@ -82,7 +84,8 @@ void stateCast::update(Character * character)
 		}
 		break;
 	case ORDER_KINDS::SKILL2:
-		if (character->_castingCount >= character->CAST2COUNT_MAX) {
+		skillName = character->_skillName[(int)SKILL_NUM::SKILL2];
+		if (character->_castingCount >= SKILLMANAGER->FindSkill(skillName)->getCastCountMax()) {
 			character->_castingCount = 0;
 			character->_state = CHAR_STATE::SKILL2;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL2)];
@@ -91,7 +94,8 @@ void stateCast::update(Character * character)
 
 		break;
 	case ORDER_KINDS::SKILL3:
-		if (character->_castingCount >= character->CAST3COUNT_MAX) {
+		skillName = character->_skillName[(int)SKILL_NUM::SKILL3];
+		if (character->_castingCount >= SKILLMANAGER->FindSkill(skillName)->getCastCountMax()) {
 			character->_castingCount = 0;
 			character->_state = CHAR_STATE::SKILL3;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL3)];
@@ -100,7 +104,9 @@ void stateCast::update(Character * character)
 
 		break;
 	case ORDER_KINDS::SKILL4:
-		if (character->_castingCount >= character->CAST4COUNT_MAX) {
+		skillName = character->_skillName[(int)SKILL_NUM::SKILL4];
+		if (character->_castingCount >= SKILLMANAGER->FindSkill(skillName)->getCastCountMax()) {
+		//if (character->_castingCount >= character->CAST4COUNT_MAX) {
 			character->_castingCount = 0;
 			character->_state = CHAR_STATE::SKILL4;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::SKILL4)];

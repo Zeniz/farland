@@ -40,6 +40,8 @@ HRESULT slashOne::init()
 	_attr = ATTR;
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
+	_castCountMax = CASTCOUNT_MAX;
+
 	EFFECTMANAGER->addEffect("slash1LB", "images/skillEffect/slash1LB.png", 2984, 352, 373, 352, 1, 0.167f, 2);
 	EFFECTMANAGER->addEffect("slash1LT", "images/skillEffect/slash1LT.png", 2984, 352, 373, 352, 1, 0.167f, 2);
 	EFFECTMANAGER->addEffect("slash1RB", "images/skillEffect/slash1RB.png", 2984, 352, 373, 352, 1, 0.167f, 2);

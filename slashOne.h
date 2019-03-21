@@ -12,6 +12,8 @@ private:
 
 	const SKILL_ATTR ATTR = SKILL_ATTR::SKILL_ATTR_NONE;
 	const float ATTR_ADJUST_RATIO = 0.f;
+	
+	const int CASTCOUNT_MAX = 50;
 
 public:
 	slashOne();

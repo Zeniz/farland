@@ -12,6 +12,8 @@ private:
 	const SKILL_ATTR ATTR = SKILL_ATTR::SKILL_ATTR_STUN;
 	const float ATTR_ADJUST_RATIO = 1.f;
 
+	const int CASTCOUNT_MAX = 150;
+
 public:
 	slashUlti();
 	~slashUlti();

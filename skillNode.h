@@ -39,6 +39,8 @@ protected:
 	SKILL_ATTR _attr;
 	float _attrAdjustRatio;
 
+	int _castCountMax;
+
 
 
 
@@ -58,6 +60,7 @@ public:
 	float getMultiNum() { return _multiNum; }
 	SKILL_ATTR getAttr() { return _attr; }
 	float getAttrAdjustRatio() { return _attrAdjustRatio; }
+	int getCastCountMax() { return _castCountMax; }
 	
 
 };

@@ -32,6 +32,7 @@ HRESULT doubleSlash::init()
 	_attr = ATTR;
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
+	_castCountMax = CASTCOUNT_MAX;
 
 	EFFECTMANAGER->addEffect("doubleSlashLB", "images/skillEffect/doubleSlashLB.png", 2448, 280, 306, 280, 1, 0.167f, 2);
 	EFFECTMANAGER->addEffect("doubleSlashLT", "images/skillEffect/doubleSlashLT.png", 2448, 280, 306, 280, 1, 0.167f, 2);
