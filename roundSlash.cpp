@@ -66,6 +66,7 @@ HRESULT roundSlash::init()
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	_castCountMax = CASTCOUNT_MAX;
+	_range = RANGE;
 
 	EFFECTMANAGER->addEffect("roundSlash", "images/skillEffect/roundSlash.png", 5152, 191, 644, 191, 1, 0.167f, 2);
 	

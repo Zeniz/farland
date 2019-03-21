@@ -6,6 +6,11 @@
 #include "roundSlash.h"
 #include "slashUlti.h"
 
+#include "thunder.h"
+#include "flameBurst.h"
+#include "flameNova.h"
+#include "meteor.h"
+
 class skillNode;
 
 

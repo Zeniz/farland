@@ -41,6 +41,8 @@ protected:
 
 	int _castCountMax;
 
+	int _range;
+
 
 
 
@@ -61,6 +63,7 @@ public:
 	SKILL_ATTR getAttr() { return _attr; }
 	float getAttrAdjustRatio() { return _attrAdjustRatio; }
 	int getCastCountMax() { return _castCountMax; }
+	int getRange() { return _range; }
 	
 
 };

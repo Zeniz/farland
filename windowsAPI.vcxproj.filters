@@ -79,6 +79,12 @@
     <Filter Include="PlayGround\enemy\enemyState">
       <UniqueIdentifier>{6050f181-8b34-4587-b357-8b3b13713f8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\characters\skills\leonSkill">
+      <UniqueIdentifier>{fd3bf8e9-b5e9-46ed-81db-14bbd45ddead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\characters\skills\carenSkill">
+      <UniqueIdentifier>{5c8bd4ae-1708-49bc-82db-9fd77617eec5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -276,20 +282,32 @@
     <ClInclude Include="skillNode.h">
       <Filter>PlayGround\characters\skills</Filter>
     </ClInclude>
-    <ClInclude Include="slashOne.h">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClInclude>
-    <ClInclude Include="doubleSlash.h">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClInclude>
-    <ClInclude Include="roundSlash.h">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClInclude>
-    <ClInclude Include="slashUlti.h">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClInclude>
     <ClInclude Include="charCaren.h">
       <Filter>PlayGround\characters\chars</Filter>
+    </ClInclude>
+    <ClInclude Include="doubleSlash.h">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="roundSlash.h">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="slashOne.h">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="slashUlti.h">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="flameBurst.h">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="flameNova.h">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="meteor.h">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="thunder.h">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -473,20 +491,32 @@
     <ClCompile Include="skillNode.cpp">
       <Filter>PlayGround\characters\skills</Filter>
     </ClCompile>
-    <ClCompile Include="slashOne.cpp">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClCompile>
-    <ClCompile Include="doubleSlash.cpp">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClCompile>
-    <ClCompile Include="roundSlash.cpp">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClCompile>
-    <ClCompile Include="slashUlti.cpp">
-      <Filter>PlayGround\characters\skills</Filter>
-    </ClCompile>
     <ClCompile Include="charCaren.cpp">
       <Filter>PlayGround\characters\chars</Filter>
+    </ClCompile>
+    <ClCompile Include="doubleSlash.cpp">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="roundSlash.cpp">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="slashOne.cpp">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="slashUlti.cpp">
+      <Filter>PlayGround\characters\skills\leonSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="flameBurst.cpp">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="flameNova.cpp">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="meteor.cpp">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="thunder.cpp">
+      <Filter>PlayGround\characters\skills\carenSkill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

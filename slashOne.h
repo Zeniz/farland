@@ -14,6 +14,7 @@ private:
 	const float ATTR_ADJUST_RATIO = 0.f;
 	
 	const int CASTCOUNT_MAX = 50;
+	const int RANGE = 1;
 
 public:
 	slashOne();

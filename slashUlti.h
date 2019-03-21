@@ -13,6 +13,7 @@ private:
 	const float ATTR_ADJUST_RATIO = 1.f;
 
 	const int CASTCOUNT_MAX = 150;
+	const int RANGE = 1;
 
 public:
 	slashUlti();

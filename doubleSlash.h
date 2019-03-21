@@ -13,6 +13,7 @@ private:
 	const float ATTR_ADJUST_RATIO = 0.f;
 
 	const int CASTCOUNT_MAX = 80;
+	const int RANGE = 1;
 
 public:
 	doubleSlash();

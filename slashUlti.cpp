@@ -66,6 +66,7 @@ HRESULT slashUlti::init()
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	_castCountMax = CASTCOUNT_MAX;
+	_range = RANGE;
 
 	EFFECTMANAGER->addEffect("slashUlti", "images/skillEffect/slashUlti.png", 6890, 334, 530, 334, 1, 0.167f, 2);
 

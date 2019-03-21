@@ -30,6 +30,22 @@ HRESULT skillManager::init()
 	slashUlti* tmpSlashUlti = new slashUlti;
 	tmpSlashUlti->init();
 	_mSkills.insert(make_pair("slashUlti", tmpSlashUlti));
+
+	thunder* tmpThunder = new thunder;
+	tmpThunder->init();
+	_mSkills.insert(make_pair("thunder", tmpThunder));
+
+	flameBurst* tmpFlameBurst = new flameBurst;
+	tmpFlameBurst->init();
+	_mSkills.insert(make_pair("flameBurst", tmpFlameBurst));
+
+	flameNova* tmpFlameNova = new flameNova;
+	tmpFlameNova->init();
+	_mSkills.insert(make_pair("flameNova", tmpFlameNova));
+
+	meteor* tmpMeteor = new meteor;
+	tmpMeteor->init();
+	_mSkills.insert(make_pair("meteor", tmpMeteor));
 	
 
 	return S_OK;
