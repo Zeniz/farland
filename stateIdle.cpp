@@ -71,7 +71,7 @@ void stateIdle::update(Character* character)
 {
 	character->_portraitKinds = CHAR_PORTRAIT_KINDS::BASIC;
 	character->_tileForRender = character->_curTile;
-
+	vEnemy* _pvEnemy = character->_vEnemy;
 
 	//	오더리스트가 있다면, -> 오더 실행하라(state에 따라 패턴넣어줌)
 	if (character->_lOrderList.size() != 0) {
@@ -94,15 +94,28 @@ void stateIdle::update(Character* character)
 			character->_state = CHAR_STATE::MOVE;
 			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
 			character->_isStateChanged = true;
-			character->_isOnAtking = false;
+			//character->_isOnAtking = false;
 			break;
 		case ORDER_KINDS::ATTACK:
-			//_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;	//	-> move부터 시작되므로, Attk패턴 중에 계속 0 으로 만들자.
-			character->_state = CHAR_STATE::MOVE;
-			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
-			character->_isStateChanged = true;
-			character->_isOnAtking = true;
-			EFFECTMANAGER->play("atkMode", character->_pos.x, character->_rc.top);
+			//	공격준비중인데 상대가 죽은경우 atk끝내는 조건
+			
+			if ((*_pvEnemy)[character->_targetEnemyIdx]->_state == E_STATE::E_DEAD) {
+				if (character->_lOrderList.size() != 0) {
+					character->_lOrderList.pop_front();
+					break;
+				}
+			}
+
+
+			if (character->_coolDownTimer[0][ORDER_KINDS::ATTACK] >= character->_coolDownTimer[1][ORDER_KINDS::ATTACK]) {
+				character->_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
+				character->_state = CHAR_STATE::BASIC_ATK;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::BASIC_ATK)];
+				character->_isStateChanged = true;
+				character->_isOnAtking = true;
+				EFFECTMANAGER->play("atkMode", character->_pos.x, character->_rc.top);
+			}
+			
 			break;
 		case ORDER_KINDS::SKILL1:
 			character->_state = CHAR_STATE::CASTING;
@@ -139,6 +152,8 @@ void stateIdle::update(Character* character)
 		}
 
 	}
+
+
 
 
 	/*

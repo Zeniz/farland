@@ -72,6 +72,9 @@ public:
 	TILE* getCurTile(int idx) { return _vChara[idx]->getCurTile(); }
 	TILE* getTargetTile(int idx) { return _vChara[idx]->getTartgetTile(); }
 
+	POINT getMapIdxOfChar(int idx) { return _vChara[idx]->mapIdx; }
+
+
 	void setCurHpAug(int idx, int augVal) { _vChara[idx]->setCurHpAug(augVal); }
 	void setCurMpAug(int idx, int augVal) { _vChara[idx]->setCurMpAug(augVal); }
 	void setCurSpAug(int idx, int augVal) { _vChara[idx]->setCurSpAug(augVal); }

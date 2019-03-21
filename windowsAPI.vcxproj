@@ -154,6 +154,7 @@
     <ClInclude Include="button.h" />
     <ClInclude Include="camera2D.h" />
     <ClInclude Include="character.h" />
+    <ClInclude Include="charCaren.h" />
     <ClInclude Include="CharInfoUI.h" />
     <ClInclude Include="charLeon.h" />
     <ClInclude Include="CharMgr.h" />
@@ -182,12 +183,14 @@
     <ClInclude Include="playGround.h" />
     <ClInclude Include="randomFunction.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="roundSlash.h" />
     <ClInclude Include="sceneManager.h" />
     <ClInclude Include="singletonBase.h" />
     <ClInclude Include="skeleton.h" />
     <ClInclude Include="skillManager.h" />
     <ClInclude Include="skillNode.h" />
     <ClInclude Include="slashOne.h" />
+    <ClInclude Include="slashUlti.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="stage1.h" />
     <ClInclude Include="stateBasicAtk.h" />
@@ -222,6 +225,7 @@
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera2D.cpp" />
     <ClCompile Include="character.cpp" />
+    <ClCompile Include="charCaren.cpp" />
     <ClCompile Include="CharInfoUI.cpp" />
     <ClCompile Include="charLeon.cpp" />
     <ClCompile Include="CharMgr.cpp" />
@@ -247,11 +251,13 @@
     <ClCompile Include="MaskTile.cpp" />
     <ClCompile Include="objects.cpp" />
     <ClCompile Include="playGround.cpp" />
+    <ClCompile Include="roundSlash.cpp" />
     <ClCompile Include="sceneManager.cpp" />
     <ClCompile Include="skeleton.cpp" />
     <ClCompile Include="skillManager.cpp" />
     <ClCompile Include="skillNode.cpp" />
     <ClCompile Include="slashOne.cpp" />
+    <ClCompile Include="slashUlti.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="stage1.cpp" />
     <ClCompile Include="stateBasicAtk.cpp" />

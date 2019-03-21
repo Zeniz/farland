@@ -9,16 +9,19 @@ class effectManager : public singletonBase<effectManager>
 {
 private:
 	//생산
-	typedef vector<effect*>								arrEffects;
+	typedef vector<effect*>								arrEffects;			//	버퍼만큼 같은이펙트를 추가한다.
 	typedef vector<effect*>::iterator					iterEffects;
 	//가공
-	typedef map<string, arrEffects>						arrEffect;
+	typedef map<string, arrEffects>						arrEffect;			//	그 버퍼벡터에 이름을 붙여 map으로 저장한다.
 	typedef map<string, arrEffects>::iterator			iterEffect;
 	//포장
 	typedef vector<map<string, arrEffects>>				arrTotalEffect;
 	typedef vector<map<string, arrEffects>>::iterator	iterTotalEffect;
 
 private:
+
+	arrEffect _mEffects;				//	수정중인 최종저장소 map<string, vector>
+
 	arrTotalEffect _vTotalEffect;
 
 public:

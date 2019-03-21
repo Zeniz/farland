@@ -37,6 +37,8 @@ HRESULT slashOne::init()
 	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, +1));
 
 	_multiNum = MULTI_NUM;
+	_attr = ATTR;
+	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	EFFECTMANAGER->addEffect("slash1LB", "images/skillEffect/slash1LB.png", 2984, 352, 373, 352, 1, 0.167f, 2);
 	EFFECTMANAGER->addEffect("slash1LT", "images/skillEffect/slash1LT.png", 2984, 352, 373, 352, 1, 0.167f, 2);

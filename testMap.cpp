@@ -56,6 +56,8 @@ HRESULT testMap::init()
 	tmpChar->InitCharacteristicAugValDefault();
 	tmpChar->AddSkill(SKILL_NUM::SKILL1, "slashOne");
 	tmpChar->AddSkill(SKILL_NUM::SKILL2, "doubleSlash");
+	tmpChar->AddSkill(SKILL_NUM::SKILL3, "roundSlash");
+	tmpChar->AddSkill(SKILL_NUM::SKILL4, "slashUlti");
 	
 	_charMgr->AddCharacter(tmpChar);
 	_UIMgr->AddChar(tmpChar);
@@ -154,7 +156,7 @@ void testMap::render()
 			
 			//	player
 			_charMgr->render(j, i);
-			//EFFECTMANAGER->render();
+			
 			
 			//	obj
 			ObjRender(j, i);
@@ -162,6 +164,8 @@ void testMap::render()
 
 		}
 	}
+	EFFECTMANAGER->render();
+
 
 	//	astar테스트용 출력
 	list<POINT>* tmpWaylistAddr = _charMgr->getWayListAddr(0);

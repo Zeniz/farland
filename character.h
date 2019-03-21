@@ -288,6 +288,7 @@ public:
 	void MakeOrder();
 	void HoldRegenFunc();
 	bool MakeClickedEnemyIdx();
+	void MakeOrderOfSkill(ORDER_KINDS skillOrder);
 
 
 
@@ -315,9 +316,16 @@ public:
 			defRatio = DEFRATIO_MAX;
 		_charValue[0][CHAR_VALUE_KINDS::CUR_HP] += augVal * (1-defRatio);
 		_preState = _state;
-		_state = CHAR_STATE::GETHIT;
-		_isStateChanged = true;
-		_curState = _arrStatePattern[static_cast<const int>(_state)];
+
+		if (this->_state != CHAR_STATE::BASIC_ATK &&
+			this->_state != CHAR_STATE::SKILL1 &&
+			this->_state != CHAR_STATE::SKILL2 && 
+			this->_state != CHAR_STATE::SKILL3 && 
+			this->_state != CHAR_STATE::SKILL4) {
+			_state = CHAR_STATE::GETHIT;
+			_isStateChanged = true;
+			_curState = _arrStatePattern[static_cast<const int>(_state)];
+		}
 	}
 	void setCurMpAug(float augVal) { _charValue[0][CHAR_VALUE_KINDS::CUR_MP] += augVal; }
 	void setCurSpAug(float augVal) { _charValue[0][CHAR_VALUE_KINDS::CUR_SP] += augVal; }

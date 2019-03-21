@@ -99,6 +99,34 @@ void stateSkillFour::update(Character * character)
 							character->_charValue[1][CHAR_VALUE_KINDS::ATK] *
 							curSkill->getMultiNum() *
 							character->SKILL1_MULTI));
+
+					//	加己利侩
+					SKILL_ATTR skillAttr = curSkill->getAttr();
+					float attrAdjustRatio = curSkill->getAttrAdjustRatio();
+					switch (skillAttr)
+					{
+					case SKILL_ATTR_NONE:
+						break;
+					case SKILL_ATTR_STUN:
+						if (attrAdjustRatio * 100 > RND->getFromIntTo(1, 101)) {
+							(*_vEnemy)[j]->setState(E_STATE::E_STUNNED);
+						}
+						break;
+					case SKILL_ATTR_FROZEN:
+						if (attrAdjustRatio * 100 > RND->getFromIntTo(1, 101)) {
+							(*_vEnemy)[j]->setState(E_STATE::E_FROZEN);
+						}
+						break;
+					case SKILL_ATTR_STONE:
+						if (attrAdjustRatio * 100 > RND->getFromIntTo(1, 101)) {
+							(*_vEnemy)[j]->setState(E_STATE::E_STONED);
+						}
+						break;
+					default:
+						break;
+					}
+					//	加己利侩 昌-
+
 				}
 			}
 

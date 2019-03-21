@@ -29,6 +29,9 @@ HRESULT doubleSlash::init()
 	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, 0));
 
 	_multiNum = MULTI_NUM;
+	_attr = ATTR;
+	_attrAdjustRatio = ATTR_ADJUST_RATIO;
+
 
 	EFFECTMANAGER->addEffect("doubleSlashLB", "images/skillEffect/doubleSlashLB.png", 2448, 280, 306, 280, 1, 0.167f, 2);
 	EFFECTMANAGER->addEffect("doubleSlashLT", "images/skillEffect/doubleSlashLT.png", 2448, 280, 306, 280, 1, 0.167f, 2);
@@ -58,7 +61,7 @@ void doubleSlash::StartSkillEffect(POINT curMapIdx, int dir)
 
 	case SKILL_DIR_LB:
 		pos.x -= AUG_X;
-		pos.y += AUG_Y;
+		pos.y += -100;
 		EFFECTMANAGER->play("doubleSlashLB", pos.x, pos.y);
 		break;
 
@@ -70,7 +73,7 @@ void doubleSlash::StartSkillEffect(POINT curMapIdx, int dir)
 
 	case SKILL_DIR_RB:
 		pos.x += AUG_X;
-		pos.y += AUG_Y;
+		pos.y += -100;
 		EFFECTMANAGER->play("doubleSlashRB", pos.x, pos.y);
 		break;
 	case SKILL_DIR_END:

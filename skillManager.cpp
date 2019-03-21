@@ -23,8 +23,14 @@ HRESULT skillManager::init()
 	tmpDoubleSlash->init();
 	_mSkills.insert(make_pair("doubleSlash", tmpDoubleSlash));
 
+	roundSlash* tmpRoundSlash = new roundSlash;
+	tmpRoundSlash->init();
+	_mSkills.insert(make_pair("roundSlash", tmpRoundSlash));
 
-
+	slashUlti* tmpSlashUlti = new slashUlti;
+	tmpSlashUlti->init();
+	_mSkills.insert(make_pair("slashUlti", tmpSlashUlti));
+	
 
 	return S_OK;
 }

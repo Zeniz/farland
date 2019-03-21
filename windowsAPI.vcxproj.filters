@@ -282,6 +282,15 @@
     <ClInclude Include="doubleSlash.h">
       <Filter>PlayGround\characters\skills</Filter>
     </ClInclude>
+    <ClInclude Include="roundSlash.h">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClInclude>
+    <ClInclude Include="slashUlti.h">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClInclude>
+    <ClInclude Include="charCaren.h">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -469,6 +478,15 @@
     </ClCompile>
     <ClCompile Include="doubleSlash.cpp">
       <Filter>PlayGround\characters\skills</Filter>
+    </ClCompile>
+    <ClCompile Include="roundSlash.cpp">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClCompile>
+    <ClCompile Include="slashUlti.cpp">
+      <Filter>PlayGround\characters\skills</Filter>
+    </ClCompile>
+    <ClCompile Include="charCaren.cpp">
+      <Filter>PlayGround\characters\chars</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

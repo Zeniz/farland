@@ -503,6 +503,8 @@ void Character::MakeOrder()
 							//	오더추가! + cooldown = 0
 							_lOrderList.push_back(order);
 							_coolDownTimer[0][ORDER_KINDS::MOVE] = 0;
+							//	Move의 특별행동 방지
+							_isOnAtking = false;
 						}
 
 					}
@@ -560,7 +562,7 @@ void Character::MakeOrder()
 	case ORDER_KINDS::ATTACK:
 		if (this->_coolDownTimer[0][ORDER_KINDS::ATTACK] >= this->_coolDownTimer[1][ORDER_KINDS::ATTACK]) {
 			order.kinds = ORDER_KINDS::ATTACK;
-			bool isClickedEnemy = false;;
+			bool isClickedEnemy = false;
 			isClickedEnemy = MakeClickedEnemyIdx();
 			//	클릭해서 적의 인덱스를 가져왔다면,
 			if (isClickedEnemy) {
@@ -572,23 +574,43 @@ void Character::MakeOrder()
 				if (_lWayIdxList.size() != 0 && _lWayIdxList.begin()->x != -1) {
 					//	적이 서있는 타일인덱스는 뺴버리고,
 					_lWayIdxList.pop_back();
-					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
-					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
-					order.kinds = ORDER_KINDS::ATTACK;
-					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
+					
+					//order.kinds = ORDER_KINDS::ATTACK;
+					//order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
 
-					//	넣기전, 기존 hold삭제
+					//	넣기전, 기존 hold, move삭제
 					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD) {
+						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
+							_liOrderList->kinds == ORDER_KINDS::MOVE) {
 							_liOrderList = _lOrderList.erase(_liOrderList);
 						}
 						else {
 							_liOrderList++;
 						}
 					}
+					//	타겟팅된 적의 인덱스
+					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
+					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
 
-					//	오더추가! + cooldown = 0
+
+					if (_lWayIdxList.size() != 0) {
+						//	Move오더 추가
+						order.kinds = ORDER_KINDS::MOVE;
+						order.targetMapIdx = _lWayIdxList.back();		//	인덱스
+						_lOrderList.push_back(order);
+						//	Move의 특별행동
+						_isOnAtking = true;
+					}
+					
+
+					//	ATK오더 추가
+					order.kinds = ORDER_KINDS::ATTACK;
+					order.targetMapIdx = targetMapIdx;		//	인덱스
 					_lOrderList.push_back(order);
+
+					//	Atk쿨다운 0
+					_coolDownTimer[0][ORDER_KINDS::MOVE] = 0;
+
 					//	현재 선택한 모드 꺼주고,
 					_mode = ORDER_KINDS::NONE;
 
@@ -600,57 +622,9 @@ void Character::MakeOrder()
 		}
 		break;
 	case ORDER_KINDS::SKILL1:
-		if (this->_coolDownTimer[0][ORDER_KINDS::SKILL1] >= this->_coolDownTimer[1][ORDER_KINDS::SKILL1]) {
-			//	이하 Move와 동일 -> except 마지막타일은 waylist에서 제거. 마지막타일은 타겟타일
-			if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
-				POINT ClickedIdx;
-				ClickedIdx = ConvertPosToIdx(_ptMouse.x, _ptMouse.y, TILESIZE_WID, TILESIZE_HEI);
-				//	맵 인덱스 안쪽이라면,
-				if (0 <= ClickedIdx.x && ClickedIdx.x < (*_vvMap)[0].size() &&
-					0 <= ClickedIdx.y && ClickedIdx.y < (*_vvMap).size()) {
-					//	찍은곳이 갈 수 있는 곳이라면,
-					if ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]->_tileInfo.terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
-						ASTARFUNC->PathFind(mapIdx, PointMake(ClickedIdx.x, ClickedIdx.y), mapIdx, _lWayIdxList);
-						if (_lWayIdxList.size() != 0) {
-							_targetTile = ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]);
-							//	목적지 타일은 이동리스트에서 뺴기
-							_lWayIdxList.pop_back();
-
-							order.kinds = ORDER_KINDS::MOVE;
-							if (_lWayIdxList.size() != 0) {
-								order.targetMapIdx = _lWayIdxList.back();		//	인덱스
-							}
-							else {
-								order.targetMapIdx = _curTile->_mapIdx;
-							}
-							
-							//	넣기전, 기존 atk/hold삭제
-							for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-								if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
-									_liOrderList->kinds == ORDER_KINDS::ATTACK) {
-									_liOrderList = _lOrderList.erase(_liOrderList);
-								}
-								else {
-									_liOrderList++;
-								}
-							}
-
-							//	Move오더추가! + cooldown = 0
-							_lOrderList.push_back(order);
-							//_coolDownTimer[0][ORDER_KINDS::MOVE] = 0;
-
-							//	skill오더 추가! + cooldown =0
-							order.kinds = ORDER_KINDS::SKILL1;
-							order.targetMapIdx = _targetTile->_tileInfo.pickIdx;
-							_lOrderList.push_back(order);
-						}
-
-					}
-				}
-			}
-		}
+		MakeOrderOfSkill(_mode);
 		
-		
+		//	이건 옛날꺼...구려
 		/*
 		if (this->_coolDownTimer[0][ORDER_KINDS::SKILL1] >= this->_coolDownTimer[1][ORDER_KINDS::SKILL1]) {
 			order.kinds = ORDER_KINDS::SKILL1;
@@ -696,135 +670,15 @@ void Character::MakeOrder()
 		*/
 		break;
 	case ORDER_KINDS::SKILL2:
-		if (this->_coolDownTimer[0][ORDER_KINDS::SKILL2] >= this->_coolDownTimer[1][ORDER_KINDS::SKILL2]) {
-			order.kinds = ORDER_KINDS::SKILL2;
-			bool isClickedEnemy = false;;
-			isClickedEnemy = MakeClickedEnemyIdx();
-			//	클릭해서 적의 인덱스를 가져왔다면,
-			if (isClickedEnemy) {
-
-				_aStarCount = 0;
-				ASTARFUNC->PathFind(mapIdx, (*_vEnemy)[_targetEnemyIdx]->_mapIdx, mapIdx, _lWayIdxList);
-
-				//	길을 찾았다면,
-				if (_lWayIdxList.size() != 0 && _lWayIdxList.begin()->x != -1) {
-					//	적이 서있는 타일인덱스는 뺴버리고,
-					_lWayIdxList.pop_back();
-					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
-					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
-					order.kinds = ORDER_KINDS::SKILL2;
-					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
-
-					//	넣기전, 기존 hold삭제
-					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
-							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
-							_liOrderList = _lOrderList.erase(_liOrderList);
-						}
-						else {
-							_liOrderList++;
-						}
-					}
-
-					//	오더추가! + cooldown = 0
-					_lOrderList.push_back(order);
-					//	현재 선택한 모드 꺼주고,
-					_mode = ORDER_KINDS::NONE;
-
-					//	쿨다운은 실행될떄!
-					//_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
-				}
-			}
-
-		}
-
+		MakeOrderOfSkill(_mode);
+		
 		break;
 	case ORDER_KINDS::SKILL3:
-		if (this->_coolDownTimer[0][ORDER_KINDS::SKILL3] >= this->_coolDownTimer[1][ORDER_KINDS::SKILL3]) {
-			order.kinds = ORDER_KINDS::SKILL3;
-			bool isClickedEnemy = false;;
-			isClickedEnemy = MakeClickedEnemyIdx();
-			//	클릭해서 적의 인덱스를 가져왔다면,
-			if (isClickedEnemy) {
-
-				_aStarCount = 0;
-				ASTARFUNC->PathFind(mapIdx, (*_vEnemy)[_targetEnemyIdx]->_mapIdx, mapIdx, _lWayIdxList);
-
-				//	길을 찾았다면,
-				if (_lWayIdxList.size() != 0 && _lWayIdxList.begin()->x != -1) {
-					//	적이 서있는 타일인덱스는 뺴버리고,
-					_lWayIdxList.pop_back();
-					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
-					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
-					order.kinds = ORDER_KINDS::SKILL3;
-					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
-
-					//	넣기전, 기존 hold삭제
-					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
-							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
-							_liOrderList = _lOrderList.erase(_liOrderList);
-						}
-						else {
-							_liOrderList++;
-						}
-					}
-
-					//	오더추가! + cooldown = 0
-					_lOrderList.push_back(order);
-					//	현재 선택한 모드 꺼주고,
-					_mode = ORDER_KINDS::NONE;
-
-					//	쿨다운은 실행될떄!
-					//_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
-				}
-			}
-
-		}
-
+		MakeOrderOfSkill(_mode);
+		
 		break;
 	case ORDER_KINDS::SKILL4:
-		if (this->_coolDownTimer[0][ORDER_KINDS::SKILL4] >= this->_coolDownTimer[1][ORDER_KINDS::SKILL4]) {
-			order.kinds = ORDER_KINDS::SKILL4;
-			bool isClickedEnemy = false;;
-			isClickedEnemy = MakeClickedEnemyIdx();
-			//	클릭해서 적의 인덱스를 가져왔다면,
-			if (isClickedEnemy) {
-
-				_aStarCount = 0;
-				ASTARFUNC->PathFind(mapIdx, (*_vEnemy)[_targetEnemyIdx]->_mapIdx, mapIdx, _lWayIdxList);
-
-				//	길을 찾았다면,
-				if (_lWayIdxList.size() != 0 && _lWayIdxList.begin()->x != -1) {
-					//	적이 서있는 타일인덱스는 뺴버리고,
-					_lWayIdxList.pop_back();
-					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
-					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
-					order.kinds = ORDER_KINDS::SKILL4;
-					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
-
-					//	넣기전, 기존 hold삭제
-					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
-							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
-							_liOrderList = _lOrderList.erase(_liOrderList);
-						}
-						else {
-							_liOrderList++;
-						}
-					}
-
-					//	오더추가! + cooldown = 0
-					_lOrderList.push_back(order);
-					//	현재 선택한 모드 꺼주고,
-					_mode = ORDER_KINDS::NONE;
-
-					//	쿨다운은 실행될떄!
-					//_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
-				}
-			}
-
-		}
+		MakeOrderOfSkill(_mode);
 
 		break;
 
@@ -862,4 +716,60 @@ bool Character::MakeClickedEnemyIdx()
 	}
 	return false;
 	
+}
+
+void Character::MakeOrderOfSkill(ORDER_KINDS skillOrder)
+{
+	tagOrderInfo order;
+
+	if (this->_coolDownTimer[0][skillOrder] >= this->_coolDownTimer[1][skillOrder]) {
+		//	이하 Move와 동일 -> except 마지막타일은 waylist에서 제거. 마지막타일은 타겟타일
+		if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON)) {
+			POINT ClickedIdx;
+			ClickedIdx = ConvertPosToIdx(_ptMouse.x, _ptMouse.y, TILESIZE_WID, TILESIZE_HEI);
+			//	맵 인덱스 안쪽이라면,
+			if (0 <= ClickedIdx.x && ClickedIdx.x < (*_vvMap)[0].size() &&
+				0 <= ClickedIdx.y && ClickedIdx.y < (*_vvMap).size()) {
+				//	찍은곳이 갈 수 있는 곳이라면,
+				if ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]->_tileInfo.terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
+					ASTARFUNC->PathFind(mapIdx, PointMake(ClickedIdx.x, ClickedIdx.y), mapIdx, _lWayIdxList);
+					if (_lWayIdxList.size() != 0) {
+						_targetTile = ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]);
+						//	목적지 타일은 이동리스트에서 뺴기
+						_lWayIdxList.pop_back();
+
+						order.kinds = ORDER_KINDS::MOVE;
+						if (_lWayIdxList.size() != 0) {
+							order.targetMapIdx = _lWayIdxList.back();		//	인덱스
+						}
+						else {
+							order.targetMapIdx = _curTile->_mapIdx;
+						}
+
+						//	넣기전, 기존 atk/hold삭제
+						for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
+							if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
+								_liOrderList->kinds == ORDER_KINDS::ATTACK) {
+								_liOrderList = _lOrderList.erase(_liOrderList);
+							}
+							else {
+								_liOrderList++;
+							}
+						}
+
+						//	Move오더추가! + cooldown = 0
+						_lOrderList.push_back(order);
+						//_coolDownTimer[0][ORDER_KINDS::MOVE] = 0;
+
+						//	skill오더 추가! + cooldown =0
+						order.kinds = skillOrder;
+						order.targetMapIdx = _targetTile->_tileInfo.pickIdx;
+						_lOrderList.push_back(order);
+						_coolDownTimer[0][skillOrder] = 0;
+					}
+
+				}
+			}
+		}
+	}
 }

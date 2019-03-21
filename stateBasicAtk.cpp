@@ -69,10 +69,8 @@ void stateBasicAtk::onSkillFour(Character * character)
 
 void stateBasicAtk::update(Character * character)
 {
-	character->_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
+	//character->_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
 	
-	//	상하좌우에 적이 있나? -> idle에서 공속과 근처몹 검사해서 해당하면 이쪽으로 넘어올거임.
-	//ChkNearbyEnemy(character, &isNearEnemy);
 
 	//	프레임이 끝나면, 공격적용!
 	if (character->_ani->isLastFrame()) {
@@ -82,15 +80,55 @@ void stateBasicAtk::update(Character * character)
 			-(character->_charValue[0][CHAR_VALUE_KINDS::ATK] +
 			character->_charValue[1][CHAR_VALUE_KINDS::ATK]));
 
+		//	공격적용 후, 다시 move 재명령
+		character->_aStarCount = 0;
+		vEnemy* _pvEnemy = character->_vEnemy;
+		vvMap* _pvvMap = character->_vvMap;
+		ASTARFUNC->PathFind(character->mapIdx, (*_pvEnemy)[character->_targetEnemyIdx]->_mapIdx, character->mapIdx, character->_lWayIdxList);
+
+		//	길을 찾았다면,
+		if (character->_lWayIdxList.size() != 0 && character->_lWayIdxList.begin()->x != -1) {
+			//	적이 서있는 타일인덱스는 뺴버리고,
+			character->_lWayIdxList.pop_back();
+			
+			//	적이 또 움직였다면, 쫓아가라(move오더 추가)
+			if (character->_lWayIdxList.size() != 0) {
+				//	타겟팅된 적의 인덱스
+				POINT targetMapIdx = (*_pvEnemy)[character->_targetEnemyIdx]->_mapIdx;
+				character->_targetTile = ((*_pvvMap)[targetMapIdx.y][targetMapIdx.x]);
+
+				//	Move오더 추가
+				tagOrderInfo order;
+
+				order.kinds = ORDER_KINDS::MOVE;
+				order.targetMapIdx = character->_lWayIdxList.back();		//	인덱스
+				character->_lOrderList.push_front(order);
+				//	Move의 특별행동
+				character->_isOnAtking = true;
+
+				//	idle대신 강제로 move로 변경
+				character->_state = CHAR_STATE::MOVE;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
+				character->_isStateChanged = true;
+			}
+			//	바로 옆에 적이있었다면, 오더 추가하지않고, idle에서 공속신호받음
+			else {
+				character->_state = CHAR_STATE::IDLE;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
+				character->_isStateChanged = true;
+			}
+			
+		}
+
+		//	움직일 필요가 없다면, -> idle로 돌아가서 신호대기
+		else {
+			character->_state = CHAR_STATE::IDLE;
+			character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
+			character->_isStateChanged = true;
+		}
 
 
-
-
-
-		//	공격적용 후, 다시 move로 가서 반복
-		character->_state = CHAR_STATE::MOVE;
-		character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::MOVE)];
-		character->_isStateChanged = true;
+		
 	}
 		
 
@@ -283,3 +321,5 @@ void stateBasicAtk::CalTileForRender(Character * character)
 		character->_tileForRender = character->_curTile;
 	}
 }
+
+

@@ -18,6 +18,7 @@ HRESULT effectManager::init()
 
 void effectManager::release()
 {
+	//	수정해야됨 -> 경량화
 	iterTotalEffect vIter;
 	iterEffect		mIter;
 
@@ -49,6 +50,24 @@ void effectManager::update()
 	iterTotalEffect vIter;
 	iterEffect		mIter;
 
+	
+	for (mIter = _mEffects.begin(); mIter != _mEffects.end(); ++mIter)
+	{
+		iterEffects vArrIter;
+		for (vArrIter = mIter->second.begin(); vArrIter != mIter->second.end(); ++vArrIter)
+		{
+			//effect* 업데이트를 실행
+			(*vArrIter)->update();
+		}
+	}
+	
+
+
+	/*
+	//	===	원본 ===
+	iterTotalEffect vIter;
+	iterEffect		mIter;
+
 	for (vIter = _vTotalEffect.begin(); vIter != _vTotalEffect.end(); ++vIter)
 	{
 		for (mIter = vIter->begin(); mIter != vIter->end(); ++mIter)
@@ -61,11 +80,29 @@ void effectManager::update()
 			}
 		}
 	}
-
+	*/
 }
 
 void effectManager::render()
 {
+	
+	//iterTotalEffect vIter;
+
+	iterEffect		mIter;
+
+	for (mIter = _mEffects.begin(); mIter != _mEffects.end(); ++mIter)
+	{
+		iterEffects vArrIter;
+		for (vArrIter = mIter->second.begin(); vArrIter != mIter->second.end(); ++vArrIter)
+		{
+			//effect* 렌더함수를 실행
+			(*vArrIter)->render();
+		}
+	}
+	
+
+	//	===	원본 ===
+	/*
 	iterTotalEffect vIter;
 	iterEffect		mIter;
 
@@ -81,7 +118,7 @@ void effectManager::render()
 			}
 		}
 	}
-
+	*/
 }
 
 void effectManager::renderReverseX()
@@ -125,13 +162,68 @@ void effectManager::addEffect(string effectName, string imageName, int imageWidt
 		vEffectBuffer[i]->init(img, effectWidth, effectHeight, fps, elapsedTime);
 	}
 
+	_mEffects.insert(pair<string, arrEffects>(effectName, vEffectBuffer));
+
+	//_vTotalEffect.push_back(mArrEffect);
+
+
+	//	===	원본 ===
+	/*
+	image* img;
+	arrEffects vEffectBuffer;
+	arrEffect mArrEffect;
+
+
+	if (IMAGEMANAGER->findImage(imageName))
+	{
+		img = IMAGEMANAGER->findImage(imageName);
+	}
+	else
+	{
+		img = IMAGEMANAGER->addImage(imageName, string2wstring(imageName).c_str(), imageWidth, imageHeight);
+	}
+
+	for (int i = 0; i < buffer; ++i)
+	{
+		vEffectBuffer.push_back(new effect);
+		vEffectBuffer[i]->init(img, effectWidth, effectHeight, fps, elapsedTime);
+	}
+
 	mArrEffect.insert(pair<string, arrEffects>(effectName, vEffectBuffer));
 
 	_vTotalEffect.push_back(mArrEffect);
+	*/
 }
 
 void effectManager::play(string effectName, int x, int y)
 {
+	//iterTotalEffect vIter;
+	iterEffect		mIter;
+
+
+	mIter = _mEffects.find(effectName);
+
+	//	플레이 할 벡터의 이름을 찾은 경우,
+	if (mIter != _mEffects.end()) {
+		iterEffects vArrIter;
+		// 그 벡터중, 실행이 되지않고있는 가장 낮은 번호를 찾아 play=true한다.
+		for (vArrIter = mIter->second.begin(); vArrIter != mIter->second.end(); ++vArrIter)
+		{
+			if ((*vArrIter)->getIsRunning()) continue;
+			(*vArrIter)->startEffect(x, y);
+			return;
+		}
+	}
+
+	
+	
+	
+	
+
+
+	//	===	원본 ===
+	/*
+
 	iterTotalEffect vIter;
 	iterEffect		mIter;
 
@@ -150,5 +242,5 @@ void effectManager::play(string effectName, int x, int y)
 			}
 		}
 	}
-
+	*/
 }

@@ -75,7 +75,7 @@ void stateMove::update(Character* character)
 
 	//	공격하러 가는중이면,
 	if (character->_isOnAtking) {
-		//	일정시간마다 astar로 길 재갱신
+		//	일정시간마다 astar로 길 재갱신 -> 오더 재갱신 처리
 		character->_aStarCount++;
 		if (character->_aStarCount > character->ASTAR_COUNT_MAX) {
 			character->_aStarCount = 0;
@@ -84,19 +84,53 @@ void stateMove::update(Character* character)
 			ASTARFUNC->PathFind(character->mapIdx,
 				(*_vEnemy)[character->_targetEnemyIdx]->_mapIdx,
 				character->mapIdx, character->_lWayIdxList);
-			//	길을 찾았으면 -> 마지막인덱스(몹이 있는 곳) pop
-			if (character->_lWayIdxList.size() != 0 && character->_lWayIdxList.begin()->x != -1) {
-				
-				if (character->_lWayIdxList.size() != 1) {
-					character->_lWayIdxList.pop_back();
+			
+			//	길이 없으면, -> 앞에 move하고 attak 오더 날려라, 그리고 idle로 돌아가라
+			if (character->_lWayIdxList.size() != 0 && character->_lWayIdxList.begin()->x == -1) {
+				if (character->_lOrderList.front().kinds == ORDER_KINDS::MOVE) {
+					character->_lOrderList.pop_front();
 				}
-				//character->_lWayIdxList.pop_back();
+				if (character->_lOrderList.front().kinds == ORDER_KINDS::ATTACK) {
+					character->_lOrderList.pop_front();
+				}
+				character->_state = CHAR_STATE::IDLE;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
+				character->_isStateChanged = true;
+				return;
+			}
+			// 길이 존재하면, waylist에서 몹있는 곳 날려라
+			else if (character->_lWayIdxList.size() != 0 && character->_lWayIdxList.begin()->x != -1) {
+				character->_lWayIdxList.pop_back();
+			}
+			
+			//	처리된 waylist를 보고, 몹이 바로 옆이면,
+			//	몹이 바로 앞에 있다면(마지막을 뻇는데 사이즈가 0 이라는건, 몹이 앞에있다는거 || 겹쳐있거나)
+			if (character->_lWayIdxList.size() == 0) {
+				//현재 오더리스트의 move를 뺴버리고, idle가서 공격신호받자.
+				if (character->_lOrderList.front().kinds == ORDER_KINDS::MOVE) {
+					character->_lOrderList.pop_front();
+				}
+				character->_state = CHAR_STATE::IDLE;
+				character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
+				character->_isStateChanged = true;
+				return;
+
+			}
+
+			//	몹있는곳을 waylist에서 뺏는데 더 이동해야한다면, -> 새로운 move오더로 교체하고, 밑에서 이동한다.
+			else if (character->_lWayIdxList.size() != 0 && character->_lWayIdxList.begin()->x != -1) {
 
 				character->_liWayIdxList = character->_lWayIdxList.end();
 				character->_liWayIdxList--;
 
 				vvMap* _vvMap = character->_vvMap;
 				character->_targetTile = (*_vvMap)[character->_liWayIdxList->y][character->_liWayIdxList->x];
+
+				character->_lOrderList.pop_front();
+				tagOrderInfo order;
+				order.kinds = ORDER_KINDS::MOVE;
+				order.targetMapIdx = character->_targetTile->_mapIdx;
+				character->_lOrderList.push_front(order);
 			}
 		}
 
@@ -165,12 +199,15 @@ void stateMove::update(Character* character)
 	//}
 	}
 
-	//	공격이동 & 목적지 도착 -> 일단 아이들로 보냄 -> idle에서 공격카운트 되면, 최종 공격 할거임.
+	//	공격이동 & 목적지 도착 -> (move오더 삭제하고)일단 아이들로 보냄 -> idle에서 공격카운트 되면, 최종 공격 할거임.
 	else if (character->_lWayIdxList.size() == 0 && character->_isOnAtking) {
+		character->_lOrderList.pop_front();
 		character->_state = CHAR_STATE::IDLE;
 		character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::IDLE)];
 		character->_isStateChanged = true;
 	}
+
+	
 	
 }
 

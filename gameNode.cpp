@@ -86,7 +86,7 @@ void gameNode::update()
 
 void gameNode::render()
 {
-	EFFECTMANAGER->render();
+	//EFFECTMANAGER->render();
 }
 
 LRESULT gameNode::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)

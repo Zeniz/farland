@@ -72,8 +72,8 @@ void MaskTile::update()
 
 void MaskTile::render()
 {
-	if (0 > _mapIdx.x && _mapIdx.x >= (*_vvMap)[0].size())	return;
-	if (0 > _mapIdx.y && _mapIdx.y >= (*_vvMap).size())		return;
+	if (0 > _mapIdx.x || _mapIdx.x >= (*_vvMap)[0].size())	return;
+	if (0 > _mapIdx.y || _mapIdx.y >= (*_vvMap).size())		return;
 	_maskImg->render(_rc.left, _rc.top - (*_vvMap)[_mapIdx.y][_mapIdx.x]->_zLevel * (TILESIZE_HEI/2), _alpha);
 }
 

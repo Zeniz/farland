@@ -114,10 +114,12 @@ void CharInfoUI::render()
 			else if (i == 2) {
 				swprintf_s(str, L"%.f\t/    %.f", _vCharInfo[_curSelectChar].curSp, _vCharInfo[_curSelectChar].maxSp);
 			}
+			
 			D2DMANAGER->drawTextD2D(_brush, L"consolas", 15, str,
 				BAR_INFO_START.x + CAMERA2D->getCamPosX() - 10,
-				BAR_INFO_START.y + (i*BAR_YGAP) + CAMERA2D->getCamPosY() - 5,
-				BAR_START.x + _barsImg->GetFrameWidth(), (BAR_START.y + i * BAR_YGAP) + _barsImg->GetFrameHeight());
+				BAR_INFO_START.y + CAMERA2D->getCamPosY() + (i*BAR_YGAP) - 5,
+				BAR_INFO_START.x + CAMERA2D->getCamPosX() + _barsImg->GetFrameWidth(),
+				BAR_INFO_START.y + CAMERA2D->getCamPosY() + (i * BAR_YGAP) + _barsImg->GetFrameHeight());
 		}
 		
 		//	스테이터스 이름들 (atk,def, m.atk, m.def, movespd, castspd,)
@@ -385,6 +387,8 @@ void CharInfoUI::CalRatios(tagCharInfo * charInfo)
 
 void CharInfoUI::SelectCharFunc()
 {
+	
+
 	if (KEYMANAGER->isOnceKeyDown(VK_F1)) {
 		if (_curSelectChar == 0) {
 			_charMgr->setSelectChar(_curSelectChar, false);
@@ -395,6 +399,9 @@ void CharInfoUI::SelectCharFunc()
 			_charMgr->setSelectChar(_curSelectChar, false);
 			_curSelectChar = 0;
 			_charMgr->setSelectChar(_curSelectChar, true);
+			
+			//	_charMgr에게 vchara[idx]의 맵 인덱스 받아서, 그곳을 비추게 하자.
+			MakeCamFocusFunc(_curSelectChar);
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F2)) {
@@ -408,6 +415,9 @@ void CharInfoUI::SelectCharFunc()
 			_charMgr->setSelectChar(_curSelectChar, false);
 			_curSelectChar = 1;
 			_charMgr->setSelectChar(_curSelectChar, true);
+
+			//	_charMgr에게 vchara[idx]의 맵 인덱스 받아서, 그곳을 비추게 하자.
+			MakeCamFocusFunc(_curSelectChar);
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F3)) {
@@ -421,6 +431,9 @@ void CharInfoUI::SelectCharFunc()
 			_charMgr->setSelectChar(_curSelectChar, false);
 			_curSelectChar = 2;
 			_charMgr->setSelectChar(_curSelectChar, true);
+
+			//	_charMgr에게 vchara[idx]의 맵 인덱스 받아서, 그곳을 비추게 하자.
+			MakeCamFocusFunc(_curSelectChar);
 		}
 	}
 }
@@ -479,4 +492,18 @@ void CharInfoUI::SelectPortrait(tagCharInfo * charInfo)
 	default:
 		break;
 	}
+}
+
+void CharInfoUI::MakeCamFocusFunc(int curSelectChar)
+{
+	POINT mapIdx;
+	POINT camPos;
+
+	mapIdx = _charMgr->getMapIdxOfChar(_curSelectChar);
+	camPos = ConvertIdxToPos(mapIdx.x, mapIdx.y, TILESIZE_WID, TILESIZE_HEI);
+	camPos.x -= WINSIZEX / 2;
+	camPos.y -= WINSIZEY / 2;
+
+	CAMERA2D->setState(cameraState::PLAYER_CAMERA);
+	CAMERA2D->setFocusOn(camPos, cameraState::PLAYER_CAMERA);
 }

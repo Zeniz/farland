@@ -28,5 +28,7 @@ public:
 	void ChkNearbyEnemy(Character* chara, bool* isNearEnemy);
 	void CalDirFunc(Character* character);
 	void CalTileForRender(Character* character);
-};
+	
 
+
+};
