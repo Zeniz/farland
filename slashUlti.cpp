@@ -61,12 +61,16 @@ HRESULT slashUlti::init()
 	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, +1));
 
 
-	_multiNum = MULTI_NUM;
+	_multiNumPhysic = MULTI_NUM_PHYSIC;
+	_multiNumMagic = MULTI_NUM_MAGIC;
 	_attr = ATTR;
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	_castCountMax = CASTCOUNT_MAX;
 	_range = RANGE;
+	_manaCost = this->MANACOST;
+
+	_skillKinds = SKILL_KINDS::SKILL_KINDS_ATK;
 
 	EFFECTMANAGER->addEffect("slashUlti", "images/skillEffect/slashUlti.png", 6890, 334, 530, 334, 1, 0.167f, 2);
 

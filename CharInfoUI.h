@@ -118,6 +118,7 @@ public:
 	void SelectCharFunc();
 	void SelectPortrait(tagCharInfo* charInfo);
 	void MakeCamFocusFunc(int curSelectChar);
+	
 
 
 

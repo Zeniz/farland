@@ -28,12 +28,16 @@ HRESULT doubleSlash::init()
 
 	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, 0));
 
-	_multiNum = MULTI_NUM;
+	_multiNumPhysic = MULTI_NUM_PHYSIC;
+	_multiNumMagic = MULTI_NUM_MAGIC;
 	_attr = ATTR;
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	_castCountMax = CASTCOUNT_MAX;
 	_range = RANGE;
+	_manaCost = this->MANACOST;
+
+	_skillKinds = SKILL_KINDS::SKILL_KINDS_ATK;
 
 	EFFECTMANAGER->addEffect("doubleSlashLB", "images/skillEffect/doubleSlashLB.png", 2448, 280, 306, 280, 1, 0.167f, 2);
 	EFFECTMANAGER->addEffect("doubleSlashLT", "images/skillEffect/doubleSlashLT.png", 2448, 280, 306, 280, 1, 0.167f, 2);
@@ -56,26 +60,27 @@ void doubleSlash::StartSkillEffect(POINT curMapIdx, int dir)
 	case SKILL_DIR_NONE:
 		break;
 	case SKILL_DIR_LT:
-		pos.x -= AUG_X;
-		pos.y -= 50;
+		pos.x += AUG_X;
+		pos.y -= AUG_Y / 4;
 		EFFECTMANAGER->play("doubleSlashLT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_LB:
-		pos.x -= AUG_X;
-		pos.y += -100;
+		pos.x += AUG_X;
+		pos.y -= AUG_Y;
 		EFFECTMANAGER->play("doubleSlashLB", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RT:
-		pos.x += AUG_X;
-		pos.y -= 50;
+		pos.x -= AUG_X;
+		pos.y -= AUG_Y/4;
+		
 		EFFECTMANAGER->play("doubleSlashRT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RB:
-		pos.x += AUG_X;
-		pos.y += -100;
+		pos.x -= AUG_X;
+		pos.y -= AUG_Y;
 		EFFECTMANAGER->play("doubleSlashRB", pos.x, pos.y);
 		break;
 	case SKILL_DIR_END:

@@ -73,6 +73,12 @@ void stateIdle::update(Character* character)
 	character->_tileForRender = character->_curTile;
 	vEnemy* _pvEnemy = character->_vEnemy;
 
+	//	죽음처리
+	if (character->_charValue[0][CUR_HP] + character->_charValue[1][CUR_HP] <= 0) {
+
+	}
+
+
 	//	오더리스트가 있다면, -> 오더 실행하라(state에 따라 패턴넣어줌)
 	if (character->_lOrderList.size() != 0) {
 		ORDER_KINDS order = (character->_lOrderList.begin()->kinds);

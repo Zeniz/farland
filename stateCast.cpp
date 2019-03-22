@@ -73,8 +73,9 @@ void stateCast::update(Character * character)
 	character->_portraitKinds = CHAR_PORTRAIT_KINDS::UPSET;
 	string skillName;
 	
-	//	Ä«·» ¾Ö´ÏÀüÈ¯¿ë
-	if (character->_name == CHAR_NAME::CAREN) {
+	//	Ä«·»/ÆÊ ¾Ö´ÏÀüÈ¯¿ë
+	if (character->_name == CHAR_NAME::CAREN ||
+		character->_name == CHAR_NAME::PALM) {
 		if (character->_ani->isLastFrame()) {
 			character->_isStateChanged = true;
 			character->_isCastBegin = false;

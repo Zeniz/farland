@@ -38,6 +38,7 @@ void CharMgr::render(int idxX, int idxY)
 	for (int i = 0; i < _vChara.size(); i++) {
 		if (_vChara[i]->getTileforRender()->_mapIdx.x == idxX && _vChara[i]->getTileforRender()->_mapIdx.y == idxY) {
 			_vChara[i]->aniRender();
+			_vChara[i]->BuffRender();
 		}
 
 	}
@@ -74,6 +75,12 @@ Character * CharMgr::MakeNewChara(CHAR_NAME charName)
 
 	case CHAR_NAME::CAREN:
 		_charaAddr = new charCaren;
+		_charaAddr->init();
+
+		break;
+
+	case CHAR_NAME::PALM:
+		_charaAddr = new charPalm;
 		_charaAddr->init();
 
 		break;

@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "flameBurst.h"
+#include "resurrection.h"
 
 
-flameBurst::flameBurst()
+resurrection::resurrection()
 {
 }
 
 
-flameBurst::~flameBurst()
+resurrection::~resurrection()
 {
 }
 
-HRESULT flameBurst::init()
+HRESULT resurrection::init()
 {
 	_skillName.clear();
-	_skillName = "flameBurst";
+	_skillName = "resurrection";
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -38,25 +38,24 @@ HRESULT flameBurst::init()
 	_range = RANGE;
 	_manaCost = this->MANACOST;
 
-	_skillKinds = SKILL_KINDS::SKILL_KINDS_ATK;
+	_skillKinds = SKILL_KINDS::SKILL_KINDS_RESUR;
 
-	EFFECTMANAGER->addEffect("flameBurst", "images/skillEffect/flameBurst.png", 3376, 355, 422, 355, 1, 0.167f, 2);
-	
+	EFFECTMANAGER->addEffect("resurrection", "images/skillEffect/resurrection.png", 5185, 448, 305, 448, 1, 0.167f, 2);
+
 
 	return S_OK;
 }
 
-void flameBurst::release()
+void resurrection::release()
 {
 }
 
-void flameBurst::StartSkillEffect(POINT curMapIdx, int dir)
+void resurrection::StartSkillEffect(POINT curMapIdx, int dir)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
-	
+
 	pos.x += AUG_X;
 	pos.y += AUG_Y;
-	EFFECTMANAGER->play("flameBurst", pos.x, pos.y);
-	
+	EFFECTMANAGER->play("resurrection", pos.x, pos.y);
 }

@@ -106,6 +106,9 @@ Character::Character()
 	
 	_isOnAtking = false;
 	_isCastBegin = false;
+
+	_vBuff.clear();
+	
 	
 	EFFECTMANAGER->addEffect("atkMode", "images/skillEffect/atkModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);
 	EFFECTMANAGER->addEffect("defMode", "images/skillEffect/defModeEffect.png", 4401, 178, 163, 178, 5, 0.167f, 5);
@@ -260,12 +263,20 @@ void Character::aniRender()
 	swprintf_s(str, L"mapIdx : [%d,%d]", _curTile->_mapIdx.x, _curTile->_mapIdx.y);
 	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 40, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 
-	swprintf_s(str, L"isOnAtk : [%d]", _isOnAtking);
-	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 60, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
-
 	swprintf_s(str, L"waylistSize : [%d]", _lWayIdxList.size());
-	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 80, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 60, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 }
+
+void Character::BuffRender()
+{
+	for (int i = 0; i < _vBuff.size(); i++) {
+		_vBuff[i].img->aniRender(
+			_pos.x -_vBuff[i].img->GetFrameWidth()/2,
+			_pos.y - _vBuff[i].img->GetFrameHeight()/2 - TILESIZE_HEI,
+			_vBuff[i].ani);
+	}
+}
+
 
 
 void Character::InitObjectiveVal(image* img, POINTFLOAT pos, int zlvl, animation * ani, TILE * curTile)
@@ -539,9 +550,12 @@ void Character::MakeOrder()
 		if (this->_coolDownTimer[0][ORDER_KINDS::HOLD] >= this->_coolDownTimer[1][ORDER_KINDS::HOLD]) {
 			order.kinds = ORDER_KINDS::HOLD;
 			order.targetMapIdx = _curTile->_mapIdx;
-			//	넣기전, 기존 hold삭제 + 가장 마지막Move의 targetIdx찾음
+			//	넣기전, 기존 hold | atk 삭제 + 가장 마지막Move의 targetIdx찾음
 			for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
 				if (_liOrderList->kinds == ORDER_KINDS::HOLD) {
+					_liOrderList = _lOrderList.erase(_liOrderList);
+				}
+				else if (_liOrderList->kinds == ORDER_KINDS::ATTACK) {
 					_liOrderList = _lOrderList.erase(_liOrderList);
 				}
 				else if (_liOrderList->kinds == ORDER_KINDS::MOVE) {
@@ -737,9 +751,16 @@ void Character::MakeOrderOfSkill(ORDER_KINDS skillOrder)
 				if ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]->_tileInfo.terAttr == T_ATTRIBUTE::T_ATTR_NONE) {
 					ASTARFUNC->PathFind(mapIdx, PointMake(ClickedIdx.x, ClickedIdx.y), mapIdx, _lWayIdxList);
 					if (_lWayIdxList.size() != 0) {
-						_targetTile = ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]);
-						//	목적지 타일은 이동리스트에서 뺴기
-						_lWayIdxList.pop_back();
+						_targetTile = ((*_vvMap)[ClickedIdx.y][ClickedIdx.x]);		//	타겟타일(쓰기 애매...오더에 목표지점 넣어줌)
+						
+						//	사거리만큼 목적지부터 빼기 (근접은 1)
+						int skillRange = SKILLMANAGER->FindSkill(this->_skillName[skillOrder - 3])->getRange();
+						for (int i = 0; i < skillRange; i++) {
+							if (_lWayIdxList.size() == 0) { break; }
+							_lWayIdxList.pop_back();
+						}
+						
+						
 
 						order.kinds = ORDER_KINDS::MOVE;
 						if (_lWayIdxList.size() != 0) {
@@ -766,7 +787,7 @@ void Character::MakeOrderOfSkill(ORDER_KINDS skillOrder)
 
 						//	skill오더 추가! + cooldown =0
 						order.kinds = skillOrder;
-						order.targetMapIdx = _targetTile->_tileInfo.pickIdx;
+						order.targetMapIdx = ClickedIdx;
 						_lOrderList.push_back(order);
 						_coolDownTimer[0][skillOrder] = 0;
 					}
@@ -775,4 +796,46 @@ void Character::MakeOrderOfSkill(ORDER_KINDS skillOrder)
 			}
 		}
 	}
+}
+
+void Character::BuffFunc()
+{
+	for (int i = 0; i < _vBuff.size();) {
+		// 시간다됐으면 -> 지워라
+		if (_vBuff[i].curCount >= _vBuff[i].maxCount) {
+			_vBuff[i].ani->stop();
+
+			if (_vBuff[i].name == "buff1") {
+				_charValue[1][CHAR_VALUE_KINDS::ATK] = 0;
+				_charValue[1][CHAR_VALUE_KINDS::M_ATK] = 0;
+				_charValue[1][CHAR_VALUE_KINDS::DEF] = 0;
+				_charValue[1][CHAR_VALUE_KINDS::M_DEF] = 0;
+			}
+
+
+			_vBuff.erase(_vBuff.begin() + i);
+		}
+		//	아니면 적용 및 갱신
+		else {
+			
+			// 버프들어오고 여기 소스에 온게 처음이면,
+			if (_vBuff[i].curCount == 0) {
+				if (_vBuff[i].name == "buff1") {
+					_charValue[1][CHAR_VALUE_KINDS::ATK] = _charValue[0][CHAR_VALUE_KINDS::ATK];
+					_charValue[1][CHAR_VALUE_KINDS::M_ATK] = _charValue[0][CHAR_VALUE_KINDS::M_ATK];
+					_charValue[1][CHAR_VALUE_KINDS::DEF] = _charValue[0][CHAR_VALUE_KINDS::DEF];
+					_charValue[1][CHAR_VALUE_KINDS::M_DEF] = _charValue[0][CHAR_VALUE_KINDS::M_DEF];
+				}
+			}
+			_vBuff[i].curCount++;
+			i++;
+			
+		}
+
+
+
+		
+		
+	}
+	
 }

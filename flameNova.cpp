@@ -30,12 +30,16 @@ HRESULT flameNova::init()
 	}
 
 
-	_multiNum = MULTI_NUM;
+	_multiNumPhysic = MULTI_NUM_PHYSIC;
+	_multiNumMagic = MULTI_NUM_MAGIC;
 	_attr = ATTR;
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	_castCountMax = CASTCOUNT_MAX;
 	_range = RANGE;
+	_manaCost = this->MANACOST;
+
+	_skillKinds = SKILL_KINDS::SKILL_KINDS_ATK;
 
 	EFFECTMANAGER->addEffect("flameNova", "images/skillEffect/flameNova.png", 8715, 326, 415, 326, 1, 0.167f, 2);
 	
@@ -53,8 +57,8 @@ void flameNova::StartSkillEffect(POINT curMapIdx, int dir)
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
 
-	pos.x -= 0;
-	pos.y -= 0;
+	pos.x += AUG_X;
+	pos.y += AUG_Y;
 	
 	EFFECTMANAGER->play("flameNova", pos.x, pos.y);
 }

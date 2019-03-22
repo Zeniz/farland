@@ -11,6 +11,11 @@
 #include "flameNova.h"
 #include "meteor.h"
 
+#include "heal1.h"
+#include "heal2.h"
+#include "buff1.h"
+#include "resurrection.h"
+
 class skillNode;
 
 

@@ -259,7 +259,7 @@ void charLeon::update()
 
 	
 
-	
+	BuffFunc();
 	
 	_curState->update(this);
 	

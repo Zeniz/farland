@@ -7,13 +7,13 @@ charCaren::charCaren()
 	IMAGEMANAGER->addFrameImage("charCaren", L"images/characters/carenSprite.png", 3584, 2560, 14, 10);
 	KEYANIMANAGER->addAnimationType("caren");
 
-	int idleFront[] = { 0,1,2 };
+	int idleFront[] = { 0,1,2,3 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "idleFront", "charCaren",
-		idleFront, 3, 5, true);
+		idleFront, 4, 5, true);
 
-	int idleBack[] = { 14,15,16 };
+	int idleBack[] = { 14,15,16,17 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "idleBack", "charCaren",
-		idleBack, 3, 5, true);
+		idleBack, 4, 5, true);
 
 	int moveFront[] = { 28,29,30,31 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "moveFront", "charCaren",
@@ -23,13 +23,13 @@ charCaren::charCaren()
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "moveBack", "charCaren",
 		moveBack, 4, 5, true);
 
-	int castStartFront[] = { 56,57,58,59 };
+	int castStartFront[] = { 56,57,58,59,60 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "castStartFront", "charCaren",
-		castStartFront, 4, 5, false);
+		castStartFront, 5, 5, false);
 
-	int castFront[] = { 60,61,62,63,64 };
+	int castFront[] = { 61,62,63,64,63,62,61 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "castFront", "charCaren",
-		castFront, 5, 5, true);
+		castFront, 7, 5, true);
 
 	int castEndFront[] = { 65,66,67,68,69 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "castEndFront", "charCaren",
@@ -40,13 +40,13 @@ charCaren::charCaren()
 		atkFront, 5, 5, false);
 
 
-	int castStartBack[] = { 70,71,72,73 };
+	int castStartBack[] = { 70,71,72,73,74 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "castStartBack", "charCaren",
-		castStartBack, 4, 5, false);
+		castStartBack, 5, 5, false);
 
-	int castBack[] = { 74,75,76,77,78 };
+	int castBack[] = { 75,76,77,78,77,76,75 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "castBack", "charCaren",
-		castBack, 5, 5, true);
+		castBack, 7, 5, true);
 	
 	int castEndBack[] = { 79,80,81,82,83 };
 	KEYANIMANAGER->addArrayFrameAnimation("caren", "castEndBack", "charCaren",
@@ -114,11 +114,11 @@ charCaren::charCaren()
 		stateGetHit2Back, 1, 5, false);
 
 	int stateExhaustedBack[] = { 104 };
-	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateExhaustedBack", "charCaren",
+	KEYANIMANAGER->addArrayFrameAnimation("caren", "stateExhaustedBack", "charCaren",
 		stateExhaustedBack, 1, 5, true);
 
 	int stateBlockBack[] = { 105 };
-	KEYANIMANAGER->addArrayFrameAnimation("leon", "stateBlockBack", "charCaren",
+	KEYANIMANAGER->addArrayFrameAnimation("caren", "stateBlockBack", "charCaren",
 		stateBlockBack, 1, 5, true);
 
 }
@@ -230,24 +230,6 @@ void charCaren::InitCharacteristicAugValDefault()
 
 void charCaren::release()
 {
-	mapIdx = _curTile->_mapIdx;
-	_mapIdx = _curTile->_mapIdx;
-	//	애니메이션 세팅
-	setAni();
-	//makeIdleByEndAni();
-	MakeIdleByEndAni();
-	CoolDownFunc();
-
-	if (_isSelectedChar) {
-		SetModeFunc();
-		MakeOrder();
-	}
-
-
-
-
-
-	_curState->update(this);
 }
 
 void charCaren::update()
@@ -265,10 +247,7 @@ void charCaren::update()
 		MakeOrder();
 	}
 
-
-
-
-
+	BuffFunc();
 	_curState->update(this);
 }
 

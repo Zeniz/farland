@@ -4,7 +4,8 @@ class flameNova : public skillNode
 {
 private:
 
-	const float MULTI_NUM = 0.9f;
+	const float MULTI_NUM_PHYSIC = 0.f;
+	const float MULTI_NUM_MAGIC = 1.2f;
 
 	const int AUG_X = 0;
 	const int AUG_Y = 0;
@@ -14,6 +15,9 @@ private:
 
 	const int CASTCOUNT_MAX = 1000;
 	const int RANGE = 1;
+
+	const float MANACOST = 40;
+
 
 public:
 	flameNova();

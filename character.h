@@ -61,6 +61,7 @@ enum class CHAR_NAME {
 	NONE = -1,
 	LEON,
 	CAREN,
+	PALM,
 
 };
 
@@ -123,6 +124,14 @@ enum CHAR_VALUE_KINDS {
 	KINDS_END,
 };
 
+struct tagBuffInfo {
+	string name;
+	image* img;
+	animation* ani;
+	int curCount;
+	int maxCount;
+};
+
 
 
 class Character : public objects
@@ -148,6 +157,7 @@ public:
 	POINT mapIdx;		//	추가됨. 초기화되지않음.
 	vvMap* _vvMap;
 	vEnemy* _vEnemy;
+	vChara* _pvChara;
 
 	float _charValue[CHAR_VALUE_CURAUG::CURAUG_END][CHAR_VALUE_KINDS::KINDS_END];
 	float _coolDownTimer[2][ORDER_KINDS::ORDER_END];
@@ -222,17 +232,20 @@ public:
 	
 	bool _isCastBegin;				//	처음 캐스팅 시작했나?
 
-	const int CAST1COUNT_MAX = 120;			//	캐스팅에 걸리는 시간
-	const int CAST2COUNT_MAX = 120;
-	const int CAST3COUNT_MAX = 120;
-	const int CAST4COUNT_MAX = 120;
+	vector<tagBuffInfo> _vBuff;
 
-	const float SKILL1_MULTI = 1.5;			//	스킬 배수
-	const float SKILL2_MULTI = 1.5;			//	스킬 배수
-	const float SKILL3_MULTI = 1.5;			//	스킬 배수
-	const float SKILL4_MULTI = 1.5;			//	스킬 배수
 
-	const float FLOAT_ERROR = 1.f;			//	벡터이동시, 오차 바로잡아주는 크기.
+	//const int CAST1COUNT_MAX = 120;			//	캐스팅에 걸리는 시간
+	//const int CAST2COUNT_MAX = 120;
+	//const int CAST3COUNT_MAX = 120;
+	//const int CAST4COUNT_MAX = 120;
+	//
+	//const float SKILL1_MULTI = 1.5;			//	스킬 배수
+	//const float SKILL2_MULTI = 1.5;			//	스킬 배수
+	//const float SKILL3_MULTI = 1.5;			//	스킬 배수
+	//const float SKILL4_MULTI = 1.5;			//	스킬 배수
+
+	const float FLOAT_ERROR = 2.f;			//	벡터이동시, 오차 바로잡아주는 크기.
 	const int ASTAR_COUNT_MAX = 60;
 	const int BASIC_ATK_COUNT_MAX = 60;
 
@@ -253,6 +266,8 @@ public:
 	HRESULT init();
 	virtual void update() abstract;
 	void aniRender();
+	void BuffRender();
+	
 
 	virtual void InitObjectiveValDefault(POINT mapIdx)		abstract;
 	virtual void InitCharacteristicValDefault()				abstract;
@@ -290,6 +305,7 @@ public:
 	void HoldRegenFunc();
 	bool MakeClickedEnemyIdx();
 	void MakeOrderOfSkill(ORDER_KINDS skillOrder);
+	void BuffFunc();
 
 
 
@@ -330,7 +346,39 @@ public:
 	}
 	void setCurMpAug(float augVal) { _charValue[0][CHAR_VALUE_KINDS::CUR_MP] += augVal; }
 	void setCurSpAug(float augVal) { _charValue[0][CHAR_VALUE_KINDS::CUR_SP] += augVal; }
-	
+
+	void healCurHpAug(float augVal) {
+		_charValue[0][CHAR_VALUE_KINDS::CUR_HP] += augVal;
+		if (_charValue[0][CHAR_VALUE_KINDS::CUR_HP] + _charValue[1][CHAR_VALUE_KINDS::CUR_HP] >
+			_charValue[0][CHAR_VALUE_KINDS::MAX_HP] + _charValue[1][CHAR_VALUE_KINDS::MAX_HP]) {
+			float lastVal = _charValue[0][CHAR_VALUE_KINDS::CUR_HP] + _charValue[1][CHAR_VALUE_KINDS::CUR_HP] -
+				_charValue[0][CHAR_VALUE_KINDS::MAX_HP] + _charValue[1][CHAR_VALUE_KINDS::MAX_HP];
+			if (lastVal > _charValue[1][CHAR_VALUE_KINDS::MAX_HP])
+				lastVal = _charValue[1][CHAR_VALUE_KINDS::MAX_HP];
+			_charValue[0][CHAR_VALUE_KINDS::CUR_HP] = _charValue[0][CHAR_VALUE_KINDS::MAX_HP];
+			_charValue[1][CHAR_VALUE_KINDS::CUR_HP] = lastVal;
+		}
+	}
+
+	void addBuff(string buffName, image* buffImg, animation* buffAni, int curCount, int maxCount) {
+		tagBuffInfo tmpBuff;
+		tmpBuff.name = buffName;
+		tmpBuff.img = buffImg;
+		tmpBuff.ani = buffAni;
+		tmpBuff.curCount = curCount;
+		tmpBuff.maxCount = maxCount;
+		tmpBuff.ani->start();
+		_vBuff.push_back(tmpBuff);
+	}
+	tagBuffInfo getBuffInfo(int idx) { return _vBuff[idx]; }
+
+	void ResurrectChar() {
+		if (this->_state == CHAR_STATE::DEAD) {
+			this->_state = CHAR_STATE::IDLE;
+			_charValue[0][CHAR_VALUE_KINDS::CUR_HP] = _charValue[0][CHAR_VALUE_KINDS::MAX_HP] * 0.5;
+			_charValue[0][CHAR_VALUE_KINDS::CUR_MP] = _charValue[0][CHAR_VALUE_KINDS::MAX_MP] * 0.5;
+		}
+	}
 	
 	
 
@@ -348,6 +396,9 @@ public:
 	}
 	void LinkToVEnemy(vEnemy* vEnemyAddr) {
 		_vEnemy = vEnemyAddr;
+	}
+	void LinkToVChara(vChara* vCharaAddr) {
+		_pvChara = vCharaAddr;
 	}
 };
 

@@ -77,7 +77,28 @@ HRESULT testMap::init()
 
 	_charMgr->AddCharacter(tmpChar2);
 	_UIMgr->AddChar(tmpChar2);
+
+	//	=== Palm ===
+	Character* tmpChar3;
+	tmpChar3 = _charMgr->MakeNewChara(CHAR_NAME::PALM);
+
+	tmpChar3->InitObjectiveValDefault({ 0,8 });
+	tmpChar3->InitCharacteristicValDefault();
+	tmpChar3->InitCharacteristicAugValDefault();
+	tmpChar3->AddSkill(SKILL_NUM::SKILL1, "heal1");
+	tmpChar3->AddSkill(SKILL_NUM::SKILL2, "heal2");
+	tmpChar3->AddSkill(SKILL_NUM::SKILL3, "buff1");
+	tmpChar3->AddSkill(SKILL_NUM::SKILL4, "resurrection");
+
+	_charMgr->AddCharacter(tmpChar3);
+	_UIMgr->AddChar(tmpChar3);
 	
+
+	//	=== 아군캐릭터들에게 주소보내줌 ===
+	for (int i = 0; i < _charMgr->getVChara()->size(); i++) {
+		_charMgr->TransAddrVCharaToChara(_charMgr->getVChara(), i);
+	}
+
 	
 	//	=============적 추가 ===========
 	
@@ -103,8 +124,10 @@ void testMap::release()
 void testMap::update()
 {
 	CAMERA2D->update();
+	KEYANIMANAGER->update("buff");
 	KEYANIMANAGER->update("leon");
 	KEYANIMANAGER->update("caren");
+	KEYANIMANAGER->update("palm");
 	KEYANIMANAGER->update("skel");
 	EFFECTMANAGER->update();
 	SetClipRangeFunc();

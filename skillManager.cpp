@@ -46,6 +46,22 @@ HRESULT skillManager::init()
 	meteor* tmpMeteor = new meteor;
 	tmpMeteor->init();
 	_mSkills.insert(make_pair("meteor", tmpMeteor));
+
+	heal1* tmpHeal1 = new heal1;
+	tmpHeal1->init();
+	_mSkills.insert(make_pair("heal1", tmpHeal1));
+
+	heal2* tmpHeal2 = new heal2;
+	tmpHeal2->init();
+	_mSkills.insert(make_pair("heal2", tmpHeal2));
+
+	buff1* tmpBuff1 = new buff1;
+	tmpBuff1->init();
+	_mSkills.insert(make_pair("buff1", tmpBuff1));
+
+	resurrection* tmpResurrection = new resurrection;
+	tmpResurrection->init();
+	_mSkills.insert(make_pair("resurrection", tmpResurrection));
 	
 
 	return S_OK;

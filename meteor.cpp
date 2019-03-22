@@ -29,12 +29,16 @@ HRESULT meteor::init()
 	}
 
 
-	_multiNum = MULTI_NUM;
+	_multiNumPhysic = MULTI_NUM_PHYSIC;
+	_multiNumMagic = MULTI_NUM_MAGIC;
 	_attr = ATTR;
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	_castCountMax = CASTCOUNT_MAX;
 	_range = RANGE;
+	_manaCost = this->MANACOST;
+
+	_skillKinds = SKILL_KINDS::SKILL_KINDS_ATK;
 
 	EFFECTMANAGER->addEffect("meteor", "images/skillEffect/meteor.png", 8338, 490, 758, 490, 1, 0.167f, 6);
 
@@ -51,7 +55,15 @@ void meteor::StartSkillEffect(POINT curMapIdx, int dir)
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
 
-	pos.x -= AUG_X;
-	pos.y -= 50;
+	pos.x += AUG_X;
+	pos.y += AUG_Y;
 	EFFECTMANAGER->play("meteor", pos.x, pos.y);
+
+	for (int i = 0; i < 3; i++) {
+		pos = ConvertIdxToPosFloat(curMapIdx.x + RND->getFromIntTo(-3, 4), curMapIdx.y + RND->getFromIntTo(-3, 4), TILESIZE_WID, TILESIZE_HEI);
+		pos.x += AUG_X;
+		pos.y += AUG_Y;
+		EFFECTMANAGER->play("meteor", pos.x, pos.y);
+	}
+	
 }

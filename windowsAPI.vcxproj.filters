@@ -85,6 +85,9 @@
     <Filter Include="PlayGround\characters\skills\carenSkill">
       <UniqueIdentifier>{5c8bd4ae-1708-49bc-82db-9fd77617eec5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\characters\skills\palmSkill">
+      <UniqueIdentifier>{2f892ce6-bb0c-46f4-bbe4-8679cd2fad35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -309,6 +312,21 @@
     <ClInclude Include="thunder.h">
       <Filter>PlayGround\characters\skills\carenSkill</Filter>
     </ClInclude>
+    <ClInclude Include="charPalm.h">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClInclude>
+    <ClInclude Include="buff1.h">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="heal1.h">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="heal2.h">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="resurrection.h">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -517,6 +535,21 @@
     </ClCompile>
     <ClCompile Include="thunder.cpp">
       <Filter>PlayGround\characters\skills\carenSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="charPalm.cpp">
+      <Filter>PlayGround\characters\chars</Filter>
+    </ClCompile>
+    <ClCompile Include="buff1.cpp">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="heal1.cpp">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="heal2.cpp">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="resurrection.cpp">
+      <Filter>PlayGround\characters\skills\palmSkill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -29,12 +29,16 @@ HRESULT thunder::init()
 	}
 
 
-	_multiNum = MULTI_NUM;
+	_multiNumPhysic = MULTI_NUM_PHYSIC;
+	_multiNumMagic = MULTI_NUM_MAGIC;
 	_attr = ATTR;
 	_attrAdjustRatio = ATTR_ADJUST_RATIO;
 
 	_castCountMax = CASTCOUNT_MAX;
 	_range = RANGE;
+	_manaCost = this->MANACOST;
+
+	_skillKinds = SKILL_KINDS::SKILL_KINDS_ATK;
 
 	EFFECTMANAGER->addEffect("thunder", "images/skillEffect/thunder.png", 2667, 306, 381, 306, 1, 0.167f, 2);
 
@@ -51,7 +55,7 @@ void thunder::StartSkillEffect(POINT curMapIdx, int dir)
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
 
-	pos.x -= AUG_X;
-	pos.y -= 50;
+	pos.x += AUG_X;
+	pos.y += AUG_Y;
 	EFFECTMANAGER->play("thunder", pos.x, pos.y);
 }

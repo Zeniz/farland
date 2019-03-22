@@ -73,6 +73,9 @@ void CharInfoUI::update()
 		CalRatios(&_vCharInfo[_curSelectChar]);
 		SelectPortrait(&_vCharInfo[_curSelectChar]);
 		_mode = _charMgr->getCharMode(_curSelectChar);
+		if (KEYMANAGER->isStayKeyDown(VK_SPACE)) {
+			MakeCamFocusFunc(_curSelectChar);
+		}
 	}
 
 
@@ -178,36 +181,46 @@ void CharInfoUI::render()
 			
 
 			WCHAR str[128];
+			string skillname;
+			wstring wSkillname;
 			//	i에 따라 스트링 설정
 			switch (i)
 			{
 			case 0:
-				swprintf_s(str, L"[M] Move");
+				wSkillname = L"[M] Move";
 				break;
 			case 1:
-				swprintf_s(str, L"[H] Hold");
+				wSkillname = L"[H] Hold";
 				break;
 			case 2:
-				swprintf_s(str, L"[A] Attack");
+				wSkillname = L"[A] Attack";
 				break;
 			case 3:
-				swprintf_s(str, L"[Q] SKILL1");		//	스킬명 받아와야함
+				wSkillname = L"[Q] ";
+				skillname = _charMgr->getSkillNameOfChar(_curSelectChar, 0);
+				wSkillname += string2wstring(skillname);
 				break;
 			case 4:
-				swprintf_s(str, L"[W] SKILL2");
+				wSkillname = L"[W] ";
+				skillname = _charMgr->getSkillNameOfChar(_curSelectChar, 1);
+				wSkillname += string2wstring(skillname);
 				break;
 			case 5:
-				swprintf_s(str, L"[E] SKILL3");
+				wSkillname = L"[E] ";
+				skillname = _charMgr->getSkillNameOfChar(_curSelectChar, 2);
+				wSkillname += string2wstring(skillname);
 				break;
 			case 6:
-				swprintf_s(str, L"[R] SKILL4");
+				wSkillname = L"[R] ";
+				skillname = _charMgr->getSkillNameOfChar(_curSelectChar, 3);
+				wSkillname += string2wstring(skillname);
 				break;
 			default:
 				break;
 			}
-			D2DMANAGER->drawTextD2D(_brush, L"consolas", 18, str,
+			D2DMANAGER->drawTextD2D(_brush, L"consolas", 18, wSkillname.c_str(),
 				CAMERA2D->getCamPosX() + SKILL_START.x, CAMERA2D->getCamPosY() + SKILL_START.y + i* SKILL_YGAP,
-				CAMERA2D->getCamPosX() + SKILL_START.x + 100, CAMERA2D->getCamPosY() + SKILL_START.y + i* SKILL_YGAP + 50);
+				CAMERA2D->getCamPosX() + SKILL_START.x + 200, CAMERA2D->getCamPosY() + SKILL_START.y + i* SKILL_YGAP + 50);
 		}
 
 		//	오더리스트
@@ -296,6 +309,9 @@ void CharInfoUI::addCharValue(CHAR_NAME name, CHAR_STATE* stateAddr, list<tagOrd
 	case CHAR_NAME::CAREN:
 		swprintf_s(charInfo.nameStr, L"카렌");
 		break;
+	case CHAR_NAME::PALM:
+		swprintf_s(charInfo.nameStr, L"팜");
+		break;
 	default:
 		break;
 	}
@@ -329,6 +345,11 @@ void CharInfoUI::addCharValue(Character * chara)
 	case CHAR_NAME::CAREN:
 		swprintf_s(charInfo.nameStr, L"카렌");
 		break;
+	case CHAR_NAME::PALM:
+		swprintf_s(charInfo.nameStr, L"팜");
+		break;
+
+
 	default:
 		break;
 	}
@@ -498,9 +519,14 @@ void CharInfoUI::MakeCamFocusFunc(int curSelectChar)
 {
 	POINT mapIdx;
 	POINT camPos;
+	POINTFLOAT charPos;
 
-	mapIdx = _charMgr->getMapIdxOfChar(_curSelectChar);
-	camPos = ConvertIdxToPos(mapIdx.x, mapIdx.y, TILESIZE_WID, TILESIZE_HEI);
+	
+
+	//mapIdx = _charMgr->getMapIdxOfChar(_curSelectChar);
+	//camPos = ConvertIdxToPos(mapIdx.x, mapIdx.y, TILESIZE_WID, TILESIZE_HEI);
+	charPos = _charMgr->getPosOfChar(_curSelectChar);
+	camPos = PointMake(charPos.x, charPos.y);
 	camPos.x -= WINSIZEX / 2;
 	camPos.y -= WINSIZEY / 2;
 

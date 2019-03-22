@@ -5,6 +5,7 @@
 #include "enemy.h"
 #include "charLeon.h"
 #include "charCaren.h"
+#include "charPalm.h"
 
 
 #include "charStatePattern.h"
@@ -74,6 +75,8 @@ public:
 	TILE* getTargetTile(int idx) { return _vChara[idx]->getTartgetTile(); }
 
 	POINT getMapIdxOfChar(int idx) { return _vChara[idx]->mapIdx; }
+	POINTFLOAT getPosOfChar(int idx) { return _vChara[idx]->_pos; }
+	string getSkillNameOfChar(int charIdx, int skillIdx) { return _vChara[charIdx]->_skillName[skillIdx]; }
 
 
 	void setCurHpAug(int idx, int augVal) { _vChara[idx]->setCurHpAug(augVal); }
@@ -87,6 +90,7 @@ public:
 	void LinkToVvMap(vvMap* vvMapAddr) { _vvMap = vvMapAddr; }
 	//void LinkToEnemyMgr(enemyMgr* enemyMgrAddr) { _enemyMgr = enemyMgrAddr; }
 	void LinkToVEnemy(vEnemy* vEnemyAddr) { _vEnemy = vEnemyAddr; }
+	void TransAddrVCharaToChara(vChara* vCharaAddr, int idx) { _vChara[idx]->LinkToVChara(vCharaAddr); }
 	
 
 
