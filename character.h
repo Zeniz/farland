@@ -307,6 +307,13 @@ public:
 	void MakeOrderOfSkill(ORDER_KINDS skillOrder);
 	void BuffFunc();
 
+	void setStatePattern(CHAR_STATE charState) {
+		this->_isStateChanged = true;
+		this->_state = charState;
+		this->_curState = _arrStatePattern[static_cast<const int>(charState)];
+	}
+			
+
 
 
 	TILE* getCurTile() { return _curTile; }
@@ -374,7 +381,8 @@ public:
 
 	void ResurrectChar() {
 		if (this->_state == CHAR_STATE::DEAD) {
-			this->_state = CHAR_STATE::IDLE;
+			this->setStatePattern(CHAR_STATE::IDLE);
+
 			_charValue[0][CHAR_VALUE_KINDS::CUR_HP] = _charValue[0][CHAR_VALUE_KINDS::MAX_HP] * 0.5;
 			_charValue[0][CHAR_VALUE_KINDS::CUR_MP] = _charValue[0][CHAR_VALUE_KINDS::MAX_MP] * 0.5;
 		}

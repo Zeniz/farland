@@ -33,6 +33,18 @@ void CharMgr::update()
 	}
 }
 
+void CharMgr::OrderUpdate()
+{
+
+	for (int i = 0; i < _vChara.size(); i++) {
+		if (_vChara[i]->getIsSelectedChar()) {
+			_vChara[i]->SetModeFunc();
+			_vChara[i]->MakeOrder();
+		}
+		
+	}
+}
+
 void CharMgr::render(int idxX, int idxY)
 {
 	for (int i = 0; i < _vChara.size(); i++) {

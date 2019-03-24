@@ -15,7 +15,7 @@ private:
 	const float BASIC_CASTSPD = 1.0f;
 
 	const float BASIC_ATK = 10;
-	const float BASIC_DEF = 5;
+	const float BASIC_DEF = 8;
 	const float BASIC_MATK = 10;
 	const float BASIC_MDEF = 5;
 

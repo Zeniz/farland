@@ -75,7 +75,16 @@ void stateIdle::update(Character* character)
 
 	//	Á×À½Ã³¸®
 	if (character->_charValue[0][CUR_HP] + character->_charValue[1][CUR_HP] <= 0) {
+		character->_state = CHAR_STATE::DEAD;
+		character->_curState = character->_arrStatePattern[static_cast<const int>(CHAR_STATE::DEAD)];
+		character->_isStateChanged = true;
+		character->_isOnAtking = false;
+		character->_lOrderList.clear();
 
+		character->_charValue[0][CUR_HP] = 0;
+		character->_charValue[1][CUR_HP] = 0;
+		character->_charValue[0][CUR_MP] = 0;
+		character->_charValue[1][CUR_MP] = 0;
 	}
 
 

@@ -41,7 +41,10 @@ public:
 	HRESULT init();
 	void release();
 	void update();
+	void OrderUpdate();
 	void render(int idxX, int idxY);
+
+	
 	
 
 

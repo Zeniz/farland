@@ -2,11 +2,13 @@
 #include "gameNode.h"
 #include "MaskTile.h"
 #include "CharInfoUI.h"
+#include "timeDelayUI.h"
 
 enum UI_KINDS {
 	UI_KINDS_NONE = 0x00000000UL,
 	MASK_TILE = 0x00000001UL,
 	CHARINFO = 0x00000002UL,
+	TIMEDELAY = 0x00000004UL,
 
 
 
@@ -16,10 +18,12 @@ enum UI_KINDS {
 
 class UIMgr : public gameNode
 {
+public:
 	unsigned char	_selectUI;
 
 	MaskTile*	_maskTile;
 	CharInfoUI* _charInfoUI;
+	timeDelayUI* _timeDelayUI;
 
 	
 
@@ -42,6 +46,6 @@ public:
 
 	void LinkToMap(vvMap* vvMapAddr) { _vvMap = vvMapAddr; }
 	void LinkToCharMgr(CharMgr* charMgrAddr) { _charMgr = charMgrAddr; }
-	
+
 };
 

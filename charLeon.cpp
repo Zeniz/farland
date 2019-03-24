@@ -252,10 +252,13 @@ void charLeon::update()
 	MakeIdleByEndAni();
 	CoolDownFunc();
 
-	if (_isSelectedChar) {
-		SetModeFunc();
-		MakeOrder();
-	}
+
+	//	timedelay중에도 얘들은 실시간으로 업뎃해야하니,
+	//	따로 뺴서 따로 업뎃해야하나? (일단 따로 뺴둠)charmgr->orderUpdate();
+	//if (_isSelectedChar) {
+	//	SetModeFunc();
+	//	MakeOrder();
+	//}
 
 	
 

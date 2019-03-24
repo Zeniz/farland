@@ -397,8 +397,10 @@ void Character::MoveFunc()
 void Character::MakeIdleByEndAni()
 {
 	if (!_ani->isPlay()) {
-		_isStateChanged = true;
-		_state = CHAR_STATE::IDLE;
+		this->setStatePattern(CHAR_STATE::IDLE);
+		//_isStateChanged = true;
+		//_state = CHAR_STATE::IDLE;
+		
 	}
 }
 

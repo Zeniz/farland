@@ -327,6 +327,12 @@
     <ClInclude Include="resurrection.h">
       <Filter>PlayGround\characters\skills\palmSkill</Filter>
     </ClInclude>
+    <ClInclude Include="timeDelayUI.h">
+      <Filter>PlayGround\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillRangeMaskUI.h">
+      <Filter>PlayGround\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -550,6 +556,12 @@
     </ClCompile>
     <ClCompile Include="resurrection.cpp">
       <Filter>PlayGround\characters\skills\palmSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="timeDelayUI.cpp">
+      <Filter>PlayGround\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillRangeMaskUI.cpp">
+      <Filter>PlayGround\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

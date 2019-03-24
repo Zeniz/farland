@@ -42,8 +42,11 @@ HRESULT testMap::init()
 	_selectedUI = UI_KINDS::UI_KINDS_NONE;
 	_selectedUI |= UI_KINDS::MASK_TILE;
 	_selectedUI |= UI_KINDS::CHARINFO;
+	_selectedUI |= UI_KINDS::TIMEDELAY;		//	타임딜레이 셋팅needed
 
 	_UIMgr->setSelectUI(_selectedUI);
+	_UIMgr->_timeDelayUI->setIsMobSlowMode(true);
+	_UIMgr->_timeDelayUI->setIsCharSlowMode(true);
 
 
 	//	============캐릭터 추가=======
@@ -132,9 +135,25 @@ void testMap::update()
 	EFFECTMANAGER->update();
 	SetClipRangeFunc();
 
-	_charMgr->update();
-	_enemyMgr->update();
 
+	//	타임딜레이가 작동중이면,
+	if (_UIMgr->_timeDelayUI != nullptr) {
+		
+		if (!_UIMgr->_timeDelayUI->getIsCharStop()) {
+			_charMgr->update();
+		}
+		if (!_UIMgr->_timeDelayUI->getIsMobStop()) {
+			_enemyMgr->update();
+		}
+
+	}
+	//	타임딜레이가 작동중이 아니라면, 걍 다 업뎃
+	else {
+		_charMgr->update();
+		_enemyMgr->update();
+	}
+	
+	_charMgr->OrderUpdate();
 
 	_UIMgr->update();
 

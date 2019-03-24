@@ -69,5 +69,5 @@ void stateDead::onSkillFour(Character * character)
 
 void stateDead::update(Character * character)
 {
-	
+	character->_portraitKinds = CHAR_PORTRAIT_KINDS::DEAD;
 }

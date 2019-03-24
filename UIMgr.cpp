@@ -17,6 +17,7 @@ HRESULT UIMgr::init()
 
 	_maskTile = nullptr;
 	_charInfoUI = nullptr;
+	_timeDelayUI = nullptr;
 
 
 
@@ -38,6 +39,9 @@ void UIMgr::update()
 	if (_selectUI & CHARINFO) {
 		_charInfoUI->update();
 	}
+	if (_selectUI & TIMEDELAY) {
+		_timeDelayUI->update();
+	}
 }
 
 void UIMgr::render()
@@ -47,6 +51,9 @@ void UIMgr::render()
 	}
 	if (_selectUI & CHARINFO) {
 		_charInfoUI->render();
+	}
+	if (_selectUI & TIMEDELAY) {
+		_timeDelayUI->render();
 	}
 }
 
@@ -63,6 +70,14 @@ void UIMgr::setSelectUI(unsigned char selectUI)
 		_charInfoUI->init();
 		_charInfoUI->LinkToCharMgr(_charMgr);
 	}
+	if (_selectUI & TIMEDELAY) {
+		_timeDelayUI = new timeDelayUI;
+		_timeDelayUI->init();
+		//	if need any Class at TimeUI, Add HERE 
+
+
+	}
+	
 }
 
 void UIMgr::AddChar(CHAR_NAME name, CHAR_STATE * stateAddr, list<tagOrderInfo>* lOrderList, float * charValue0, float * charValue1)
