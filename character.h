@@ -62,6 +62,7 @@ enum class CHAR_NAME {
 	LEON,
 	CAREN,
 	PALM,
+	KAISER,
 
 };
 

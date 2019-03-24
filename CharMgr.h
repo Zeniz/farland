@@ -6,6 +6,7 @@
 #include "charLeon.h"
 #include "charCaren.h"
 #include "charPalm.h"
+#include "charKaiser.h"
 
 
 #include "charStatePattern.h"

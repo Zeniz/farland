@@ -44,5 +44,34 @@ public:
 	void CalDirToPlayer(enemy* enemy);
 
 
+
+	//	Kaiser¿ë
+	void ChooseSkill(enemy* enemy);
+
+	SKILL_DIR ConvertCharDirToSkillDir(enemy* enemy);
+	
+
+	void TargetSelectFunc(enemy* enemy);
+	
+	/*
+	{
+		SKILL_DIR skillDir = SKILL_DIR::SKILL_DIR_NONE;
+		E_DIR dir = enemy->_dir;
+		if (dir == E_DIR::DIR_LT) {
+			skillDir = SKILL_DIR::SKILL_DIR_LT;
+		}
+		else if (dir == E_DIR::DIR_LB) {
+			skillDir = SKILL_DIR::SKILL_DIR_LB;
+		}
+		else if (dir == E_DIR::DIR_RT) {
+			skillDir = SKILL_DIR::SKILL_DIR_RT;
+		}
+		else if (dir == E_DIR::DIR_RB) {
+			skillDir = SKILL_DIR::SKILL_DIR_RB;
+		}
+		return skillDir;
+	}
+	*/
+
 };
 

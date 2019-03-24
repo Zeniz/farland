@@ -25,7 +25,7 @@ void eStatePattern::Idle(enemy * enemy)
 	//	isNoticeTrue,
 	if (enemy->_isNotice) {
 
-		//	자기 주변에 캐릭터 있나 검색
+		//	자기 주변에 캐릭터 있나 검색 (nearCharIdx 세팅)
 		vChara* pvChara = enemy->_vChara;
 		for (int i = 0; i < pvChara->size(); i++) {
 			bool isAliveChar = (*pvChara)[i]->_state != CHAR_STATE::DEAD;
@@ -50,35 +50,173 @@ void eStatePattern::Idle(enemy * enemy)
 			}
 			
 		}
+		//	MOB_SKELL의 공격, 이동 소스
+		if (enemy->_name == ENEMY_NAME::MOB_SKEL) {
+			//	근처 캐릭터 있으면 공격
+			if (isNearChar) {
+				enemy->_atkCount++;
+				if (enemy->_atkCount > enemy->ATKCOUNT_MAX) {
+					enemy->_atkCount = 0;
+					enemy->_targetCharIdx = targetCharIdx;
+					enemy->_state = E_STATE::E_ATK1;
+					enemy->_isStateChanged = true;
+				}
 
-		//	근처 캐릭터 있으면 공격
-		if (isNearChar) {
-			enemy->_atkCount++;
-			if (enemy->_atkCount > enemy->ATKCOUNT_MAX) {
-				enemy->_atkCount = 0;
-				enemy->_targetCharIdx = targetCharIdx;
-				enemy->_state = E_STATE::E_ATK1;
-				enemy->_isStateChanged = true;
 			}
 
-		}
-
-		//	캐릭터 없으면 이동
-		else {
-			//	그나마 가장 가까운 캐릭터가 검색되었다면,
-			if (nearCharIdx != -1) {
-				enemy->_targetCharIdx = nearCharIdx;
-				enemy->_state = E_STATE::E_MOVE;
-				enemy->_isStateChanged = true;
-				ASTARFUNC->PathFind(enemy->_mapIdx, enemy->getChara(nearCharIdx)->mapIdx, enemy->_mapIdx, enemy->_lWayIdxList);
-				//	검색이 됐고, -1,-,1 이 아니라면 -> 마지막좌표(플레이어)는 뺴라.
-				if (enemy->_lWayIdxList.size() != 0 && enemy->_lWayIdxList.begin()->x != -1) {
-					enemy->_lWayIdxList.pop_back();
+			//	캐릭터 없으면 이동
+			else {
+				//	그나마 가장 가까운 캐릭터가 검색되었다면,
+				if (nearCharIdx != -1) {
+					enemy->_targetCharIdx = nearCharIdx;
+					enemy->_state = E_STATE::E_MOVE;
+					enemy->_isStateChanged = true;
+					ASTARFUNC->PathFind(enemy->_mapIdx, enemy->getChara(nearCharIdx)->mapIdx, enemy->_mapIdx, enemy->_lWayIdxList);
+					//	검색이 됐고, -1,-,1 이 아니라면 -> 마지막좌표(플레이어)는 뺴라.
+					if (enemy->_lWayIdxList.size() != 0 && enemy->_lWayIdxList.begin()->x != -1) {
+						enemy->_lWayIdxList.pop_back();
+					}
 				}
 			}
-			
-
 		}
+		//	MOB_SKELL의 공격, 이동 소스 끗
+
+
+		//	카이저의 행동에 대한 소스
+		else if (enemy->_name == ENEMY_NAME::MOB_KAISER) {
+
+
+			if (enemy->_bossAction == BOSS_ACTION::BOSS_ACTION_NONE) {
+				ChooseSkill(enemy);
+				TargetSelectFunc(enemy);
+			}
+
+			vChara* pvChara = enemy->_vChara;
+			POINT targetIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+			int distance = abs(targetIdx.x - enemy->_mapIdx.x) + abs(targetIdx.y - enemy->_mapIdx.y);
+			int skillRange;
+			
+			
+			
+			BOSS_ACTION actionKinds = enemy->_bossAction;
+			switch (actionKinds)
+			{
+			case BOSS_ACTION_NONE:
+				break;
+			case BOSS_SNATCH:
+				enemy->_curSkillName = "snatch";
+				//	스킬범위 내
+				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
+				if (skillRange >= distance) {
+
+					enemy->_state = E_STATE::E_SKILL1_CAST;
+					enemy->_isStateChanged = true;
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+				}
+				//	스킬범위밖이므로, 이동계산
+				else {
+					ASTARFUNC->PathFind(enemy->_mapIdx, targetIdx, enemy->_mapIdx, enemy->_lWayIdxList);
+					//	스킬범위만큼 리스트에서 뺴줌. 최대사정거리 유지
+					for (int i = 0; i < skillRange; i++) {
+						if (enemy->_lWayIdxList.size() == 0)	break;
+						enemy->_lWayIdxList.pop_back();
+					}
+					enemy->_state = E_STATE::E_MOVE;
+					enemy->_isStateChanged = true;
+
+				}
+				
+
+
+				break;
+			case BOSS_ATK1:
+				enemy->_curSkillName = "bossAtk1";
+
+				//	스킬범위 내
+				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
+				if (skillRange >= distance) {
+
+					enemy->_state = E_STATE::E_SKILL1_CAST;
+					enemy->_isStateChanged = true;
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+				}
+				//	스킬범위밖이므로, 이동계산
+				else {
+					ASTARFUNC->PathFind(enemy->_mapIdx, targetIdx, enemy->_mapIdx, enemy->_lWayIdxList);
+					//	스킬범위만큼 리스트에서 뺴줌. 최대사정거리 유지
+					for (int i = 0; i < skillRange; i++) {
+						if (enemy->_lWayIdxList.size() == 0)	break;
+						enemy->_lWayIdxList.pop_back();
+					}
+					enemy->_state = E_STATE::E_MOVE;
+					enemy->_isStateChanged = true;
+
+				}
+				break;
+			case BOSS_ATK2:
+				enemy->_curSkillName = "bossAtk2";
+
+				//	스킬범위 내
+				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
+				if (skillRange >= distance) {
+
+					enemy->_state = E_STATE::E_SKILL1_CAST;
+					enemy->_isStateChanged = true;
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+				}
+				//	스킬범위밖이므로, 이동계산
+				else {
+					ASTARFUNC->PathFind(enemy->_mapIdx, targetIdx, enemy->_mapIdx, enemy->_lWayIdxList);
+					//	스킬범위만큼 리스트에서 뺴줌. 최대사정거리 유지
+					for (int i = 0; i < skillRange; i++) {
+						if (enemy->_lWayIdxList.size() == 0)	break;
+						enemy->_lWayIdxList.pop_back();
+					}
+					enemy->_state = E_STATE::E_MOVE;
+					enemy->_isStateChanged = true;
+
+				}
+				break;
+			case BOSS_BUFF:
+				enemy->_curSkillName = "bossBuff";
+
+
+				//	스킬범위 내
+				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
+				if (skillRange >= distance) {
+
+					enemy->_state = E_STATE::E_SKILL1_CAST;
+					enemy->_isStateChanged = true;
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+				}
+				//	스킬범위밖이므로, 이동계산
+				else {
+					ASTARFUNC->PathFind(enemy->_mapIdx, targetIdx, enemy->_mapIdx, enemy->_lWayIdxList);
+					//	스킬범위만큼 리스트에서 뺴줌. 최대사정거리 유지
+					for (int i = 0; i < skillRange; i++) {
+						if (enemy->_lWayIdxList.size() == 0)	break;
+						enemy->_lWayIdxList.pop_back();
+					}
+					enemy->_state = E_STATE::E_MOVE;
+					enemy->_isStateChanged = true;
+
+				}
+				break;
+			case BOSS_HOLD:
+				enemy->_state = E_STATE::E_BLOCK;
+				enemy->_isStateChanged = true;
+
+				enemy->_targetMapIdx = enemy->_mapIdx;
+				break;
+			case BOSS_ACTION_END:
+				break;
+			default:
+				break;
+			}
+
+			
+		}
+		
 	}
 		
 
@@ -122,6 +260,12 @@ void eStatePattern::Stunned(enemy * enemy)
 
 void eStatePattern::Deffence(enemy * enemy)
 {
+	//	아직작성안함 -> idle로 일단 보내겠음
+	enemy->_state = E_STATE::E_IDLE;
+	enemy->_bossAction = BOSS_ACTION::BOSS_ACTION_NONE;
+	enemy->_isStateChanged = true;
+
+
 }
 
 void eStatePattern::Move(enemy * enemy)
@@ -234,10 +378,93 @@ void eStatePattern::Atk3(enemy * enemy)
 
 void eStatePattern::Skill1Cast(enemy * enemy)
 {
+	enemy->_castingCount += enemy->_statValue[E_STATS::E_CASTSPD];
+	int castCountMax = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getCastCountMax();
+
+	if (enemy->_castingCount > castCountMax) {
+		enemy->_castingCount = 0;
+		enemy->_state = E_STATE::E_SKILL1_SHOT;
+		enemy->_isStateChanged = true;
+	}
+
 }
 
 void eStatePattern::Skill1Shot(enemy * enemy)
 {
+	//	프레임이 끝나면, 공격적용!
+	if (enemy->_ani->isLastFrame()) {
+
+		enemy->_state = E_STATE::E_IDLE;
+		enemy->_bossAction = BOSS_ACTION::BOSS_ACTION_NONE;
+		//	이펙트 적용
+		skillNode* curSkill = SKILLMANAGER->FindSkill(enemy->_curSkillName);
+		curSkill->StartSkillEffect(
+			enemy->_targetMapIdx,
+			(int)enemy->_dir);
+
+		//	판정적용
+		SKILL_KINDS skillKinds = curSkill->getSkillKinds();
+
+		//	공격시 사용되는 스킬의 특수능력
+		SKILL_ATTR skillAttr = curSkill->getAttr();
+		//	특수능력 적용확률
+		float attrAdjustRatio = curSkill->getAttrAdjustRatio();
+		POINT tileIdxOnSkill;		//	스킬이 적용될 타일인덱스
+		SKILL_DIR skillDir = ConvertCharDirToSkillDir(enemy);
+		POINT curIdx = enemy->_targetMapIdx;
+		vChara* pvChara = enemy->_vChara;
+
+		
+		switch (skillKinds)
+		{
+		case SKILL_KINDS_NONE:
+			break;
+		case SKILL_KINDS_ATK:
+		{
+			// 캐릭에게 맞았는가 판단하고 데미지 적용
+			// 스킬이 적용될 타일인덱스
+			for (int i = 0; i < curSkill->getAugIdxSize(skillDir); i++) {
+				tileIdxOnSkill = { curIdx.x + curSkill->getAugIdx(skillDir, i).x, curIdx.y + curSkill->getAugIdx(skillDir, i).y };
+				//	캐릭터전체를 검색해서 캐릭터의 인덱스와
+				for (int j = 0; j < pvChara->size(); j++) {
+					//	인덱스가 같으면 -> 데미지 적용!
+					if ((*pvChara)[j]->_mapIdx.x == tileIdxOnSkill.x &&
+						(*pvChara)[j]->_mapIdx.y == tileIdxOnSkill.y) {
+						//	데미지 적용식
+						(*pvChara)[j]->setCurHpAug(
+							-(enemy->_statValue[E_STATS::E_ATK] *
+								curSkill->getMultiNumPhysic()
+								+
+								enemy->_statValue[E_STATS::E_MATK] *
+								curSkill->getMultiNumMagic()
+								));
+					}
+				}
+			}
+		}
+			
+			break;
+		case SKILL_KINDS_HEAL:
+			break;
+		case SKILL_KINDS_BUFF:
+			//enemy->addBuff(curSkill->getSkillName(), 
+			//	IMAGEMANAGER->findImage(curSkill->getSkillName().c_str()),
+			//	KEYANIMANAGER->findAnimation(curSkill->getSkillName(), curSkill->getSkillName()),
+			//	0, curSkill->getDuration());
+				
+
+			break;
+		case SKILL_KINDS_RESUR:
+			break;
+		default:
+			break;
+		}
+
+
+
+	}
+
+
 }
 
 void eStatePattern::Skill2Cast(enemy * enemy)
@@ -372,4 +599,76 @@ void eStatePattern::CalDirToPlayer(enemy * enemy)
 	
 
 	//return dir;
+}
+
+void eStatePattern::ChooseSkill(enemy * enemy)
+{
+	int randNum;
+	BOSS_ACTION bossAction = BOSS_ACTION_NONE;
+	randNum = RND->getFromIntTo(0, enemy->BOSS_ACTIONNUM);
+	switch (randNum)
+	{
+	case BOSS_SNATCH:
+		enemy->_bossAction = BOSS_SNATCH;
+		
+		break;
+	case BOSS_ATK1:
+		enemy->_bossAction = BOSS_ATK1;
+		break;
+	case BOSS_ATK2:
+		enemy->_bossAction = BOSS_ATK2;
+		break;
+	case BOSS_BUFF:
+		enemy->_bossAction = BOSS_SNATCH;
+		break;
+	case BOSS_HOLD:
+		enemy->_bossAction = BOSS_HOLD;
+		break;
+
+	default:
+		break;
+	}
+	
+}
+
+SKILL_DIR eStatePattern::ConvertCharDirToSkillDir(enemy * enemy)
+{
+	SKILL_DIR skillDir = SKILL_DIR::SKILL_DIR_NONE;
+	E_DIR dir = enemy->_dir;
+	if (dir == E_DIR::DIR_LT) {
+		skillDir = SKILL_DIR::SKILL_DIR_LT;
+	}
+	else if (dir == E_DIR::DIR_LB) {
+		skillDir = SKILL_DIR::SKILL_DIR_LB;
+	}
+	else if (dir == E_DIR::DIR_RT) {
+		skillDir = SKILL_DIR::SKILL_DIR_RT;
+	}
+	else if (dir == E_DIR::DIR_RB) {
+		skillDir = SKILL_DIR::SKILL_DIR_RB;
+	}
+	return skillDir;
+}
+
+void eStatePattern::TargetSelectFunc(enemy * enemy)
+{
+	int curMinDistance = 9999999;
+	vChara* pvChara = enemy->_vChara;
+
+	for (int i = 0; i < pvChara->size(); i++) {
+		
+		
+		if ((*pvChara)[i]->getCharValueCur()[CHAR_VALUE_KINDS::CUR_HP] <= 0)
+			continue;
+		//if((*pvChara)[i]->_state == CHAR_STATE::DEAD) continue;
+
+		POINT targetIdx = (*pvChara)[i]->mapIdx;
+		int distance;
+		distance = abs(targetIdx.x - enemy->_mapIdx.x) + abs(targetIdx.y - enemy->_mapIdx.y);
+		if (curMinDistance > distance) {
+			curMinDistance = distance;
+			enemy->_targetCharIdx = i;
+		}
+	}
+	
 }

@@ -54,6 +54,75 @@ void enemy::render()
 	D2D_RECT_F rc = { _pos.x - 5, _pos.y - 5, _pos.x + 5, _pos.y + 5 };
 	D2DMANAGER->fillRectangle(0xFFFFFF, rc);
 
+
+	WCHAR str[128];
+
+	//swprintf_s(str, L"state : %d", (int)_state);
+
+	
+	switch (_state)
+	{
+	case E_STATUS_NONE:
+		swprintf_s(str, L"state : NONE");
+		break;
+	case E_IDLE:
+		swprintf_s(str, L"state : IDLE");
+		break;
+	case E_DEAD:
+		swprintf_s(str, L"state : DEAD");
+		break;
+	case E_GETDMG:
+		swprintf_s(str, L"state : GETDMG");
+		break;
+	case E_STONED:
+		swprintf_s(str, L"state : STONED");
+		break;
+	case E_FROZEN:
+		break;
+	case E_GETCRIDMG:
+		break;
+	case E_STUNNED:
+		break;
+	case E_BLOCK:
+		break;
+	case E_MOVE:
+		swprintf_s(str, L"state : MOVE");
+		break;
+	case E_ATK1:
+		break;
+	case E_ATK2:
+		break;
+	case E_ATK3:
+		break;
+	case E_SKILL1_CAST:
+		swprintf_s(str, L"state : CAST");
+		break;
+	case E_SKILL1_SHOT:
+		swprintf_s(str, L"state : SHOT");
+		break;
+	case E_SKILL2_CAST:
+		break;
+	case E_SKILL2_SHOT:
+		break;
+	case E_SKILL3_CAST:
+		break;
+	case E_SKILL3_SHOT:
+		break;
+	case E_SKILL4_CAST:
+		break;
+	case E_SKILL4_SHOT:
+		break;
+	case E_STATUS_END:
+		break;
+	default:
+		swprintf_s(str, L"state : ERROR");
+		break;
+	}
+	
+	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xFF1111, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 20, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+
+
+
 	//	테스트 출력
 	//WCHAR wstr[128];
 	//swprintf_s(wstr, L"pTile->Zlvl : %d", _pCurTile->_zLevel);

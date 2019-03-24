@@ -97,7 +97,6 @@ Character * CharMgr::MakeNewChara(CHAR_NAME charName)
 
 		break;
 
-
 	}
 
 	_charaAddr->LinkToArrStatePattern(*_arrStatePattern);

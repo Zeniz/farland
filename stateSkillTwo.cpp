@@ -196,7 +196,7 @@ void stateSkillTwo::update(Character * character)
 						//	버프 적용식
 						(*pvChara)[j]->addBuff(curSkill->getSkillName(),
 							IMAGEMANAGER->findImage(curSkill->getSkillName().c_str()),
-							KEYANIMANAGER->findAnimation("buff", curSkill->getSkillName()),
+							KEYANIMANAGER->findAnimation(curSkill->getSkillName(), curSkill->getSkillName()),
 							0, curSkill->getDuration());
 					}
 				}

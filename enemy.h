@@ -9,6 +9,17 @@ class Character;
 typedef vector<Character*> vChara;
 
 
+enum BOSS_ACTION {
+	BOSS_ACTION_NONE = -1,
+	BOSS_SNATCH,
+	BOSS_ATK1,
+	BOSS_ATK2,
+	BOSS_BUFF,
+	BOSS_HOLD,
+	BOSS_ACTION_END,
+
+
+};
 
 enum E_STATS {
 	E_STATS_NONE = -1,
@@ -40,9 +51,12 @@ static string _enemyImgKey[ENEMY_NAME::E_NAME_END] = {
 enum E_DIR {
 	DIR_NONE = -1,
 	DIR_LT = 0,
+	//DIR_RT,
+	//DIR_RB,
+	//DIR_LB,
+	DIR_LB,
 	DIR_RT,
 	DIR_RB,
-	DIR_LB,
 
 	DIR_END,
 };
@@ -168,6 +182,19 @@ public:
 	enemyHpBar* _hpBar;
 
 
+	//	====	º¸½º¿ë		====
+	
+	BOSS_ACTION _bossAction;
+	string _curSkillName;
+	vector<string> _vSkillName;
+	int _castingCount;
+	int _castingSpd;
+	POINT _targetMapIdx;
+	//vector<tagBuffInfo> _vBuff;
+
+
+
+
 	const int STUNNED_COUNTMAX = 240;
 	const int ATKCOUNT_MAX = 120;
 	const int MOVETILECOUNT_MAX = 2;
@@ -177,6 +204,8 @@ public:
 	const int LEN_TO_BOTTOM_FROM_CENTERPOS = 30;
 	const int WID_FROM_CENTERPOS = 50;
 	const int DELETE_DELAY_MAX = 300;
+	
+	const int BOSS_ACTIONNUM = BOSS_ACTION::BOSS_ACTION_END;
 
 
 public:
@@ -266,7 +295,26 @@ public:
 		_isStateChanged = true;
 	}
 
+	void setDir(E_DIR dir) {
+		_dir = dir;
+	}
+	/*
+	void addBuff(string buffName, image* buffImg, animation* buffAni, int curCount, int maxCount) {
+		tagBuffInfo tmpBuff;
+		tmpBuff.name = buffName;
+		tmpBuff.img = buffImg;
+		tmpBuff.ani = buffAni;
+		tmpBuff.curCount = curCount;
+		tmpBuff.maxCount = maxCount;
+		tmpBuff.ani->start();
+		_vBuff.push_back(tmpBuff);
+	}
+	*/
 	void setHpBar(POINT augPos);
+
+	void AddSkill(string skillName) {
+		_vSkillName.push_back(skillName);
+	}
 
 
 	TILE* getCurTile() { return _pCurTile; }

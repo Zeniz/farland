@@ -4,6 +4,7 @@
 #include "enemy.h"
 #include "character.h"
 #include "skeleton.h"
+#include "charKaiser.h"
 
 typedef vector<enemy*> vEnemy;
 typedef vector<Character*> vChara;

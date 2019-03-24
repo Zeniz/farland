@@ -88,6 +88,9 @@
     <Filter Include="PlayGround\characters\skills\palmSkill">
       <UniqueIdentifier>{2f892ce6-bb0c-46f4-bbe4-8679cd2fad35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\characters\skills\kaiserSkill">
+      <UniqueIdentifier>{be861e10-e90f-4fa2-9c45-72dead1a737d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -333,6 +336,21 @@
     <ClInclude Include="SkillRangeMaskUI.h">
       <Filter>PlayGround\UI</Filter>
     </ClInclude>
+    <ClInclude Include="bossAtk1.h">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="bossAtk2.h">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="bossBuff.h">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="snatch.h">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClInclude>
+    <ClInclude Include="charKaiser.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -562,6 +580,21 @@
     </ClCompile>
     <ClCompile Include="SkillRangeMaskUI.cpp">
       <Filter>PlayGround\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="bossAtk1.cpp">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="bossAtk2.cpp">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="bossBuff.cpp">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="snatch.cpp">
+      <Filter>PlayGround\characters\skills\kaiserSkill</Filter>
+    </ClCompile>
+    <ClCompile Include="charKaiser.cpp">
+      <Filter>PlayGround\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -62,6 +62,23 @@ HRESULT skillManager::init()
 	resurrection* tmpResurrection = new resurrection;
 	tmpResurrection->init();
 	_mSkills.insert(make_pair("resurrection", tmpResurrection));
+
+
+	bossAtk1* tmpBossAtk1 = new bossAtk1;
+	tmpBossAtk1->init();
+	_mSkills.insert(make_pair("bossAtk1", tmpBossAtk1));
+
+	bossAtk2* tmpBossAtk2 = new bossAtk2;
+	tmpBossAtk2->init();
+	_mSkills.insert(make_pair("bossAtk2", tmpBossAtk2));
+
+	bossBuff* tmpBossBuff = new bossBuff;
+	tmpBossBuff->init();
+	_mSkills.insert(make_pair("bossBuff", tmpBossBuff));
+
+	snatch* tmpSnatch = new snatch;
+	tmpSnatch->init();
+	_mSkills.insert(make_pair("snatch", tmpSnatch));
 	
 
 	return S_OK;

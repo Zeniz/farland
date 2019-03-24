@@ -195,11 +195,18 @@ void stateSkillFour::update(Character * character)
 					//	인덱스가 같으면 -> 버프 적용!
 					if ((*pvChara)[j]->_mapIdx.x == tileIdxOnSkill.x &&
 						(*pvChara)[j]->_mapIdx.y == tileIdxOnSkill.y) {
+				
 						//	버프 적용식
 						(*pvChara)[j]->addBuff(curSkill->getSkillName(),
 							IMAGEMANAGER->findImage(curSkill->getSkillName().c_str()),
-							KEYANIMANAGER->findAnimation("buff", curSkill->getSkillName()),
+							KEYANIMANAGER->findAnimation(curSkill->getSkillName(), curSkill->getSkillName()),
 							0, curSkill->getDuration());
+						//	원본
+						//(*pvChara)[j]->addBuff(curSkill->getSkillName(),
+						//	IMAGEMANAGER->findImage(curSkill->getSkillName().c_str()),
+						//	KEYANIMANAGER->findAnimation("buff", curSkill->getSkillName()),
+						//	0, curSkill->getDuration());
+
 					}
 				}
 			}

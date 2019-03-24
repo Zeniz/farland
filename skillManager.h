@@ -16,6 +16,11 @@
 #include "buff1.h"
 #include "resurrection.h"
 
+#include "bossAtk1.h"
+#include "bossAtk2.h"
+#include "bossBuff.h"
+#include "snatch.h"
+
 class skillNode;
 
 

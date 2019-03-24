@@ -4,6 +4,7 @@
 enum ENEMY_NAME {
 	E_NAME_NONE = -1,
 	MOB_SKEL,
+	MOB_KAISER,
 
 	E_NAME_END,
 };

@@ -65,6 +65,13 @@ enemy* enemyMgr::MakeNewEnemy(ENEMY_NAME mobName)
 		tmpEnemy = new skeleton;
 		tmpEnemy->init();
 		break;
+
+	case ENEMY_NAME::MOB_KAISER:
+		tmpEnemy = new charKaiser;
+		tmpEnemy->init();
+		break;
+
+
 	case ENEMY_NAME::E_NAME_END:
 		break;
 	default:

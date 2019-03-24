@@ -43,9 +43,9 @@ HRESULT buff1::init()
 	_skillKinds = SKILL_KINDS::SKILL_KINDS_BUFF;
 
 	IMAGEMANAGER->addFrameImage("buff1", L"images/skillEffect/buff1.png", 2260, 102, 20, 1);
-	KEYANIMANAGER->addAnimationType("buff");
+	KEYANIMANAGER->addAnimationType("buff1");
 	int buffAniAry[] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 };
-	KEYANIMANAGER->addArrayFrameAnimation("buff", "buff1", "buff1",
+	KEYANIMANAGER->addArrayFrameAnimation("buff1", "buff1", "buff1",
 		buffAniAry, 20, 15, true);
 	
 

@@ -58,10 +58,15 @@ HRESULT testMap::init()
 	tmpChar->InitObjectiveValDefault({ 0,9 });
 	tmpChar->InitCharacteristicValDefault();
 	tmpChar->InitCharacteristicAugValDefault();
-	tmpChar->AddSkill(SKILL_NUM::SKILL1, "slashOne");
-	tmpChar->AddSkill(SKILL_NUM::SKILL2, "doubleSlash");
-	tmpChar->AddSkill(SKILL_NUM::SKILL3, "roundSlash");
-	tmpChar->AddSkill(SKILL_NUM::SKILL4, "slashUlti");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL1, "slashOne");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL2, "doubleSlash");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL3, "roundSlash");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL4, "slashUlti");
+
+	tmpChar->AddSkill(SKILL_NUM::SKILL1, "bossAtk1");
+	tmpChar->AddSkill(SKILL_NUM::SKILL2, "bossAtk2");
+	tmpChar->AddSkill(SKILL_NUM::SKILL3, "snatch");
+	tmpChar->AddSkill(SKILL_NUM::SKILL4, "bossBuff");
 	
 	_charMgr->AddCharacter(tmpChar);
 	_UIMgr->AddChar(tmpChar);
@@ -95,7 +100,7 @@ HRESULT testMap::init()
 
 	_charMgr->AddCharacter(tmpChar3);
 	_UIMgr->AddChar(tmpChar3);
-	
+
 
 	//	=== 아군캐릭터들에게 주소보내줌 ===
 	for (int i = 0; i < _charMgr->getVChara()->size(); i++) {
@@ -104,7 +109,7 @@ HRESULT testMap::init()
 
 	
 	//	=============적 추가 ===========
-	
+	/*
 	enemy* tmpEnemy;
 	tmpEnemy = _enemyMgr->MakeNewEnemy(ENEMY_NAME::MOB_SKEL);		//	뉴 떄리고, 링크걸고 리턴
 	
@@ -113,6 +118,32 @@ HRESULT testMap::init()
 	tmpEnemy->setHpBar(PointMake(0,-130));
 
 	_enemyMgr->AddEnemy(tmpEnemy);
+	*/
+
+
+	//	===	Kaiser AI ====
+
+	enemy* tmpKaiser;
+	tmpKaiser = _enemyMgr->MakeNewEnemy(ENEMY_NAME::MOB_KAISER);
+
+	tmpKaiser->InitObjectiveValDefault({ 14,10 });
+	tmpKaiser->InitCharacteristicValDefault();
+	tmpKaiser->setHpBar(PointMake(0, -130));
+	tmpKaiser->setDir(E_DIR::DIR_LT);
+
+	_enemyMgr->AddEnemy(tmpKaiser);
+	//tmpKaiser->InitCharacteristicAugValDefault();
+	//tmpKaiser->AddSkill(SKILL_NUM::SKILL1, "snatch");
+	//tmpKaiser->AddSkill(SKILL_NUM::SKILL2, "bossAtk1");
+	//tmpKaiser->AddSkill(SKILL_NUM::SKILL3, "bossAtk2");
+	//tmpKaiser->AddSkill(SKILL_NUM::SKILL4, "bossBuff");
+	//_enemyMgr->AddEnemy(tmpKaiser);
+
+
+	//_charMgr->AddCharacter(tmpChar3);
+	//_UIMgr->AddChar(tmpChar3);
+
+
 	
 
 	SAFE_DELETE(_mapLoader);
@@ -127,11 +158,13 @@ void testMap::release()
 void testMap::update()
 {
 	CAMERA2D->update();
-	KEYANIMANAGER->update("buff");
+	KEYANIMANAGER->update("buff1");
+	KEYANIMANAGER->update("bossBuff");
 	KEYANIMANAGER->update("leon");
 	KEYANIMANAGER->update("caren");
 	KEYANIMANAGER->update("palm");
 	KEYANIMANAGER->update("skel");
+	KEYANIMANAGER->update("kaiser");
 	EFFECTMANAGER->update();
 	SetClipRangeFunc();
 
