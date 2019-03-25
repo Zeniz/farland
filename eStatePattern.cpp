@@ -105,13 +105,40 @@ void eStatePattern::Idle(enemy * enemy)
 				break;
 			case BOSS_SNATCH:
 				enemy->_curSkillName = "snatch";
-				//	스킬범위 내
 				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
+				//	스킬범위 내 라면,
 				if (skillRange >= distance) {
+
+					//	스킬범위표시기능 + 방향설정기능 추가 =================
+
+					//	에너미 Dir설정(남은거리에따라)
+					SetDirBeforeSkillCast(enemy, targetIdx);
+
+
+					//	스킬범위표시기능, vector추가부분 =====================
+
+					// 스킬방향 설정 (= 에너미 방향)
+					SKILL_DIR skillDir;
+					SetSkillDir(enemy, &skillDir);
+					int AugIdxSize = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdxSize(skillDir);
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+
+					for (int i = 0; i < AugIdxSize; i++) {
+						POINT augTileIdx = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdx(skillDir, i);
+						POINT targetTileIdx = { targetIdx.x + augTileIdx.x, targetIdx.y + augTileIdx.y };
+						enemy->_skillMaskTile.addTargetTile(enemy->_maskImgNum, targetTileIdx, enemy->_maskImgNum);
+					}
+					
+					//	스킬범위표시기능, vector추가부분 끗 =====================
+
+
+					
+
+
 
 					enemy->_state = E_STATE::E_SKILL1_CAST;
 					enemy->_isStateChanged = true;
-					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+					
 				}
 				//	스킬범위밖이므로, 이동계산
 				else {
@@ -136,9 +163,31 @@ void eStatePattern::Idle(enemy * enemy)
 				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
 				if (skillRange >= distance) {
 
+					//	스킬범위표시기능 + 방향설정기능 추가 =================
+
+					//	에너미 Dir설정(남은거리에따라)
+					SetDirBeforeSkillCast(enemy, targetIdx);
+
+
+					//	스킬범위표시기능, vector추가부분 =====================
+
+					// 스킬방향 설정 (= 에너미 방향)
+					SKILL_DIR skillDir;
+					SetSkillDir(enemy, &skillDir);
+					int AugIdxSize = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdxSize(skillDir);
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+
+					for (int i = 0; i < AugIdxSize; i++) {
+						POINT augTileIdx = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdx(skillDir, i);
+						POINT targetTileIdx = { targetIdx.x + augTileIdx.x, targetIdx.y + augTileIdx.y };
+						enemy->_skillMaskTile.addTargetTile(enemy->_maskImgNum, targetTileIdx, enemy->_maskImgNum);
+					}
+
+					//	스킬범위표시기능, vector추가부분 끗 =====================
+
 					enemy->_state = E_STATE::E_SKILL1_CAST;
 					enemy->_isStateChanged = true;
-					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+					
 				}
 				//	스킬범위밖이므로, 이동계산
 				else {
@@ -160,9 +209,31 @@ void eStatePattern::Idle(enemy * enemy)
 				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
 				if (skillRange >= distance) {
 
+					//	스킬범위표시기능 + 방향설정기능 추가 =================
+
+				//	에너미 Dir설정(남은거리에따라)
+					SetDirBeforeSkillCast(enemy, targetIdx);
+
+
+					//	스킬범위표시기능, vector추가부분 =====================
+
+					// 스킬방향 설정 (= 에너미 방향)
+					SKILL_DIR skillDir;
+					SetSkillDir(enemy, &skillDir);
+					int AugIdxSize = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdxSize(skillDir);
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+
+					for (int i = 0; i < AugIdxSize; i++) {
+						POINT augTileIdx = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdx(skillDir, i);
+						POINT targetTileIdx = { targetIdx.x + augTileIdx.x, targetIdx.y + augTileIdx.y };
+						enemy->_skillMaskTile.addTargetTile(enemy->_maskImgNum, targetTileIdx, enemy->_maskImgNum);
+					}
+
+					//	스킬범위표시기능, vector추가부분 끗 =====================
+
 					enemy->_state = E_STATE::E_SKILL1_CAST;
 					enemy->_isStateChanged = true;
-					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+					//enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
 				}
 				//	스킬범위밖이므로, 이동계산
 				else {
@@ -185,9 +256,31 @@ void eStatePattern::Idle(enemy * enemy)
 				skillRange = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getRange();
 				if (skillRange >= distance) {
 
+					//	스킬범위표시기능 + 방향설정기능 추가 =================
+
+				//	에너미 Dir설정(남은거리에따라)
+					SetDirBeforeSkillCast(enemy, targetIdx);
+
+
+					//	스킬범위표시기능, vector추가부분 =====================
+
+					// 스킬방향 설정 (= 에너미 방향)
+					SKILL_DIR skillDir;
+					SetSkillDir(enemy, &skillDir);
+					int AugIdxSize = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdxSize(skillDir);
+					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+
+					for (int i = 0; i < AugIdxSize; i++) {
+						POINT augTileIdx = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getAugIdx(skillDir, i);
+						POINT targetTileIdx = { targetIdx.x + augTileIdx.x, targetIdx.y + augTileIdx.y };
+						enemy->_skillMaskTile.addTargetTile(enemy->_maskImgNum, targetTileIdx, enemy->_maskImgNum);
+					}
+
+					//	스킬범위표시기능, vector추가부분 끗 =====================
+
 					enemy->_state = E_STATE::E_SKILL1_CAST;
 					enemy->_isStateChanged = true;
-					enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
+					//enemy->_targetMapIdx = (*pvChara)[enemy->_targetCharIdx]->mapIdx;
 				}
 				//	스킬범위밖이므로, 이동계산
 				else {
@@ -382,6 +475,8 @@ void eStatePattern::Skill1Cast(enemy * enemy)
 	int castCountMax = SKILLMANAGER->FindSkill(enemy->_curSkillName)->getCastCountMax();
 
 	if (enemy->_castingCount > castCountMax) {
+		enemy->_skillMaskTile.ClearVMaskInfo();		//	마스크 리스트 클리어
+
 		enemy->_castingCount = 0;
 		enemy->_state = E_STATE::E_SKILL1_SHOT;
 		enemy->_isStateChanged = true;
@@ -396,11 +491,14 @@ void eStatePattern::Skill1Shot(enemy * enemy)
 
 		enemy->_state = E_STATE::E_IDLE;
 		enemy->_bossAction = BOSS_ACTION::BOSS_ACTION_NONE;
+		vvMap* pvvMap = enemy->_vvMap;		//	vvMap에서 Zlvl 받아서, startSkillEffect에 추가해서 계산해야함
 		//	이펙트 적용
 		skillNode* curSkill = SKILLMANAGER->FindSkill(enemy->_curSkillName);
+		POINT targetMapIdx = enemy->_targetMapIdx;
 		curSkill->StartSkillEffect(
 			enemy->_targetMapIdx,
-			(int)enemy->_dir);
+			(int)enemy->_dir,
+			(*pvvMap)[targetMapIdx.y][targetMapIdx.x]->_zLevel);
 
 		//	판정적용
 		SKILL_KINDS skillKinds = curSkill->getSkillKinds();
@@ -671,4 +769,48 @@ void eStatePattern::TargetSelectFunc(enemy * enemy)
 		}
 	}
 	
+}
+
+void eStatePattern::SetDirBeforeSkillCast(enemy * enemy, POINT targetIdx)
+{
+	int differX = targetIdx.x - enemy->_mapIdx.x;
+	int differY = targetIdx.y - enemy->_mapIdx.y;
+
+	if (abs(differX) > abs(differY)) {
+		if (differX < 0) {
+			enemy->_dir = E_DIR::DIR_LT;
+		}
+		else {
+			enemy->_dir = E_DIR::DIR_RB;
+		}
+	}
+	else {
+		if (differY < 0) {
+			enemy->_dir = E_DIR::DIR_RT;
+		}
+		else {
+			enemy->_dir = E_DIR::DIR_LB;
+		}
+	}
+}
+
+void eStatePattern::SetSkillDir(enemy * enemy, SKILL_DIR * skillDir)
+{
+	switch (enemy->_dir)
+	{
+	case E_DIR::DIR_LT:
+		*skillDir = SKILL_DIR::SKILL_DIR_LT;
+		break;
+	case E_DIR::DIR_LB:
+		*skillDir = SKILL_DIR::SKILL_DIR_LB;
+		break;
+	case E_DIR::DIR_RT:
+		*skillDir = SKILL_DIR::SKILL_DIR_RT;
+		break;
+	case E_DIR::DIR_RB:
+		*skillDir = SKILL_DIR::SKILL_DIR_RB;
+		break;
+	default:
+		break;
+	}
 }

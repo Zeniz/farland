@@ -351,6 +351,9 @@
     <ClInclude Include="charKaiser.h">
       <Filter>PlayGround\enemy</Filter>
     </ClInclude>
+    <ClInclude Include="mainmenu.h">
+      <Filter>PlayGround\scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -595,6 +598,9 @@
     </ClCompile>
     <ClCompile Include="charKaiser.cpp">
       <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="mainmenu.cpp">
+      <Filter>PlayGround\scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

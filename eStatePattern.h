@@ -52,6 +52,9 @@ public:
 	
 
 	void TargetSelectFunc(enemy* enemy);
+
+	void SetDirBeforeSkillCast(enemy* enemy, POINT targetIdx);
+	void SetSkillDir(enemy* enemy, SKILL_DIR* skillDir);
 	
 	/*
 	{

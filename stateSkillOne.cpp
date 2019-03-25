@@ -70,13 +70,20 @@ void stateSkillOne::onSkillFour(Character * character)
 void stateSkillOne::update(Character * character)
 {
 	//	프레임이 끝나면, 공격적용!
+	
 	if (character->_ani->isLastFrame()) {
+		vvMap* pvvMap = character->_vvMap;		//	vvMap에서 Zlvl 받아서, startSkillEffect에 추가해서 계산해야함
 		skillNode* curSkill = SKILLMANAGER->FindSkill(character->_skillName[(int)SKILL_NUM::SKILL1]);
+		POINT targetMapIdx = character->_lOrderList.begin()->targetMapIdx;
 		curSkill->StartSkillEffect(
 			character->_lOrderList.begin()->targetMapIdx,
-			(int)character->_dir);
+			(int)character->_dir,
+			(*pvvMap)[targetMapIdx.y][targetMapIdx.x]->_zLevel);
 		character->_coolDownTimer[0][ORDER_KINDS::SKILL1] = 0;
 		character->setCurMpAug(-curSkill->getManaCost());
+
+		//	스킬범위 표시타일 삭제
+		character->_skillTileMask.ClearVMaskInfo();
 
 
 

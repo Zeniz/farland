@@ -67,7 +67,7 @@ void roundSlash::release()
 {
 }
 
-void roundSlash::StartSkillEffect(POINT curMapIdx, int dir)
+void roundSlash::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
@@ -78,22 +78,22 @@ void roundSlash::StartSkillEffect(POINT curMapIdx, int dir)
 		break;
 	case SKILL_DIR_LT:
 		pos.x += AUG_X;
-		pos.y += -25;
+		pos.y += -25 - zLvl * TILESIZE_HEI / 2;
 		
 		break;
 	case SKILL_DIR_LB:
 		pos.x += AUG_X;
-		pos.y -= AUG_Y * 3;
+		pos.y -= AUG_Y * 3 + zLvl * TILESIZE_HEI / 2;
 		
 		break;
 	case SKILL_DIR_RT:
 		pos.x -= AUG_X;
-		pos.y += -25;
+		pos.y += -25 - zLvl * TILESIZE_HEI / 2;
 		
 		break;
 	case SKILL_DIR_RB:
 		pos.x -= AUG_X;
-		pos.y -= AUG_Y * 3;
+		pos.y -= AUG_Y * 3 + zLvl * TILESIZE_HEI / 2;
 		
 		break;
 	case SKILL_DIR_END:

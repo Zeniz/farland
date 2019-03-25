@@ -56,6 +56,6 @@ void bossBuff::release()
 {
 }
 
-void bossBuff::StartSkillEffect(POINT curMapIdx, int dir)
+void bossBuff::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 }

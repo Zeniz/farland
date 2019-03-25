@@ -59,7 +59,7 @@ void slashOne::release()
 {
 }
 
-void slashOne::StartSkillEffect(POINT curMapIdx, int dir)
+void slashOne::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
@@ -69,25 +69,25 @@ void slashOne::StartSkillEffect(POINT curMapIdx, int dir)
 		break;
 	case SKILL_DIR_LT:
 		pos.x += AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("slash1LT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_LB:
 		pos.x += AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("slash1LB", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RT:
 		pos.x -= AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("slash1RT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RB:
 		pos.x -= AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("slash1RB", pos.x, pos.y);
 		break;
 	case SKILL_DIR_END:

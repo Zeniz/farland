@@ -68,7 +68,7 @@ public:
 
 	virtual HRESULT init() abstract;
 	virtual void release() abstract;
-	virtual void StartSkillEffect(POINT curMapIdx, int dir) abstract;
+	virtual void StartSkillEffect(POINT curMapIdx, int dir, int zLvl) abstract;
 
 
 

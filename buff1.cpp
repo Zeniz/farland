@@ -56,6 +56,6 @@ void buff1::release()
 {
 }
 
-void buff1::StartSkillEffect(POINT curMapIdx, int dir)
+void buff1::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 }

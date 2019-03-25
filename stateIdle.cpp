@@ -139,6 +139,12 @@ void stateIdle::update(Character* character)
 			character->_isStateChanged = true;
 			character->_isOnAtking = true;
 			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
+
+
+
+
+			AddSkillMaskOnTile(character, ORDER_KINDS::SKILL1);
+			
 			break;
 		case ORDER_KINDS::SKILL2:
 			character->_isCastBegin = true;
@@ -147,7 +153,12 @@ void stateIdle::update(Character* character)
 			character->_isStateChanged = true;
 			character->_isOnAtking = true;
 			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
+
+
+			AddSkillMaskOnTile(character, ORDER_KINDS::SKILL2);
 			break;
+
+
 		case ORDER_KINDS::SKILL3:
 			character->_isCastBegin = true;
 			character->_state = CHAR_STATE::CASTING;
@@ -155,6 +166,12 @@ void stateIdle::update(Character* character)
 			character->_isStateChanged = true;
 			character->_isOnAtking = true;
 			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
+
+
+			AddSkillMaskOnTile(character, ORDER_KINDS::SKILL3);
+
+
+
 			break;
 		case ORDER_KINDS::SKILL4:
 			character->_isCastBegin = true;
@@ -163,7 +180,9 @@ void stateIdle::update(Character* character)
 			character->_isStateChanged = true;
 			character->_isOnAtking = true;
 			CalDir(character->_curTile->_mapIdx, character->_lOrderList.begin()->targetMapIdx, &character->_dir);
-			break;
+			
+
+			AddSkillMaskOnTile(character, ORDER_KINDS::SKILL4);
 
 			break;
 		default:
@@ -469,13 +488,36 @@ void stateIdle::CalDir(POINT curIdx, POINT targetIdx, CHAR_DIR * charDir)
 	int augX = targetIdx.x - curIdx.x;
 	int augY = targetIdx.y - curIdx.y;
 
-	if (augX == 1)
-		*charDir = CHAR_DIR::RB;
-	if (augX == -1)
-		*charDir = CHAR_DIR::LT;
-	if (augY == 1)
-		*charDir = CHAR_DIR::LB;
-	if (augY == -1)
-		*charDir = CHAR_DIR::RT;
+	if (abs(augX) > abs(augY)) {
+		if (augX < 0) {
+			*charDir = CHAR_DIR::LT;
+		}
+		else {
+			*charDir = CHAR_DIR::RB;
+		}
+	}
+	else {
+		if (augY < 0) {
+			*charDir = CHAR_DIR::RT;
+		}
+		else {
+			*charDir = CHAR_DIR::LB;
+		}
+	}
 
+}
+
+void stateIdle::AddSkillMaskOnTile(Character * character, ORDER_KINDS orderKinds)
+{
+	
+	SKILL_DIR skillDir = ConvertCharDirToSkillDir(character);
+	skillNode* curSkill = SKILLMANAGER->FindSkill(character->_skillName[(int)orderKinds - 3]);
+	POINT curIdx = character->_lOrderList.begin()->targetMapIdx;
+	int rangeTileSize = curSkill->getAugIdxSize(skillDir);
+	POINT tileIdxOnSkill;
+
+	for (int i = 0; i < curSkill->getAugIdxSize(skillDir); i++) {
+		tileIdxOnSkill = { curIdx.x + curSkill->getAugIdx(skillDir, i).x, curIdx.y + curSkill->getAugIdx(skillDir, i).y };
+		character->_skillTileMask.addTargetTile(character->_maskImgNum, tileIdxOnSkill, (int)orderKinds);
+	}
 }

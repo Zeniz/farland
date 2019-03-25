@@ -50,7 +50,7 @@ void meteor::release()
 {
 }
 
-void meteor::StartSkillEffect(POINT curMapIdx, int dir)
+void meteor::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
@@ -60,9 +60,9 @@ void meteor::StartSkillEffect(POINT curMapIdx, int dir)
 	EFFECTMANAGER->play("meteor", pos.x, pos.y);
 
 	for (int i = 0; i < 3; i++) {
-		pos = ConvertIdxToPosFloat(curMapIdx.x + RND->getFromIntTo(-3, 4), curMapIdx.y + RND->getFromIntTo(-3, 4), TILESIZE_WID, TILESIZE_HEI);
+		pos = ConvertIdxToPosFloat(curMapIdx.x + RND->getFromIntTo(-2, 3), curMapIdx.y + RND->getFromIntTo(-3, 4), TILESIZE_WID, TILESIZE_HEI);
 		pos.x += AUG_X;
-		pos.y += AUG_Y;
+		pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("meteor", pos.x, pos.y);
 	}
 	

@@ -82,7 +82,7 @@ void slashUlti::release()
 {
 }
 
-void slashUlti::StartSkillEffect(POINT curMapIdx, int dir)
+void slashUlti::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
@@ -93,7 +93,7 @@ void slashUlti::StartSkillEffect(POINT curMapIdx, int dir)
 	case SKILL_DIR_LT:	case SKILL_DIR_LB:
 	case SKILL_DIR_RT:	case SKILL_DIR_RB:
 		pos.x += AUG_X;
-		pos.y += AUG_Y;
+		pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("slashUlti", pos.x, pos.y);
 		break;
 	case SKILL_DIR_END:

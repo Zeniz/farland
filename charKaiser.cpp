@@ -125,12 +125,13 @@ HRESULT charKaiser::init()
 	_img = IMAGEMANAGER->findImage("charKaiser");
 
 	_name = ENEMY_NAME::MOB_KAISER;
-
+	
 
 	_isNotice = false;
 	_targetCharIdx = -1;
 	_bossAction = BOSS_ACTION::BOSS_ACTION_NONE;
-	
+	_maskImgNum = 3;
+	_skillMaskTile.init();
 
 	return S_OK;
 }

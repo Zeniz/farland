@@ -131,6 +131,7 @@ charCaren::~charCaren()
 HRESULT charCaren::init()
 {
 	_img = IMAGEMANAGER->findImage("charCaren");
+	_maskImgNum = 1;
 	//_frameX = NULL;
 	//_frameY = NULL;
 	//

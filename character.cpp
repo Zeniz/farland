@@ -96,6 +96,7 @@ Character::Character()
 	_coolDownTimer[1][ORDER_KINDS::SKILL3] = 300;
 	_coolDownTimer[1][ORDER_KINDS::SKILL4] = 350;
 	
+	_skillTileMask.init();
 	_holdCounter = 0;
 	_holdCounterMax = 60;
 	_targetEnemyIdx = -1;
@@ -170,6 +171,10 @@ HRESULT Character::init()
 
 void Character::aniRender()
 {
+	_skillTileMask.render();
+
+
+
 	if (_dir == CHAR_DIR::LT || _dir == CHAR_DIR::RB) {
 		_img->aniRenderReverseX(_rc.left, _rc.top - _curTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
 	}
@@ -263,7 +268,7 @@ void Character::aniRender()
 	swprintf_s(str, L"mapIdx : [%d,%d]", _curTile->_mapIdx.x, _curTile->_mapIdx.y);
 	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 40, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 
-	swprintf_s(str, L"waylistSize : [%d]", _lWayIdxList.size());
+	swprintf_s(str, L"_vvMap->zlevel : [%d]", (*_vvMap)[_curTile->_mapIdx.y][_curTile->_mapIdx.x]->_zLevel);
 	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 60, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
 }
 

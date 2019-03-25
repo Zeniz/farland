@@ -52,7 +52,7 @@ void bossAtk1::release()
 {
 }
 
-void bossAtk1::StartSkillEffect(POINT curMapIdx, int dir)
+void bossAtk1::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
@@ -62,26 +62,26 @@ void bossAtk1::StartSkillEffect(POINT curMapIdx, int dir)
 		break;
 	case SKILL_DIR_LT:
 		pos.x += AUG_X;
-		pos.y -= AUG_Y / 4;
+		pos.y -= AUG_Y / 4 + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("bossAtk1LT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_LB:
 		pos.x += AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("bossAtk1LB", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RT:
 		pos.x -= AUG_X;
-		pos.y -= AUG_Y / 4;
+		pos.y -= AUG_Y / 4 + zLvl * TILESIZE_HEI / 2;
 
 		EFFECTMANAGER->play("bossAtk1RT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RB:
 		pos.x -= AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("bossAtk1RB", pos.x, pos.y);
 		break;
 	case SKILL_DIR_END:

@@ -24,7 +24,7 @@ public:
 
 	HRESULT init() override;
 	void release() override;
-	void StartSkillEffect(POINT curMapIdx, int dir) override;
+	void StartSkillEffect(POINT curMapIdx, int dir, int zLvl) override;
 
 };
 

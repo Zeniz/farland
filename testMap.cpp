@@ -123,6 +123,7 @@ HRESULT testMap::init()
 
 	//	===	Kaiser AI ====
 
+	/*
 	enemy* tmpKaiser;
 	tmpKaiser = _enemyMgr->MakeNewEnemy(ENEMY_NAME::MOB_KAISER);
 
@@ -132,17 +133,7 @@ HRESULT testMap::init()
 	tmpKaiser->setDir(E_DIR::DIR_LT);
 
 	_enemyMgr->AddEnemy(tmpKaiser);
-	//tmpKaiser->InitCharacteristicAugValDefault();
-	//tmpKaiser->AddSkill(SKILL_NUM::SKILL1, "snatch");
-	//tmpKaiser->AddSkill(SKILL_NUM::SKILL2, "bossAtk1");
-	//tmpKaiser->AddSkill(SKILL_NUM::SKILL3, "bossAtk2");
-	//tmpKaiser->AddSkill(SKILL_NUM::SKILL4, "bossBuff");
-	//_enemyMgr->AddEnemy(tmpKaiser);
-
-
-	//_charMgr->AddCharacter(tmpChar3);
-	//_UIMgr->AddChar(tmpChar3);
-
+	*/
 
 	
 

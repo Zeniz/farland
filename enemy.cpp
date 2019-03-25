@@ -42,6 +42,8 @@ void enemy::update()
 
 void enemy::render()
 {
+	_skillMaskTile.render();
+
 	if (_dir == E_DIR::DIR_LT || _dir == E_DIR::DIR_RB) {
 		_img->aniRenderReverseX(_rc.left, _rc.top - _zLevel*(TILESIZE_HEI / 2), this->_ani);
 	}

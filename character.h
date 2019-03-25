@@ -4,6 +4,7 @@
 #include "tileNode.h"
 #include "enemy.h"
 #include "charStatePattern.h"
+#include "SkillRangeMaskUI.h"
 
 
 
@@ -208,7 +209,8 @@ public:
 	string _skillName[static_cast<const int>(SKILL_NUM::SKILL_NUM_END)];
 	 
 	
-	
+	SkillRangeMaskUI _skillTileMask;
+	int _maskImgNum;
 
 
 	list<tagOrderInfo> _lOrderList;
@@ -356,6 +358,9 @@ public:
 	void setCurSpAug(float augVal) { _charValue[0][CHAR_VALUE_KINDS::CUR_SP] += augVal; }
 
 	void healCurHpAug(float augVal) {
+		if (this->_state == CHAR_STATE::DEAD ||
+			this->_charValue[0][CHAR_VALUE_KINDS::CUR_HP] <= 0)
+			return;
 		_charValue[0][CHAR_VALUE_KINDS::CUR_HP] += augVal;
 		if (_charValue[0][CHAR_VALUE_KINDS::CUR_HP] + _charValue[1][CHAR_VALUE_KINDS::CUR_HP] >
 			_charValue[0][CHAR_VALUE_KINDS::MAX_HP] + _charValue[1][CHAR_VALUE_KINDS::MAX_HP]) {

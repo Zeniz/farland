@@ -13,7 +13,7 @@ private:
 	const SKILL_ATTR ATTR = SKILL_ATTR::SKILL_ATTR_NONE;
 	const float ATTR_ADJUST_RATIO = 0.f;
 
-	const int CASTCOUNT_MAX = 500;
+	const int CASTCOUNT_MAX = 10;		//	600Á¤µµ
 	const int RANGE = 5;
 	const float MANACOST = 30;
 
@@ -24,6 +24,6 @@ public:
 
 	HRESULT init() override;
 	void release() override;
-	void StartSkillEffect(POINT curMapIdx, int dir) override;
+	void StartSkillEffect(POINT curMapIdx, int dir, int zLvl) override;
 };
 

@@ -10,6 +10,11 @@
 
 #include "UIMgr.h"
 
+
+
+
+
+
 class stage1 : public gameNode
 {
 private:
@@ -33,9 +38,15 @@ private:
 	unsigned char _selectedUI;
 
 
+
+
+
+
+
 public:
 	stage1();
 	~stage1();
+
 
 	HRESULT init();
 	void release();
@@ -51,7 +62,8 @@ public:
 	void ZTileRender(int idxX, int idxY);
 	void PlayerRender(int idxX, int idxY);
 	void EnemyRender(int idxX, int idxY, int& enemyCount);
-	void ObjRender(int idxX, int idxY);
+	void ObjRender(int idx, int idxY);
+
 
 };
 

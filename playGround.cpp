@@ -16,15 +16,19 @@ HRESULT playGround::init()
 
 	_mapEditor = new mapEditor;
 	_testMap = new testMap;
+	_stage1 = new stage1;
+	_mainmenu = new mainmenu;
 	
 
 
 
 	SCENEMANAGER->addScene("mapEditor", _mapEditor);
 	SCENEMANAGER->addScene("testMap", _testMap);
+	SCENEMANAGER->addScene("stage1", _stage1);
+	SCENEMANAGER->addScene("mainmenu", _mainmenu);
 	
 
-	SCENEMANAGER->changeScene("testMap");
+	SCENEMANAGER->changeScene("mainmenu");
 
 
 	return S_OK;

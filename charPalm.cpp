@@ -135,6 +135,7 @@ charPalm::~charPalm()
 HRESULT charPalm::init()
 {
 	_img = IMAGEMANAGER->findImage("charPalm");
+	_maskImgNum = 2;
 	//_frameX = NULL;
 	//_frameY = NULL;
 	//

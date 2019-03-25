@@ -4,6 +4,7 @@
 #include "tileNode.h"
 #include "enemyForMapEditor.h"
 #include "enemyHpBar.h"
+#include "SkillRangeMaskUI.h"
 
 class Character;
 typedef vector<Character*> vChara;
@@ -191,6 +192,9 @@ public:
 	int _castingSpd;
 	POINT _targetMapIdx;
 	//vector<tagBuffInfo> _vBuff;
+
+	SkillRangeMaskUI _skillMaskTile;
+	int _maskImgNum;
 
 
 

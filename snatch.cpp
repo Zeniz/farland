@@ -72,7 +72,7 @@ void snatch::release()
 {
 }
 
-void snatch::StartSkillEffect(POINT curMapIdx, int dir)
+void snatch::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
@@ -81,27 +81,27 @@ void snatch::StartSkillEffect(POINT curMapIdx, int dir)
 	case SKILL_DIR_NONE:
 		break;
 	case SKILL_DIR_LT:
-		pos.x += AUG_X;
-		pos.y -= AUG_Y / 4;
+		pos.x -= 128;
+		pos.y -= 64 + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("snatchLT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_LB:
-		pos.x += AUG_X;
-		pos.y -= AUG_Y;
+		pos.x -= 128;
+		pos.y -= 32 + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("snatchLB", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RT:
-		pos.x -= AUG_X;
-		pos.y -= AUG_Y / 4;
+		pos.x += 128;
+		pos.y -= 64 + zLvl * TILESIZE_HEI / 2;
 
 		EFFECTMANAGER->play("snatchRT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RB:
-		pos.x -= AUG_X;
-		pos.y -= AUG_Y;
+		pos.x += 128;
+		pos.y -= 32 + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("snatchRB", pos.x, pos.y);
 		break;
 	case SKILL_DIR_END:

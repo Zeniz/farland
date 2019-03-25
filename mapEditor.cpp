@@ -237,6 +237,10 @@ void mapEditor::update()
 	CAMERA2D->update();
 	SetClipRangeFunc();
 
+	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE)) {
+		SCENEMANAGER->changeScene("mainmenu");
+	}
+
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON)) {
 		ClearInfoInCursor();
 	}

@@ -51,7 +51,7 @@ void doubleSlash::release()
 {
 }
 
-void doubleSlash::StartSkillEffect(POINT curMapIdx, int dir)
+void doubleSlash::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
@@ -61,26 +61,26 @@ void doubleSlash::StartSkillEffect(POINT curMapIdx, int dir)
 		break;
 	case SKILL_DIR_LT:
 		pos.x += AUG_X;
-		pos.y -= AUG_Y / 4;
+		pos.y -= AUG_Y / 4 + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("doubleSlashLT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_LB:
 		pos.x += AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("doubleSlashLB", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RT:
 		pos.x -= AUG_X;
-		pos.y -= AUG_Y/4;
+		pos.y -= AUG_Y/4 + zLvl * TILESIZE_HEI / 2;
 		
 		EFFECTMANAGER->play("doubleSlashRT", pos.x, pos.y);
 		break;
 
 	case SKILL_DIR_RB:
 		pos.x -= AUG_X;
-		pos.y -= AUG_Y;
+		pos.y -= AUG_Y + zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("doubleSlashRB", pos.x, pos.y);
 		break;
 	case SKILL_DIR_END:

@@ -51,12 +51,12 @@ void heal1::release()
 {
 }
 
-void heal1::StartSkillEffect(POINT curMapIdx, int dir)
+void heal1::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
 	POINTFLOAT pos = ConvertIdxToPosFloat(curMapIdx.x, curMapIdx.y, TILESIZE_WID, TILESIZE_HEI);
 	// Adjust Pos by Dir
 
 	pos.x += AUG_X;
-	pos.y += AUG_Y;
+	pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 	EFFECTMANAGER->play("heal1", pos.x, pos.y);
 }

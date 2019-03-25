@@ -138,6 +138,7 @@ charLeon::~charLeon()
 HRESULT charLeon::init()
 {
 	_img = IMAGEMANAGER->findImage("charLeon");
+	_maskImgNum = 0;
 	//_frameX = NULL;
 	//_frameY = NULL;
 	//
