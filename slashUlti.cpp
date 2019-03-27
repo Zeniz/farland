@@ -15,6 +15,7 @@ HRESULT slashUlti::init()
 {
 	_skillName.clear();
 	_skillName = "roundSlash";
+	SOUNDMANAGER->addSound("slashUlti", "sounds/effectSound/swordSound1.mp3", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -101,4 +102,5 @@ void slashUlti::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 	default:
 		break;
 	}
+	SOUNDMANAGER->play("slashUlti");
 }

@@ -15,6 +15,7 @@ HRESULT buff1::init()
 {
 	_skillName.clear();
 	_skillName = "buff1";
+	SOUNDMANAGER->addSound("buff1", "sounds/effectSound/buff.wav", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -58,4 +59,5 @@ void buff1::release()
 
 void buff1::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 {
+	SOUNDMANAGER->play("buff1");
 }

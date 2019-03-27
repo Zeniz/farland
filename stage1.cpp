@@ -18,6 +18,8 @@ HRESULT stage1::init()
 	POINT tmpPt = { -WINSIZEX / 2,0 };
 	CAMERA2D->setFocusOn(tmpPt, cameraState::PLAYER_CAMERA);
 	CAMERA2D->setState(cameraState::PLAYER_CAMERA);
+	SOUNDMANAGER->addSound("stage1BGM", "sounds/stage1BGM.mid", true, true);
+	_bgImg = IMAGEMANAGER->addImage("stage1BG", L"images/map/stage1BG.png", 1600, 900);
 
 	_mapLoader = new mapLoader;
 	_mapLoader->LoadMap(10, &_vvMap, &_tileNum, &_vEnemy);
@@ -38,15 +40,18 @@ HRESULT stage1::init()
 	_UIMgr->init();
 	_UIMgr->LinkToMap(&_vvMap);
 	_UIMgr->LinkToCharMgr(_charMgr);
+	_UIMgr->LinkToVEnemy(_enemyMgr->getVEnemy());
 
 	_selectedUI = UI_KINDS::UI_KINDS_NONE;
 	_selectedUI |= UI_KINDS::MASK_TILE;
 	_selectedUI |= UI_KINDS::CHARINFO;
 	_selectedUI |= UI_KINDS::TIMEDELAY;		//	타임딜레이 셋팅needed
+	_selectedUI |= UI_KINDS::STAGECLEAR;
 
 	_UIMgr->setSelectUI(_selectedUI);
 	_UIMgr->_timeDelayUI->setIsMobSlowMode(true);
 	_UIMgr->_timeDelayUI->setIsCharSlowMode(true);
+	_UIMgr->CalNextStage("stage1");
 
 
 	//	============캐릭터 추가=======
@@ -58,15 +63,15 @@ HRESULT stage1::init()
 	tmpChar->InitObjectiveValDefault({ 0,9 });
 	tmpChar->InitCharacteristicValDefault();
 	tmpChar->InitCharacteristicAugValDefault();
-	//tmpChar->AddSkill(SKILL_NUM::SKILL1, "slashOne");
-	//tmpChar->AddSkill(SKILL_NUM::SKILL2, "doubleSlash");
-	//tmpChar->AddSkill(SKILL_NUM::SKILL3, "roundSlash");
-	//tmpChar->AddSkill(SKILL_NUM::SKILL4, "slashUlti");
+	tmpChar->AddSkill(SKILL_NUM::SKILL1, "slashOne");
+	tmpChar->AddSkill(SKILL_NUM::SKILL2, "doubleSlash");
+	tmpChar->AddSkill(SKILL_NUM::SKILL3, "roundSlash");
+	tmpChar->AddSkill(SKILL_NUM::SKILL4, "slashUlti");
 
-	tmpChar->AddSkill(SKILL_NUM::SKILL1, "bossAtk1");
-	tmpChar->AddSkill(SKILL_NUM::SKILL2, "bossAtk2");
-	tmpChar->AddSkill(SKILL_NUM::SKILL3, "snatch");
-	tmpChar->AddSkill(SKILL_NUM::SKILL4, "bossBuff");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL1, "bossAtk1");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL2, "bossAtk2");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL3, "snatch");
+	//tmpChar->AddSkill(SKILL_NUM::SKILL4, "bossBuff");
 
 	_charMgr->AddCharacter(tmpChar);
 	_UIMgr->AddChar(tmpChar);
@@ -109,16 +114,61 @@ HRESULT stage1::init()
 
 
 	//	=============적 추가 ===========
-	/*
-	enemy* tmpEnemy;
-	tmpEnemy = _enemyMgr->MakeNewEnemy(ENEMY_NAME::MOB_SKEL);		//	뉴 떄리고, 링크걸고 리턴
+	
+	// ===========테스트중==============
+	for (int i = 0; i < 8; i++) {
+		
+		enemy* tmpEnemy;
+		tmpEnemy = _enemyMgr->MakeNewEnemy(ENEMY_NAME::MOB_SKEL);		//	뉴 떄리고, 링크걸고 리턴
+		tmpEnemy->InitCharacteristicValDefault();
 
-	tmpEnemy->InitObjectiveValDefault({ 10,10 });
-	tmpEnemy->InitCharacteristicValDefault();
-	tmpEnemy->setHpBar(PointMake(0,-130));
 
-	_enemyMgr->AddEnemy(tmpEnemy);
-	*/
+		POINT mapPosIdx;
+		switch (i) {
+		case 0:
+			mapPosIdx = { 11,10 };
+			tmpEnemy->setDir(E_DIR::DIR_LT);
+			break;
+		case 1:
+			mapPosIdx = { 8,18 };
+			tmpEnemy->setDir(E_DIR::DIR_RT);
+			break;
+		case 2:
+			mapPosIdx = { 9,18 };
+			tmpEnemy->setDir(E_DIR::DIR_RT);
+			break;
+		case 3:
+			mapPosIdx = { 8,0 };
+			tmpEnemy->setDir(E_DIR::DIR_LB);
+			break;
+		case 4:
+			mapPosIdx = { 9,0 };
+			tmpEnemy->setDir(E_DIR::DIR_LB);
+			break;
+		case 5:
+			mapPosIdx = { 15,8 };
+			tmpEnemy->setDir(E_DIR::DIR_LT);
+			break;
+		case 6:
+			mapPosIdx = { 15,9 };
+			tmpEnemy->setDir(E_DIR::DIR_LT);
+			break;
+		case 7:
+			mapPosIdx = { 15,10 };
+			tmpEnemy->setDir(E_DIR::DIR_LT);
+			break;
+
+		}
+
+
+		tmpEnemy->InitObjectiveValDefault(mapPosIdx);
+		
+		tmpEnemy->setHpBar(PointMake(0, -130));
+
+		_enemyMgr->AddEnemy(tmpEnemy);
+	}
+	
+	
 
 
 	//	===	Kaiser AI ====
@@ -148,6 +198,20 @@ void stage1::release()
 
 void stage1::update()
 {
+	
+
+
+	OPTIONMANAGER->update();
+	if (OPTIONMANAGER->getIsOptionMode()) {
+		_UIMgr->setPauseToTimeDelay(true);
+	}
+	
+
+	if (!SOUNDMANAGER->isPlaySound("stage1BGM")) {
+		SOUNDMANAGER->play("stage1BGM", OPTIONMANAGER->getRatioValue(OPTION_KINDS::BGM_VOLUME));
+	}
+
+
 	CAMERA2D->update();
 	KEYANIMANAGER->update("buff1");
 	KEYANIMANAGER->update("bossBuff");
@@ -186,7 +250,7 @@ void stage1::update()
 
 void stage1::render()
 {
-
+	_bgImg->renderABS(0, 0, 1.0f);
 	/*
 	//	obj, enemy의 첫 렌더 인덱스 찾기. (vObj, vEnemy가 맵인덱스로  sort되어있음)
 	for (int i = _clipMapIdx[0].y; i < _clipMapIdx[1].y; i++) {
@@ -274,6 +338,7 @@ void stage1::render()
 	//	캐릭터 정보 UI
 	//_charMgr->RenderCharInfo();
 
+	OPTIONMANAGER->render();
 
 }
 

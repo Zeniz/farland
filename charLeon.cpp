@@ -192,6 +192,7 @@ void charLeon::InitObjectiveValDefault(POINT mapIdx)
 
 	_ani = KEYANIMANAGER->findAnimation("leon", "idleFront");
 	_curTile = (*_vvMap)[mapIdx.y][mapIdx.x];
+	_tileForRender = _curTile;
 	_frontTile = nullptr;
 	_targetTile = nullptr;
 }

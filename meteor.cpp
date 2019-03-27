@@ -16,6 +16,8 @@ HRESULT meteor::init()
 	_skillName.clear();
 	_skillName = "meteor";
 
+	SOUNDMANAGER->addSound("meteor", "sounds/effectSound/meteorSound2.mp3", false, false);
+
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
 	}
@@ -65,5 +67,6 @@ void meteor::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 		pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 		EFFECTMANAGER->play("meteor", pos.x, pos.y);
 	}
+	SOUNDMANAGER->play("meteor", OPTIONMANAGER->getRatioValue(OPTION_KINDS::EFFECT_SOUND));
 	
 }

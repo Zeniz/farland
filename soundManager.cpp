@@ -242,6 +242,7 @@ void soundManager::setEffectVolume(float volume)
 		volume = 1.0f;
 
 	_effectGroup->setVolume(volume);
+	_effectSoundGroup->setVolume(volume);
 
 	cout << "effect volume : " << volume << endl;
 }
@@ -254,6 +255,7 @@ void soundManager::setBgmVolume(float volume)
 		volume = 1.0f;
 
 	_bgmGroup->setVolume(volume);
+	_bgmSoundGroup->setVolume(volume);
 
 	cout << "bgm volume : " << volume << endl;
 }

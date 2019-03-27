@@ -15,6 +15,7 @@ HRESULT heal1::init()
 {
 	_skillName.clear();
 	_skillName = "heal1";
+	SOUNDMANAGER->addSound("heal1", "sounds/effectSound/heal.wav", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -59,4 +60,5 @@ void heal1::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 	pos.x += AUG_X;
 	pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 	EFFECTMANAGER->play("heal1", pos.x, pos.y);
+	SOUNDMANAGER->play("heal1");
 }

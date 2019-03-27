@@ -55,6 +55,12 @@ public:
 
 	float getTimeDelayRatio() { return _timeDelayRatio; }
 	void setTimeDelayRatio(float delayRatio) { _timeDelayRatio = delayRatio; }
+
+	void setPause(bool value) {
+		_isPause = value;
+		if (_isCharSlowMode)		_isCharStop = _isPause;
+		if (_isMobSlowMode)		_isMobStop = _isPause;
+	}
 	
 
 };

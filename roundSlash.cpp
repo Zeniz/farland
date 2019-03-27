@@ -15,6 +15,7 @@ HRESULT roundSlash::init()
 {
 	_skillName.clear();
 	_skillName = "roundSlash";
+	SOUNDMANAGER->addSound("roundSlash", "sounds/effectSound/swordSound1.mp3", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -102,4 +103,5 @@ void roundSlash::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 		break;
 	}
 	EFFECTMANAGER->play("roundSlash", pos.x, pos.y);
+	SOUNDMANAGER->play("roundSlash");
 }

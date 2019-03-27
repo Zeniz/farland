@@ -13,6 +13,7 @@ flameBurst::~flameBurst()
 
 HRESULT flameBurst::init()
 {
+	SOUNDMANAGER->addSound("flameBurst", "sounds/effectSound/flameBurst.wav", false, false);
 	_skillName.clear();
 	_skillName = "flameBurst";
 
@@ -58,5 +59,6 @@ void flameBurst::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 	pos.x += AUG_X;
 	pos.y += AUG_Y - zLvl * TILESIZE_HEI/2;
 	EFFECTMANAGER->play("flameBurst", pos.x, pos.y);
+	SOUNDMANAGER->play("flameBrust", OPTIONMANAGER->getRatioValue(OPTION_KINDS::EFFECT_SOUND));
 	
 }

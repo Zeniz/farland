@@ -13,6 +13,9 @@ mainmenu::~mainmenu()
 
 HRESULT mainmenu::init()
 {
+	CAMERA2D->setFocusOn({ 0,0 }, cameraState::EVENT_CAMERA);
+
+
 	IMAGEMANAGER->addFrameImage("mainmenuBg", L"images/title/titleImg.png", 1600, 900, 1, 1);
 	IMAGEMANAGER->addFrameImage("newgameButton", L"images/title/newgameButton.png", 341, 106, 1, 2);
 	IMAGEMANAGER->addFrameImage("mapToolButton", L"images/title/mapToolButton.png", 302, 106, 1, 2);
@@ -55,13 +58,14 @@ HRESULT mainmenu::init()
 
 void mainmenu::release()
 {
-	
+	SOUNDMANAGER->stop("mainmenuBGM");
 }
 
 void mainmenu::update()
 {
+	OPTIONMANAGER->update();
 	if (!SOUNDMANAGER->isPlaySound("mainmenuBGM")) {
-		SOUNDMANAGER->play("mainmenuBGM", 1.0f);
+		SOUNDMANAGER->play("mainmenuBGM", OPTIONMANAGER->getRatioValue(OPTION_KINDS::BGM_VOLUME));
 	}
 	
 	
@@ -118,4 +122,6 @@ void mainmenu::render()
 				1.0f);
 		}
 	}
+	
+	OPTIONMANAGER->render();
 }

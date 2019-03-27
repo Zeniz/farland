@@ -15,6 +15,7 @@ HRESULT flameNova::init()
 {
 	_skillName.clear();
 	_skillName = "flameNova";
+	SOUNDMANAGER->addSound("flameNova", "sounds/effectSound/flameBurst.wav", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -61,4 +62,5 @@ void flameNova::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 	pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 	
 	EFFECTMANAGER->play("flameNova", pos.x, pos.y);
+	SOUNDMANAGER->play("flameNova", OPTIONMANAGER->getRatioValue(OPTION_KINDS::EFFECT_SOUND));
 }

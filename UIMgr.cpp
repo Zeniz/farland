@@ -18,6 +18,7 @@ HRESULT UIMgr::init()
 	_maskTile = nullptr;
 	_charInfoUI = nullptr;
 	_timeDelayUI = nullptr;
+	_stageClearUI = nullptr;
 
 
 
@@ -42,6 +43,10 @@ void UIMgr::update()
 	if (_selectUI & TIMEDELAY) {
 		_timeDelayUI->update();
 	}
+	if (_selectUI & TIMEDELAY) {
+		_stageClearUI->update();
+	}
+
 }
 
 void UIMgr::render()
@@ -54,6 +59,9 @@ void UIMgr::render()
 	}
 	if (_selectUI & TIMEDELAY) {
 		_timeDelayUI->render();
+	}
+	if (_selectUI & STAGECLEAR) {
+		_stageClearUI->render();
 	}
 }
 
@@ -74,8 +82,13 @@ void UIMgr::setSelectUI(unsigned char selectUI)
 		_timeDelayUI = new timeDelayUI;
 		_timeDelayUI->init();
 		//	if need any Class at TimeUI, Add HERE 
-
-
+	}
+	if (_selectUI & STAGECLEAR) {
+		_stageClearUI = new stageClearUI;
+		_stageClearUI->init();
+		_stageClearUI->LinkToVEnemy(_vpEnemy);
+		_stageClearUI->LinkToVChara(_charMgr->getVChara());
+		//	if need any Class at STAGECLEARUI, Add HERE 
 	}
 	
 }

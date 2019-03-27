@@ -19,6 +19,8 @@ class stage1 : public gameNode
 {
 private:
 	//	===	기본적으로 필요한 것들 ===	//
+	image* _bgImg;
+
 	vvMap _vvMap;
 	POINT _tileNum;
 

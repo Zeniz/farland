@@ -3,12 +3,14 @@
 #include "MaskTile.h"
 #include "CharInfoUI.h"
 #include "timeDelayUI.h"
+#include "stageClearUI.h"
 
 enum UI_KINDS {
 	UI_KINDS_NONE = 0x00000000UL,
 	MASK_TILE = 0x00000001UL,
 	CHARINFO = 0x00000002UL,
 	TIMEDELAY = 0x00000004UL,
+	STAGECLEAR = 0x00000008UL,
 
 
 
@@ -24,12 +26,14 @@ public:
 	MaskTile*	_maskTile;
 	CharInfoUI* _charInfoUI;
 	timeDelayUI* _timeDelayUI;
+	stageClearUI* _stageClearUI;
 
 	
 
 
 	vvMap* _vvMap;
 	CharMgr* _charMgr;
+	vEnemy* _vpEnemy;
 
 public:
 	UIMgr();
@@ -46,6 +50,11 @@ public:
 
 	void LinkToMap(vvMap* vvMapAddr) { _vvMap = vvMapAddr; }
 	void LinkToCharMgr(CharMgr* charMgrAddr) { _charMgr = charMgrAddr; }
+	void LinkToVEnemy(vEnemy* vEnemyAddr) { _vpEnemy = vEnemyAddr; }
 
+	void setPauseToTimeDelay(bool value) { _timeDelayUI->setPause(value); }
+
+	void setStageClear(bool value) { _stageClearUI->setIsClear(value); }
+	void CalNextStage(string curStageName) { _stageClearUI->CalNextStage(curStageName.c_str()); }
 };
 

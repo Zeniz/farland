@@ -25,12 +25,14 @@ HRESULT gameNode::init(bool managerInit)
 	if (_managerInit)
 	{
 		SetTimer(_hWnd, 1, 10, NULL);
+		
 		D2DMANAGER->init();
 		TIMEMANAGER->init();
 		SCENEMANAGER->init();
 		KEYMANAGER->init();
 		IMAGEMANAGER->init();
 		INIDATAMANAGER->init();
+		OPTIONMANAGER->init();
 		SOUNDMANAGER->init();
 		KEYANIMANAGER->init();
 		CAMERA2D->init();
@@ -38,6 +40,7 @@ HRESULT gameNode::init(bool managerInit)
 		EFFECTMANAGER->init();
 		ASTARFUNC->init();
 		SKILLMANAGER->init();
+		//OPTIONMANAGER->init();
 		
 	}
 
@@ -76,6 +79,8 @@ void gameNode::release()
 		ASTARFUNC->releaseSingleton();
 		SKILLMANAGER->release();
 		SKILLMANAGER->releaseSingleton();
+		OPTIONMANAGER->release();
+		OPTIONMANAGER->releaseSingleton();
 	}
 }
 

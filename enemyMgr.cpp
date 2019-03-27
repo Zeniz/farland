@@ -39,6 +39,8 @@ void enemyMgr::render(int idxX, int idxY)
 	for (int i = 0; i < _vEnemy.size(); i++) {
 		if (_vEnemy[i]->getTileForRender()->_mapIdx.x == idxX &&
 			_vEnemy[i]->getTileForRender()->_mapIdx.y == idxY) {
+		//if (_vEnemy[i]->getCurTile()->_mapIdx.x == idxX &&
+		//	_vEnemy[i]->getCurTile()->_mapIdx.y == idxY) {
 			_vEnemy[i]->render();
 		}
 	}

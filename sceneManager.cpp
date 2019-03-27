@@ -70,6 +70,8 @@ HRESULT sceneManager::changeScene(string sceneName)
 	//성공적으로 씬이 변경이되면 init함수를 실행
 	if (SUCCEEDED(find->second->init()))
 	{
+		_preSceneName = _curSceneName.c_str();
+		_curSceneName = sceneName.c_str();
 		//현재 어떤 씬의 정보가 들어있을수도 있으므로 릴리즈 시켜주고
 		if (_currentScene) _currentScene->release();
 

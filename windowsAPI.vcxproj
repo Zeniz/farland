@@ -154,6 +154,7 @@
     <ClInclude Include="bossAtk1.h" />
     <ClInclude Include="bossAtk2.h" />
     <ClInclude Include="bossBuff.h" />
+    <ClInclude Include="bossStage.h" />
     <ClInclude Include="buff1.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="camera2D.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="doubleSlash.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="effectManager.h" />
+    <ClInclude Include="Ending.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemyForMapEditor.h" />
     <ClInclude Include="enemyHpBar.h" />
@@ -179,6 +181,7 @@
     <ClInclude Include="fontLoader.h" />
     <ClInclude Include="fontLoaderCommon.h" />
     <ClInclude Include="gameNode.h" />
+    <ClInclude Include="gameover.h" />
     <ClInclude Include="heal1.h" />
     <ClInclude Include="heal2.h" />
     <ClInclude Include="image.h" />
@@ -192,6 +195,7 @@
     <ClInclude Include="MaskTile.h" />
     <ClInclude Include="meteor.h" />
     <ClInclude Include="objects.h" />
+    <ClInclude Include="optionMgr.h" />
     <ClInclude Include="playGround.h" />
     <ClInclude Include="randomFunction.h" />
     <ClInclude Include="Resource.h" />
@@ -208,6 +212,7 @@
     <ClInclude Include="snatch.h" />
     <ClInclude Include="soundManager.h" />
     <ClInclude Include="stage1.h" />
+    <ClInclude Include="stageClearUI.h" />
     <ClInclude Include="stateBasicAtk.h" />
     <ClInclude Include="stateBlock.h" />
     <ClInclude Include="stateCast.h" />
@@ -242,6 +247,7 @@
     <ClCompile Include="bossAtk1.cpp" />
     <ClCompile Include="bossAtk2.cpp" />
     <ClCompile Include="bossBuff.cpp" />
+    <ClCompile Include="bossStage.cpp" />
     <ClCompile Include="buff1.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera2D.cpp" />
@@ -257,6 +263,7 @@
     <ClCompile Include="doubleSlash.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
+    <ClCompile Include="Ending.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemyForMapEditor.cpp" />
     <ClCompile Include="enemyHpBar.cpp" />
@@ -266,6 +273,7 @@
     <ClCompile Include="flameNova.cpp" />
     <ClCompile Include="fontLoader.cpp" />
     <ClCompile Include="gameNode.cpp" />
+    <ClCompile Include="gameover.cpp" />
     <ClCompile Include="heal1.cpp" />
     <ClCompile Include="heal2.cpp" />
     <ClCompile Include="image.cpp" />
@@ -279,6 +287,7 @@
     <ClCompile Include="MaskTile.cpp" />
     <ClCompile Include="meteor.cpp" />
     <ClCompile Include="objects.cpp" />
+    <ClCompile Include="optionMgr.cpp" />
     <ClCompile Include="playGround.cpp" />
     <ClCompile Include="resurrection.cpp" />
     <ClCompile Include="roundSlash.cpp" />
@@ -292,6 +301,7 @@
     <ClCompile Include="snatch.cpp" />
     <ClCompile Include="soundManager.cpp" />
     <ClCompile Include="stage1.cpp" />
+    <ClCompile Include="stageClearUI.cpp" />
     <ClCompile Include="stateBasicAtk.cpp" />
     <ClCompile Include="stateBlock.cpp" />
     <ClCompile Include="stateCast.cpp" />

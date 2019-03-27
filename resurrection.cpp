@@ -15,6 +15,7 @@ HRESULT resurrection::init()
 {
 	_skillName.clear();
 	_skillName = "resurrection";
+	SOUNDMANAGER->addSound("resurrection", "sounds/effectSound/buff.wav", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -58,4 +59,5 @@ void resurrection::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 	pos.x += AUG_X;
 	pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 	EFFECTMANAGER->play("resurrection", pos.x, pos.y);
+	SOUNDMANAGER->play("resurrection");
 }

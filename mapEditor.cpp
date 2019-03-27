@@ -116,6 +116,9 @@ mapEditor::~mapEditor()
 
 HRESULT mapEditor::init()
 {
+	SOUNDMANAGER->addSound("mapEditorBGM", "sounds/mapEditorBGM.mid", true, true);
+
+
 	POINT tmpPt = { -WINSIZEX / 2,0 };
 	CAMERA2D->setFocusOn(tmpPt, cameraState::EVENT_CAMERA);
 	CAMERA2D->setState(cameraState::EVENT_CAMERA);
@@ -230,16 +233,23 @@ HRESULT mapEditor::init(int tileNumX, int tileNumY)
 
 void mapEditor::release()
 {
+	SOUNDMANAGER->stop("mapEditorBGM");
 }
 
 void mapEditor::update()
 {
+	if (!SOUNDMANAGER->isPlaySound("mapEditorBGM")) {
+		SOUNDMANAGER->play("mapEditorBGM", OPTIONMANAGER->getRatioValue(OPTION_KINDS::BGM_VOLUME));
+	}
+	OPTIONMANAGER->update();
+
+
 	CAMERA2D->update();
 	SetClipRangeFunc();
 
-	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE)) {
-		SCENEMANAGER->changeScene("mainmenu");
-	}
+	//if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE)) {
+	//	SCENEMANAGER->changeScene("mainmenu");
+	//}
 
 	if (KEYMANAGER->isOnceKeyDown(VK_RBUTTON)) {
 		ClearInfoInCursor();
@@ -351,7 +361,7 @@ void mapEditor::render()
 	CursorSampleRender();
 
 	
-	
+	OPTIONMANAGER->render();
 	
 
 }

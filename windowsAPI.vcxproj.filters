@@ -354,6 +354,21 @@
     <ClInclude Include="mainmenu.h">
       <Filter>PlayGround\scenes</Filter>
     </ClInclude>
+    <ClInclude Include="optionMgr.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="bossStage.h">
+      <Filter>PlayGround\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="stageClearUI.h">
+      <Filter>PlayGround\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Ending.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="gameover.h">
+      <Filter>PlayGround\scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -600,6 +615,21 @@
       <Filter>PlayGround\enemy</Filter>
     </ClCompile>
     <ClCompile Include="mainmenu.cpp">
+      <Filter>PlayGround\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="optionMgr.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="bossStage.cpp">
+      <Filter>PlayGround\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="stageClearUI.cpp">
+      <Filter>PlayGround\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ending.cpp">
+      <Filter>PlayGround\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="gameover.cpp">
       <Filter>PlayGround\scenes</Filter>
     </ClCompile>
   </ItemGroup>

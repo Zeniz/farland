@@ -18,6 +18,8 @@ HRESULT playGround::init()
 	_testMap = new testMap;
 	_stage1 = new stage1;
 	_mainmenu = new mainmenu;
+	_bossStage = new bossStage;
+	_gameover = new gameover;
 	
 
 
@@ -25,7 +27,10 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("mapEditor", _mapEditor);
 	SCENEMANAGER->addScene("testMap", _testMap);
 	SCENEMANAGER->addScene("stage1", _stage1);
+	SCENEMANAGER->addScene("bossStage", _bossStage);
+	SCENEMANAGER->addScene("gameover", _gameover);
 	SCENEMANAGER->addScene("mainmenu", _mainmenu);
+
 	
 
 	SCENEMANAGER->changeScene("mainmenu");

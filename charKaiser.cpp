@@ -148,6 +148,7 @@ void charKaiser::InitObjectiveValDefault(POINT mapIdx)
 
 	_ani = KEYANIMANAGER->findAnimation("kaiser", "idleFront");
 	_pCurTile = (*_vvMap)[mapIdx.y][mapIdx.x];
+	_tileForRender = _pCurTile;
 	
 	_mapIdx = mapIdx;
 }

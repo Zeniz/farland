@@ -15,26 +15,27 @@ HRESULT slashOne::init()
 {
 	_skillName.clear();
 	_skillName = "slashOne";
+	SOUNDMANAGER->addSound("slashOne", "sounds/effectSound/swordSound1.mp3", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
 	}
 
-	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(-1, 0));
-	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(-1, -1));
-	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(-1, +1));
+	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(0, 0));
+	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(0, -1));
+	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(0, +1));
 
-	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(0, +1));
-	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(-1, +1));
-	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(+1, +1));
+	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(0, 0));
+	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(-1, 0));
+	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(+1, 0));
 
-	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(0, -1));
-	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(-1, -1));
-	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(+1, -1));
+	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(0, 0));
+	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(-1, 0));
+	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(+1, 0));
 
-	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, 0));
-	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, -1));
-	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, +1));
+	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(0, 0));
+	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(0, -1));
+	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(0, +1));
 
 	_multiNumPhysic = MULTI_NUM_PHYSIC;
 	_multiNumMagic = MULTI_NUM_MAGIC;
@@ -52,6 +53,8 @@ HRESULT slashOne::init()
 	EFFECTMANAGER->addEffect("slash1RB", "images/skillEffect/slash1RB.png", 2984, 352, 373, 352, 1, 0.167f, 2);
 	EFFECTMANAGER->addEffect("slash1RT", "images/skillEffect/slash1RT.png", 2984, 352, 373, 352, 1, 0.167f, 2);
 	
+
+
 	return S_OK;
 }
 
@@ -96,5 +99,7 @@ void slashOne::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 		break;
 	}
 	
+	SOUNDMANAGER->play("slashOne");
+
 }
 

@@ -13,7 +13,7 @@ private:
 	const SKILL_ATTR ATTR = SKILL_ATTR::SKILL_ATTR_NONE;
 	const float ATTR_ADJUST_RATIO = 0.f;
 
-	const int CASTCOUNT_MAX = 10;	//	600정도
+	const int CASTCOUNT_MAX = 600;	//	600정도
 	const int RANGE = 2;
 	const float MANACOST = 30;
 

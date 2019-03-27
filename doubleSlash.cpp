@@ -15,18 +15,19 @@ HRESULT doubleSlash::init()
 {
 	_skillName.clear();
 	_skillName = "doubleSlash";
+	SOUNDMANAGER->addSound("doubleSlash", "sounds/effectSound/swordSound1.mp3", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
 	}
 
-	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(-1, 0));
+	_vAugIdx[SKILL_DIR_LT].push_back(PointMake(0, 0));
 
-	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(0, +1));
+	_vAugIdx[SKILL_DIR_LB].push_back(PointMake(0, 0));
 
-	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(0, -1));
+	_vAugIdx[SKILL_DIR_RT].push_back(PointMake(0, 0));
 
-	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(+1, 0));
+	_vAugIdx[SKILL_DIR_RB].push_back(PointMake(0, 0));
 
 	_multiNumPhysic = MULTI_NUM_PHYSIC;
 	_multiNumMagic = MULTI_NUM_MAGIC;
@@ -88,4 +89,6 @@ void doubleSlash::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 	default:
 		break;
 	}
+
+	SOUNDMANAGER->play("doubleSlash");
 }

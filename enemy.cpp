@@ -53,8 +53,8 @@ void enemy::render()
 
 	_hpBar->render();
 
-	D2D_RECT_F rc = { _pos.x - 5, _pos.y - 5, _pos.x + 5, _pos.y + 5 };
-	D2DMANAGER->fillRectangle(0xFFFFFF, rc);
+	//D2D_RECT_F rc = { _pos.x - 5, _pos.y - 5, _pos.x + 5, _pos.y + 5 };
+	//D2DMANAGER->fillRectangle(0xFFFFFF, rc);
 
 
 	WCHAR str[128];
@@ -91,6 +91,7 @@ void enemy::render()
 		swprintf_s(str, L"state : MOVE");
 		break;
 	case E_ATK1:
+		swprintf_s(str, L"state : ATK1");
 		break;
 	case E_ATK2:
 		break;

@@ -137,6 +137,7 @@ void skeleton::InitObjectiveValDefault(POINT mapIdx)
 
 	_ani = KEYANIMANAGER->findAnimation("skel", "idleFront");
 	_pCurTile = (*_vvMap)[mapIdx.y][mapIdx.x];
+	_tileForRender = _pCurTile;
 
 	_mapIdx = mapIdx;
 

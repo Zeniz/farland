@@ -15,6 +15,9 @@ private:
 	static gameNode*	_currentScene;	//ÇöÀç ¾À
 	mapSceneList		_mSceneList;
 
+	string _curSceneName;
+	string _preSceneName;
+
 public:
 	sceneManager();
 	~sceneManager();
@@ -29,6 +32,12 @@ public:
 
 	//¾À º¯°æ ÇÔ¾¥
 	HRESULT changeScene(string sceneName);
+
+	void setCurSceneName(string curSceneName) { _curSceneName = curSceneName.c_str(); }
+	string getCurSceneName() { return _curSceneName.c_str(); }
+
+	void setPreSceneName(string preSceneName) { _preSceneName = preSceneName.c_str(); }
+	string getPreSceneName() { return _preSceneName.c_str(); }
 
 
 };

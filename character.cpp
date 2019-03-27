@@ -296,6 +296,7 @@ void Character::InitObjectiveVal(image* img, POINTFLOAT pos, int zlvl, animation
 
 	_ani = ani;
 	_curTile = curTile;
+	_tileForRender = _curTile;
 	_frontTile = nullptr;
 	_targetTile = nullptr;
 

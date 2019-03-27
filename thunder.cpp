@@ -15,6 +15,7 @@ HRESULT thunder::init()
 {
 	_skillName.clear();
 	_skillName = "thunder";
+	SOUNDMANAGER->addSound("thunder", "sounds/effectSound/thunder.wav", false, false);
 
 	for (int i = 0; i < SKILL_DIR::SKILL_DIR_END; i++) {
 		_vAugIdx[i].clear();
@@ -58,4 +59,5 @@ void thunder::StartSkillEffect(POINT curMapIdx, int dir, int zLvl)
 	pos.x += AUG_X;
 	pos.y += AUG_Y - zLvl * TILESIZE_HEI / 2;
 	EFFECTMANAGER->play("thunder", pos.x, pos.y);
+	SOUNDMANAGER->play("thunder", OPTIONMANAGER->getRatioValue(OPTION_KINDS::EFFECT_SOUND));
 }
