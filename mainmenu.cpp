@@ -14,6 +14,7 @@ mainmenu::~mainmenu()
 HRESULT mainmenu::init()
 {
 	CAMERA2D->setFocusOn({ 0,0 }, cameraState::EVENT_CAMERA);
+	CAMERA2D->setState(cameraState::EVENT_CAMERA);
 
 
 	IMAGEMANAGER->addFrameImage("mainmenuBg", L"images/title/titleImg.png", 1600, 900, 1, 1);

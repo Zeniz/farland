@@ -43,7 +43,7 @@ void UIMgr::update()
 	if (_selectUI & TIMEDELAY) {
 		_timeDelayUI->update();
 	}
-	if (_selectUI & TIMEDELAY) {
+	if (_selectUI & STAGECLEAR) {
 		_stageClearUI->update();
 	}
 

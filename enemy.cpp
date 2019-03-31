@@ -57,6 +57,9 @@ void enemy::render()
 	//D2DMANAGER->fillRectangle(0xFFFFFF, rc);
 
 
+	//	테스트용
+
+	/*
 	WCHAR str[128];
 
 	//swprintf_s(str, L"state : %d", (int)_state);
@@ -130,6 +133,8 @@ void enemy::render()
 	//WCHAR wstr[128];
 	//swprintf_s(wstr, L"pTile->Zlvl : %d", _pCurTile->_zLevel);
 	//D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xFF0000, 1.0f), L"consolas", 15, wstr, _rc.left, _rc.top - 20, true, D2DMANAGER->createBrush(0x000000, 1.0f));
+
+	*/
 }
 
 

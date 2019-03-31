@@ -45,7 +45,7 @@ HRESULT stage1::init()
 	_selectedUI = UI_KINDS::UI_KINDS_NONE;
 	_selectedUI |= UI_KINDS::MASK_TILE;
 	_selectedUI |= UI_KINDS::CHARINFO;
-	_selectedUI |= UI_KINDS::TIMEDELAY;		//	타임딜레이 셋팅needed
+	_selectedUI |= UI_KINDS::TIMEDELAY;		
 	_selectedUI |= UI_KINDS::STAGECLEAR;
 
 	_UIMgr->setSelectUI(_selectedUI);
@@ -58,7 +58,7 @@ HRESULT stage1::init()
 
 	//	===	Leon ===
 	Character* tmpChar;
-	tmpChar = _charMgr->MakeNewChara(CHAR_NAME::LEON);		//	뉴떄려줌, 링크걸고 리턴
+	tmpChar = _charMgr->MakeNewChara(CHAR_NAME::LEON);		
 
 	tmpChar->InitObjectiveValDefault({ 0,9 });
 	tmpChar->InitCharacteristicValDefault();
@@ -67,12 +67,7 @@ HRESULT stage1::init()
 	tmpChar->AddSkill(SKILL_NUM::SKILL2, "doubleSlash");
 	tmpChar->AddSkill(SKILL_NUM::SKILL3, "roundSlash");
 	tmpChar->AddSkill(SKILL_NUM::SKILL4, "slashUlti");
-
-	//tmpChar->AddSkill(SKILL_NUM::SKILL1, "bossAtk1");
-	//tmpChar->AddSkill(SKILL_NUM::SKILL2, "bossAtk2");
-	//tmpChar->AddSkill(SKILL_NUM::SKILL3, "snatch");
-	//tmpChar->AddSkill(SKILL_NUM::SKILL4, "bossBuff");
-
+	
 	_charMgr->AddCharacter(tmpChar);
 	_UIMgr->AddChar(tmpChar);
 
@@ -115,7 +110,7 @@ HRESULT stage1::init()
 
 	//	=============적 추가 ===========
 	
-	// ===========테스트중==============
+	
 	for (int i = 0; i < 8; i++) {
 		
 		enemy* tmpEnemy;

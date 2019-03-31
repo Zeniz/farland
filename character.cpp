@@ -182,6 +182,10 @@ void Character::aniRender()
 		_img->aniRender(_rc.left, _rc.top - _curTile->_zLevel*(TILESIZE_HEI / 2), this->_ani);
 	}
 
+
+	//	이하 테스트용
+	/*
+
 	WCHAR str[128];
 	switch (_state)
 	{
@@ -270,6 +274,9 @@ void Character::aniRender()
 
 	swprintf_s(str, L"_vvMap->zlevel : [%d]", (*_vvMap)[_curTile->_mapIdx.y][_curTile->_mapIdx.x]->_zLevel);
 	D2DMANAGER->drawTextD2D(D2DMANAGER->createBrush(0xF00000, 1.0f), L"consolas", 20, str, _rc.left, _rc.top - 60, true, D2DMANAGER->createBrush(0xFFFFFF, 1.0f));
+
+	*/
+
 }
 
 void Character::BuffRender()
@@ -648,51 +655,7 @@ void Character::MakeOrder()
 		break;
 	case ORDER_KINDS::SKILL1:
 		MakeOrderOfSkill(_mode);
-		
-		//	이건 옛날꺼...구려
-		/*
-		if (this->_coolDownTimer[0][ORDER_KINDS::SKILL1] >= this->_coolDownTimer[1][ORDER_KINDS::SKILL1]) {
-			order.kinds = ORDER_KINDS::SKILL1;
-			bool isClickedEnemy = false;
-			isClickedEnemy = MakeClickedEnemyIdx();
-			//	클릭해서 적의 인덱스를 가져왔다면,
-			if (isClickedEnemy) {
 
-				_aStarCount = 0;
-				ASTARFUNC->PathFind(mapIdx, (*_vEnemy)[_targetEnemyIdx]->_mapIdx, mapIdx, _lWayIdxList);
-
-				//	길을 찾았다면,
-				if (_lWayIdxList.size() != 0 && _lWayIdxList.begin()->x != -1) {
-					//	적이 서있는 타일인덱스는 뺴버리고,
-					_lWayIdxList.pop_back();
-					POINT targetMapIdx = (*_vEnemy)[_targetEnemyIdx]->_mapIdx;
-					_targetTile = ((*_vvMap)[targetMapIdx.y][targetMapIdx.x]);
-					order.kinds = ORDER_KINDS::SKILL1;
-					order.targetMapIdx = _targetTile->_tileInfo.pickIdx;		//	인덱스
-
-					//	넣기전, 기존 hold삭제
-					for (_liOrderList = _lOrderList.begin(); _liOrderList != _lOrderList.end();) {
-						if (_liOrderList->kinds == ORDER_KINDS::HOLD ||
-							_liOrderList->kinds == ORDER_KINDS::ATTACK) {
-							_liOrderList = _lOrderList.erase(_liOrderList);
-						}
-						else {
-							_liOrderList++;
-						}
-					}
-
-					//	오더추가! + cooldown = 0
-					_lOrderList.push_back(order);
-					//	현재 선택한 모드 꺼주고,
-					_mode = ORDER_KINDS::NONE;
-
-					//	쿨다운은 실행될떄!
-					//_coolDownTimer[0][ORDER_KINDS::ATTACK] = 0;
-				}
-			}
-
-		}
-		*/
 		break;
 	case ORDER_KINDS::SKILL2:
 		MakeOrderOfSkill(_mode);
